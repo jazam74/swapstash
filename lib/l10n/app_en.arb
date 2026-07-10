@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "appName": "SwapStash",
+  "home": "Home",
+  "collections": "Collections",
+  "trades": "Trades",
+  "messages": "Messages",
+  "profile": "Profile",
+  "welcomeUser": "Welcome, Uroš!",
+  "welcomeDescription": "Manage your collections and find the best trades.",
+  "newMatches": "New matches",
+  "activeCollections": "Active collections",
+  "addCollection": "Add collection",
+  "sameCountry": "Same country",
+  "international": "International",
+  "reviewTrade": "Review trade",
+  "noMessages": "No messages",
+  "noMessagesDescription": "Your trade conversations will appear here.",
+  "language": "Language",
+  "internationalTrades": "International trades",
+  "allowed": "Allowed",
+  "successfulTrades": "Successful trades"
+}

@@ -1,0 +1,24 @@
+{
+  "sl": [
+    "appName",
+    "home",
+    "collections",
+    "trades",
+    "messages",
+    "profile",
+    "welcomeUser",
+    "welcomeDescription",
+    "newMatches",
+    "activeCollections",
+    "addCollection",
+    "sameCountry",
+    "international",
+    "reviewTrade",
+    "noMessages",
+    "noMessagesDescription",
+    "language",
+    "internationalTrades",
+    "allowed",
+    "successfulTrades"
+  ]
+}

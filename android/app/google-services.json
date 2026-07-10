@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "216798493473",
+    "project_id": "swapstash-49199",
+    "storage_bucket": "swapstash-49199.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216798493473:android:09b94621330a7da624dc60",
+        "android_client_info": {
+          "package_name": "com.example.swapstash"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLxUvuziB2vsl-nzncQBKAqCJGCM9asHo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
