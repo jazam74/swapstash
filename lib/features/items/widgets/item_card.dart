@@ -39,6 +39,8 @@ class ItemCard extends StatelessWidget {
       status = 'Imam';
     }
 
+    final imagePath = 'assets/items/${item.number}.jpg';
+
     return Card(
       margin: EdgeInsets.zero,
       color: backgroundColor,
@@ -46,8 +48,36 @@ class ItemCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.white.withValues(alpha: 0.55),
+                  child: Image.asset(
+                    imagePath,
+                    fit: BoxFit.cover,
+                    errorBuilder: (
+                      context,
+                      error,
+                      stackTrace,
+                    ) {
+                      return Center(
+                        child: Icon(
+                          Icons.image_not_supported_outlined,
+                          size: 42,
+                          color: foregroundColor.withValues(
+                            alpha: 0.65,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Icon(
@@ -77,6 +107,7 @@ class ItemCard extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

@@ -345,7 +345,7 @@ class _ItemsPageState extends State<ItemsPage> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 8,
                           mainAxisSpacing: 8,
-                          childAspectRatio: 1.55,
+                          childAspectRatio: 0.85,
                         ),
                         itemCount: visibleItems.length,
                         itemBuilder: (context, index) {
