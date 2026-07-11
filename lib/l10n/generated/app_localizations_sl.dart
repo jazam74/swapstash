@@ -12,61 +12,61 @@ class AppLocalizationsSl extends AppLocalizations {
   String get appName => 'SwapStash';
 
   @override
-  String get home => 'Home';
+  String get home => 'Domov';
 
   @override
-  String get collections => 'Collections';
+  String get collections => 'Zbirke';
 
   @override
-  String get trades => 'Trades';
+  String get trades => 'Menjave';
 
   @override
-  String get messages => 'Messages';
+  String get messages => 'Sporočila';
 
   @override
-  String get profile => 'Profile';
+  String get profile => 'Profil';
 
   @override
-  String get welcomeUser => 'Welcome, Uroš!';
+  String get welcomeUser => 'Dobrodošel, Uroš!';
 
   @override
   String get welcomeDescription =>
-      'Manage your collections and find the best trades.';
+      'Uredi svoje zbirke in poišči najboljše menjave.';
 
   @override
-  String get newMatches => 'New matches';
+  String get newMatches => 'Nova ujemanja';
 
   @override
-  String get activeCollections => 'Active collections';
+  String get activeCollections => 'Aktivne zbirke';
 
   @override
-  String get addCollection => 'Add collection';
+  String get addCollection => 'Dodaj zbirko';
 
   @override
-  String get sameCountry => 'Same country';
+  String get sameCountry => 'Ista država';
 
   @override
-  String get international => 'International';
+  String get international => 'Mednarodno';
 
   @override
-  String get reviewTrade => 'Review trade';
+  String get reviewTrade => 'Preglej menjavo';
 
   @override
-  String get noMessages => 'No messages';
+  String get noMessages => 'Ni sporočil';
 
   @override
   String get noMessagesDescription =>
-      'Your trade conversations will appear here.';
+      'Pogovori o menjavah bodo prikazani tukaj.';
 
   @override
-  String get language => 'Language';
+  String get language => 'Jezik';
 
   @override
-  String get internationalTrades => 'International trades';
+  String get internationalTrades => 'Mednarodne menjave';
 
   @override
-  String get allowed => 'Allowed';
+  String get allowed => 'Dovoljene';
 
   @override
-  String get successfulTrades => 'Successful trades';
+  String get successfulTrades => 'Uspešne menjave';
 }

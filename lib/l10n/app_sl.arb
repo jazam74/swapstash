@@ -1,0 +1,23 @@
+{
+  "@@locale": "sl",
+  "appName": "SwapStash",
+  "home": "Domov",
+  "collections": "Zbirke",
+  "trades": "Menjave",
+  "messages": "Sporočila",
+  "profile": "Profil",
+  "welcomeUser": "Dobrodošel, Uroš!",
+  "welcomeDescription": "Uredi svoje zbirke in poišči najboljše menjave.",
+  "newMatches": "Nova ujemanja",
+  "activeCollections": "Aktivne zbirke",
+  "addCollection": "Dodaj zbirko",
+  "sameCountry": "Ista država",
+  "international": "Mednarodno",
+  "reviewTrade": "Preglej menjavo",
+  "noMessages": "Ni sporočil",
+  "noMessagesDescription": "Pogovori o menjavah bodo prikazani tukaj.",
+  "language": "Jezik",
+  "internationalTrades": "Mednarodne menjave",
+  "allowed": "Dovoljene",
+  "successfulTrades": "Uspešne menjave"
+}
