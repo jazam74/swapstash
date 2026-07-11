@@ -27,4 +27,19 @@ class CollectionService {
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> watchCollections() {
+    final user = _auth.currentUser;
+
+    if (user == null) {
+      throw Exception('Uporabnik ni prijavljen.');
+    }
+
+    return _db
+        .collection('users')
+        .doc(user.uid)
+        .collection('collections')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
 }
