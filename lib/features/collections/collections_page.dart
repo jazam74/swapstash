@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swapstash/features/collections/add_collection_dialog.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -17,7 +18,10 @@ class CollectionsPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // naslednji korak
+          showDialog(
+            context: context,
+            builder: (_) => const AddCollectionDialog(),
+          );
         },
         icon: const Icon(Icons.add),
         label: const Text('Dodaj zbirko'),
