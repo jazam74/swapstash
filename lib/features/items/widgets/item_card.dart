@@ -17,18 +17,32 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color backgroundColor;
+    final Color foregroundColor;
+    final IconData statusIcon;
     final String status;
 
     if (item.isMissing) {
+      backgroundColor = Colors.red.shade50;
+      foregroundColor = Colors.red.shade700;
+      statusIcon = Icons.remove_circle_outline;
       status = 'Manjka';
     } else if (item.hasDuplicates) {
+      backgroundColor = Colors.orange.shade50;
+      foregroundColor = Colors.orange.shade800;
+      statusIcon = Icons.swap_horiz;
       status = 'Viški: ${item.duplicateCount}';
     } else {
+      backgroundColor = Colors.green.shade50;
+      foregroundColor = Colors.green.shade700;
+      statusIcon = Icons.check_circle_outline;
       status = 'Imam';
     }
 
     return Card(
       margin: EdgeInsets.zero,
+      color: backgroundColor,
+      clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -36,11 +50,18 @@ class ItemCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                Icon(
+                  statusIcon,
+                  size: 20,
+                  color: foregroundColor,
+                ),
+                const SizedBox(width: 6),
                 Text(
                   '#${item.number}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
+                    color: foregroundColor,
                   ),
                 ),
                 const Spacer(),
@@ -48,8 +69,9 @@ class ItemCard extends StatelessWidget {
                   child: Text(
                     status,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: foregroundColor,
                     ),
                   ),
                 ),
@@ -66,7 +88,7 @@ class ItemCard extends StatelessWidget {
                   icon: const Icon(Icons.remove),
                 ),
                 SizedBox(
-                  width: 34,
+                  width: 36,
                   child: Center(
                     child: isSaving
                         ? const SizedBox(
@@ -78,9 +100,10 @@ class ItemCard extends StatelessWidget {
                           )
                         : Text(
                             '${item.quantity}',
-                            style: const TextStyle(
-                              fontSize: 20,
+                            style: TextStyle(
+                              fontSize: 21,
                               fontWeight: FontWeight.bold,
+                              color: foregroundColor,
                             ),
                           ),
                   ),
