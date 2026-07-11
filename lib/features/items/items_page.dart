@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/services/item_service.dart';
 import 'package:swapstash/features/items/widgets/item_card.dart';
+import 'package:swapstash/features/items/widgets/item_statistics.dart';
 
 class ItemsPage extends StatefulWidget {
   final String collectionId;
