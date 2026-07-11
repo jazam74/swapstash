@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/services/collection_service.dart';
 import 'package:swapstash/features/collections/add_collection_dialog.dart';
+import 'package:swapstash/features/items/items_page.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -47,6 +48,10 @@ class CollectionsPage extends StatelessWidget {
             itemBuilder: (context, index) {
               final data = docs[index].data();
 
+              final name = data['name'] as String? ?? 'Neimenovana zbirka';
+              final publisher = data['publisher'] as String? ?? '';
+              final totalItems = data['totalItems'] as int? ?? 0;
+
               return Card(
                 margin: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -54,10 +59,21 @@ class CollectionsPage extends StatelessWidget {
                 ),
                 child: ListTile(
                   leading: const Icon(Icons.collections_bookmark),
-                  title: Text(data['name'] ?? ''),
+                  title: Text(name),
                   subtitle: Text(
-                    '${data['publisher']} • ${data['totalItems']} predmetov',
+                    '$publisher • $totalItems predmetov',
                   ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ItemsPage(
+                          collectionName: name,
+                          totalItems: totalItems,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               );
             },
