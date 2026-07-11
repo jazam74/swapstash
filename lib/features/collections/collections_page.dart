@@ -68,6 +68,7 @@ class CollectionsPage extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => ItemsPage(
+                          collectionId: docs[index].id,
                           collectionName: name,
                           totalItems: totalItems,
                         ),

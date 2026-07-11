@@ -7,11 +7,13 @@ enum ItemStatus {
 }
 
 class ItemsPage extends StatefulWidget {
+  final String collectionId;
   final String collectionName;
   final int totalItems;
 
   const ItemsPage({
     super.key,
+    required this.collectionId,
     required this.collectionName,
     required this.totalItems,
   });
