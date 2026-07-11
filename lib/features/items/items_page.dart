@@ -4,6 +4,13 @@ import 'package:swapstash/core/services/item_service.dart';
 import 'package:swapstash/features/items/widgets/item_card.dart';
 import 'package:swapstash/features/items/widgets/item_statistics.dart';
 
+enum ItemFilter {
+  all,
+  owned,
+  missing,
+  duplicates,
+}
+
 class ItemsPage extends StatefulWidget {
   final String collectionId;
   final String collectionName;
@@ -29,6 +36,7 @@ class _ItemsPageState extends State<ItemsPage> {
   final Set<int> _savingItems = {};
 
   String _search = '';
+  ItemFilter _selectedFilter = ItemFilter.all;
 
   @override
   void initState() {
@@ -132,13 +140,99 @@ class _ItemsPageState extends State<ItemsPage> {
   }
 
   List<Item> _filterItems(List<Item> items) {
-    if (_search.isEmpty) {
-      return items;
-    }
-
     return items.where((item) {
-      return item.number.toString().contains(_search);
+      final matchesSearch = _search.isEmpty ||
+          item.number.toString().contains(_search);
+
+      if (!matchesSearch) {
+        return false;
+      }
+
+      switch (_selectedFilter) {
+        case ItemFilter.all:
+          return true;
+
+        case ItemFilter.owned:
+          return item.isOwned;
+
+        case ItemFilter.missing:
+          return item.isMissing;
+
+        case ItemFilter.duplicates:
+          return item.hasDuplicates;
+      }
     }).toList();
+  }
+
+  Widget _buildFilterBar() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.fromLTRB(
+        12,
+        4,
+        12,
+        4,
+      ),
+      child: Row(
+        children: [
+          ChoiceChip(
+            label: const Text('Vsi'),
+            selected: _selectedFilter == ItemFilter.all,
+            onSelected: (_) {
+              setState(() {
+                _selectedFilter = ItemFilter.all;
+              });
+            },
+          ),
+          const SizedBox(width: 8),
+          ChoiceChip(
+            label: const Text('Imam'),
+            selected: _selectedFilter == ItemFilter.owned,
+            onSelected: (_) {
+              setState(() {
+                _selectedFilter = ItemFilter.owned;
+              });
+            },
+          ),
+          const SizedBox(width: 8),
+          ChoiceChip(
+            label: const Text('Manjkajo'),
+            selected: _selectedFilter == ItemFilter.missing,
+            onSelected: (_) {
+              setState(() {
+                _selectedFilter = ItemFilter.missing;
+              });
+            },
+          ),
+          const SizedBox(width: 8),
+          ChoiceChip(
+            label: const Text('Viški'),
+            selected: _selectedFilter == ItemFilter.duplicates,
+            onSelected: (_) {
+              setState(() {
+                _selectedFilter = ItemFilter.duplicates;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _emptyMessage() {
+    switch (_selectedFilter) {
+      case ItemFilter.all:
+        return 'Ni predmetov, ki ustrezajo iskanju.';
+
+      case ItemFilter.owned:
+        return 'Ni zbranih predmetov, ki ustrezajo iskanju.';
+
+      case ItemFilter.missing:
+        return 'Ni manjkajočih predmetov, ki ustrezajo iskanju.';
+
+      case ItemFilter.duplicates:
+        return 'Ni viškov, ki ustrezajo iskanju.';
+    }
   }
 
   @override
@@ -225,6 +319,7 @@ class _ItemsPageState extends State<ItemsPage> {
                   },
                 ),
               ),
+              _buildFilterBar(),
               ItemStatistics(
                 ownedCount: ownedCount,
                 duplicateCount: duplicateCount,
@@ -234,9 +329,13 @@ class _ItemsPageState extends State<ItemsPage> {
               const Divider(),
               Expanded(
                 child: visibleItems.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'Ni predmetov, ki ustrezajo iskanju.',
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Text(
+                            _emptyMessage(),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       )
                     : GridView.builder(
