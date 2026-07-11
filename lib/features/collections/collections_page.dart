@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:swapstash/core/models/collection.dart';
 import 'package:swapstash/core/services/collection_service.dart';
 import 'package:swapstash/features/collections/add_collection_dialog.dart';
 import 'package:swapstash/features/items/items_page.dart';
@@ -15,10 +15,11 @@ class CollectionsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Moje zbirke'),
       ),
-      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      body: StreamBuilder<List<Collection>>(
         stream: collectionService.watchCollections(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              !snapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -26,15 +27,19 @@ class CollectionsPage extends StatelessWidget {
 
           if (snapshot.hasError) {
             return Center(
-              child: Text(
-                'Napaka: ${snapshot.error}',
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  'Zbirk ni bilo mogoče naložiti:\n${snapshot.error}',
+                  textAlign: TextAlign.center,
+                ),
               ),
             );
           }
 
-          final docs = snapshot.data?.docs ?? [];
+          final collections = snapshot.data ?? [];
 
-          if (docs.isEmpty) {
+          if (collections.isEmpty) {
             return const Center(
               child: Text(
                 'Še nimaš nobene zbirke.',
@@ -44,13 +49,13 @@ class CollectionsPage extends StatelessWidget {
           }
 
           return ListView.builder(
-            itemCount: docs.length,
+            padding: const EdgeInsets.only(
+              top: 8,
+              bottom: 96,
+            ),
+            itemCount: collections.length,
             itemBuilder: (context, index) {
-              final data = docs[index].data();
-
-              final name = data['name'] as String? ?? 'Neimenovana zbirka';
-              final publisher = data['publisher'] as String? ?? '';
-              final totalItems = data['totalItems'] as int? ?? 0;
+              final collection = collections[index];
 
               return Card(
                 margin: const EdgeInsets.symmetric(
@@ -58,19 +63,28 @@ class CollectionsPage extends StatelessWidget {
                   vertical: 8,
                 ),
                 child: ListTile(
-                  leading: const Icon(Icons.collections_bookmark),
-                  title: Text(name),
-                  subtitle: Text(
-                    '$publisher • $totalItems predmetov',
+                  leading: const Icon(
+                    Icons.collections_bookmark,
                   ),
-                  trailing: const Icon(Icons.chevron_right),
+                  title: Text(
+                    collection.name.isEmpty
+                        ? 'Neimenovana zbirka'
+                        : collection.name,
+                  ),
+                  subtitle: Text(
+                    '${collection.publisher} • '
+                    '${collection.totalItems} predmetov',
+                  ),
+                  trailing: const Icon(
+                    Icons.chevron_right,
+                  ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => ItemsPage(
-                          collectionId: docs[index].id,
-                          collectionName: name,
-                          totalItems: totalItems,
+                          collectionId: collection.id,
+                          collectionName: collection.name,
+                          totalItems: collection.totalItems,
                         ),
                       ),
                     );
@@ -83,7 +97,7 @@ class CollectionsPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          await showDialog(
+          await showDialog<bool>(
             context: context,
             builder: (_) => const AddCollectionDialog(),
           );

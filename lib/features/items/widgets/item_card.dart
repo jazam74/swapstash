@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:swapstash/core/models/item.dart';
 
 class ItemCard extends StatelessWidget {
-  final int itemNumber;
-  final int quantity;
+  final Item item;
   final bool isSaving;
   final VoidCallback onIncrease;
   final VoidCallback onDecrease;
 
   const ItemCard({
     super.key,
-    required this.itemNumber,
-    required this.quantity,
+    required this.item,
     required this.isSaving,
     required this.onIncrease,
     required this.onDecrease,
@@ -20,12 +19,12 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final String status;
 
-    if (quantity == 0) {
+    if (item.isMissing) {
       status = 'Manjka';
-    } else if (quantity == 1) {
-      status = 'Imam';
+    } else if (item.hasDuplicates) {
+      status = 'Viški: ${item.duplicateCount}';
     } else {
-      status = 'Viški: ${quantity - 1}';
+      status = 'Imam';
     }
 
     return Card(
@@ -38,7 +37,7 @@ class ItemCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '#$itemNumber',
+                  '#${item.number}',
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -60,9 +59,10 @@ class ItemCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton.filledTonal(
+                  tooltip: 'Zmanjšaj količino',
                   visualDensity: VisualDensity.compact,
                   onPressed:
-                      quantity == 0 || isSaving ? null : onDecrease,
+                      item.isMissing || isSaving ? null : onDecrease,
                   icon: const Icon(Icons.remove),
                 ),
                 SizedBox(
@@ -77,7 +77,7 @@ class ItemCard extends StatelessWidget {
                             ),
                           )
                         : Text(
-                            '$quantity',
+                            '${item.quantity}',
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -86,6 +86,7 @@ class ItemCard extends StatelessWidget {
                   ),
                 ),
                 IconButton.filled(
+                  tooltip: 'Povečaj količino',
                   visualDensity: VisualDensity.compact,
                   onPressed: isSaving ? null : onIncrease,
                   icon: const Icon(Icons.add),

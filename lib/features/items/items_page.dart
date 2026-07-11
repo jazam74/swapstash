@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:swapstash/core/models/item.dart';
 import 'package:swapstash/core/services/item_service.dart';
 import 'package:swapstash/features/items/widgets/item_card.dart';
 import 'package:swapstash/features/items/widgets/item_statistics.dart';
@@ -25,7 +25,7 @@ class _ItemsPageState extends State<ItemsPage> {
   final TextEditingController _searchController =
       TextEditingController();
 
-  final Map<int, int> _localQuantities = {};
+  final Map<int, Item> _localItems = {};
   final Set<int> _savingItems = {};
 
   String _search = '';
@@ -36,57 +36,40 @@ class _ItemsPageState extends State<ItemsPage> {
     super.dispose();
   }
 
-  int _quantityFromData(Map<String, dynamic> data) {
-    final quantity = data['quantity'];
-
-    if (quantity is int) {
-      return quantity;
-    }
-
-    // Začasna združljivost s starejšimi zapisi.
-    switch (data['status']) {
-      case 'owned':
-        return 1;
-      case 'duplicate':
-        return 2;
-      case 'missing':
-      default:
-        return 0;
-    }
-  }
-
   Future<void> _changeQuantity({
-    required int itemNumber,
-    required int currentQuantity,
+    required Item item,
     required int change,
   }) async {
-    if (_savingItems.contains(itemNumber)) {
+    if (_savingItems.contains(item.number)) {
       return;
     }
 
-    final newQuantity =
-        (currentQuantity + change).clamp(0, 999);
+    final newQuantity = (item.quantity + change).clamp(0, 999);
 
-    if (newQuantity == currentQuantity) {
+    if (newQuantity == item.quantity) {
       return;
     }
+
+    final updatedItem = item.copyWith(
+      quantity: newQuantity,
+    );
 
     setState(() {
-      _localQuantities[itemNumber] = newQuantity;
-      _savingItems.add(itemNumber);
+      _localItems[item.number] = updatedItem;
+      _savingItems.add(item.number);
     });
 
     try {
       await _itemService.saveItemQuantity(
         collectionId: widget.collectionId,
-        itemNumber: itemNumber,
+        itemNumber: item.number,
         quantity: newQuantity,
       );
     } catch (error) {
       if (!mounted) return;
 
       setState(() {
-        _localQuantities[itemNumber] = currentQuantity;
+        _localItems[item.number] = item;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -99,45 +82,45 @@ class _ItemsPageState extends State<ItemsPage> {
     } finally {
       if (mounted) {
         setState(() {
-          _savingItems.remove(itemNumber);
+          _savingItems.remove(item.number);
         });
       }
     }
   }
 
-  Widget _summaryCard({
-    required String label,
-    required int value,
-    required IconData icon,
-  }) {
-    return Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 14,
-          ),
-          child: Column(
-            children: [
-              Icon(icon),
-              const SizedBox(height: 6),
-              Text(
-                '$value',
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
+  List<Item> _createCompleteItemList(
+    List<Item> storedItems,
+  ) {
+    final storedItemsByNumber = {
+      for (final item in storedItems)
+        if (item.number >= 1 &&
+            item.number <= widget.totalItems)
+          item.number: item,
+    };
+
+    return List.generate(
+      widget.totalItems,
+      (index) {
+        final itemNumber = index + 1;
+
+        return _localItems[itemNumber] ??
+            storedItemsByNumber[itemNumber] ??
+            Item(
+              number: itemNumber,
+              quantity: 0,
+            );
+      },
     );
+  }
+
+  List<Item> _filterItems(List<Item> items) {
+    if (_search.isEmpty) {
+      return items;
+    }
+
+    return items.where((item) {
+      return item.number.toString().contains(_search);
+    }).toList();
   }
 
   @override
@@ -146,8 +129,7 @@ class _ItemsPageState extends State<ItemsPage> {
       appBar: AppBar(
         title: Text(widget.collectionName),
       ),
-      body: StreamBuilder<
-          QuerySnapshot<Map<String, dynamic>>>(
+      body: StreamBuilder<List<Item>>(
         stream: _itemService.watchItems(widget.collectionId),
         builder: (context, snapshot) {
           if (snapshot.connectionState ==
@@ -171,60 +153,22 @@ class _ItemsPageState extends State<ItemsPage> {
             );
           }
 
-          final firestoreQuantities = <int, int>{};
-
-          for (final document in snapshot.data?.docs ?? []) {
-            final data = document.data();
-            final number = data['number'];
-
-            if (number is int) {
-              firestoreQuantities[number] =
-                  _quantityFromData(data);
-            }
-          }
-
-          final effectiveQuantities = <int, int>{};
-
-          for (
-            var itemNumber = 1;
-            itemNumber <= widget.totalItems;
-            itemNumber++
-          ) {
-            effectiveQuantities[itemNumber] =
-                _localQuantities[itemNumber] ??
-                firestoreQuantities[itemNumber] ??
-                0;
-          }
-
-          final ownedCount = effectiveQuantities.values
-              .where((quantity) => quantity > 0)
-              .length;
-
-          final duplicateCount =
-              effectiveQuantities.values.fold<int>(
-            0,
-            (sum, quantity) =>
-                sum + (quantity > 1 ? quantity - 1 : 0),
+          final items = _createCompleteItemList(
+            snapshot.data ?? [],
           );
 
-          final missingCount = effectiveQuantities.values
-              .where((quantity) => quantity == 0)
-              .length;
+          final visibleItems = _filterItems(items);
 
-          final progress = widget.totalItems == 0
-              ? 0.0
-              : ownedCount / widget.totalItems;
+          final ownedCount =
+              items.where((item) => item.isOwned).length;
 
-          final visibleItems =
-              effectiveQuantities.entries.where((entry) {
-            if (_search.isEmpty) {
-              return true;
-            }
+          final duplicateCount = items.fold<int>(
+            0,
+            (sum, item) => sum + item.duplicateCount,
+          );
 
-            return entry.key
-                .toString()
-                .contains(_search);
-          }).toList();
+          final missingCount =
+              items.where((item) => item.isMissing).length;
 
           return Column(
             children: [
@@ -259,48 +203,11 @@ class _ItemsPageState extends State<ItemsPage> {
                   },
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        _summaryCard(
-                          label: 'Zbranih',
-                          value: ownedCount,
-                          icon:
-                              Icons.check_circle_outline,
-                        ),
-                        const SizedBox(width: 8),
-                        _summaryCard(
-                          label: 'Viški',
-                          value: duplicateCount,
-                          icon: Icons.swap_horiz,
-                        ),
-                        const SizedBox(width: 8),
-                        _summaryCard(
-                          label: 'Manjka',
-                          value: missingCount,
-                          icon:
-                              Icons.remove_circle_outline,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    LinearProgressIndicator(
-                      value: progress,
-                      minHeight: 10,
-                      borderRadius:
-                          BorderRadius.circular(8),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '$ownedCount od '
-                      '${widget.totalItems} zbranih predmetov',
-                    ),
-                  ],
-                ),
+              ItemStatistics(
+                ownedCount: ownedCount,
+                duplicateCount: duplicateCount,
+                missingCount: missingCount,
+                totalItems: widget.totalItems,
               ),
               const Divider(),
               Expanded(
@@ -321,30 +228,22 @@ class _ItemsPageState extends State<ItemsPage> {
                         ),
                         itemCount: visibleItems.length,
                         itemBuilder: (context, index) {
-                          final itemNumber =
-                              visibleItems[index].key;
-                          final quantity =
-                              visibleItems[index].value;
+                          final item = visibleItems[index];
                           final isSaving =
-                              _savingItems.contains(
-                            itemNumber,
-                          );
+                              _savingItems.contains(item.number);
 
                           return ItemCard(
-                            itemNumber: itemNumber,
-                            quantity: quantity,
+                            item: item,
                             isSaving: isSaving,
                             onIncrease: () {
                               _changeQuantity(
-                                itemNumber: itemNumber,
-                                currentQuantity: quantity,
+                                item: item,
                                 change: 1,
                               );
                             },
                             onDecrease: () {
                               _changeQuantity(
-                                itemNumber: itemNumber,
-                                currentQuantity: quantity,
+                                item: item,
                                 change: -1,
                               );
                             },

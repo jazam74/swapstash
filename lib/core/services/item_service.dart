@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:swapstash/core/models/item.dart';
 
 class ItemService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -40,16 +41,50 @@ class ItemService {
       return;
     }
 
+    final item = Item(
+      number: itemNumber,
+      quantity: quantity,
+    );
+
     await document.set({
-      'number': itemNumber,
-      'quantity': quantity,
+      ...item.toMap(),
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> watchItems(
+  Stream<List<Item>> watchItems(
     String collectionId,
   ) {
-    return _itemsCollection(collectionId).snapshots();
+    return _itemsCollection(collectionId)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((document) {
+        final data = document.data();
+
+        // Začasna podpora starim zapisom s poljem "status".
+        if (!data.containsKey('quantity')) {
+          return Item(
+            number: data['number'] as int? ?? 0,
+            quantity: _legacyQuantityFromStatus(
+              data['status'] as String?,
+            ),
+          );
+        }
+
+        return Item.fromMap(data);
+      }).toList();
+    });
+  }
+
+  int _legacyQuantityFromStatus(String? status) {
+    switch (status) {
+      case 'owned':
+        return 1;
+      case 'duplicate':
+        return 2;
+      case 'missing':
+      default:
+        return 0;
+    }
   }
 }
