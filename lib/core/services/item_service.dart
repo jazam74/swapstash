@@ -22,16 +22,27 @@ class ItemService {
         .collection('items');
   }
 
-  Future<void> saveItemStatus({
+  Future<void> saveItemQuantity({
     required String collectionId,
     required int itemNumber,
-    required String status,
+    required int quantity,
   }) async {
-    await _itemsCollection(collectionId)
-        .doc(itemNumber.toString())
-        .set({
+    if (quantity < 0) {
+      throw ArgumentError('Količina ne sme biti negativna.');
+    }
+
+    final document = _itemsCollection(
+      collectionId,
+    ).doc(itemNumber.toString());
+
+    if (quantity == 0) {
+      await document.delete();
+      return;
+    }
+
+    await document.set({
       'number': itemNumber,
-      'status': status,
+      'quantity': quantity,
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
@@ -39,7 +50,6 @@ class ItemService {
   Stream<QuerySnapshot<Map<String, dynamic>>> watchItems(
     String collectionId,
   ) {
-    return _itemsCollection(collectionId)
-        .snapshots();
+    return _itemsCollection(collectionId).snapshots();
   }
 }
