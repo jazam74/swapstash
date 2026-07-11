@@ -31,9 +31,27 @@ class _ItemsPageState extends State<ItemsPage> {
   String _search = '';
 
   @override
+  void initState() {
+    super.initState();
+    _rebuildStats();
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _rebuildStats() async {
+    try {
+      await _itemService.rebuildCollectionStats(
+        collectionId: widget.collectionId,
+      );
+    } catch (error) {
+      debugPrint(
+        'Statistike zbirke ni bilo mogoče preračunati: $error',
+      );
+    }
   }
 
   Future<void> _changeQuantity({
@@ -173,8 +191,12 @@ class _ItemsPageState extends State<ItemsPage> {
           return Column(
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.fromLTRB(12, 12, 12, 4),
+                padding: const EdgeInsets.fromLTRB(
+                  12,
+                  12,
+                  12,
+                  4,
+                ),
                 child: TextField(
                   controller: _searchController,
                   keyboardType: TextInputType.number,

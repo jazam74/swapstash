@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/features/collections/collections_page.dart';
+import 'package:swapstash/features/dashboard/dashboard_page.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -12,7 +13,7 @@ class _HomeShellState extends State<HomeShell> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    Center(child: Text("Domov")),
+    DashboardPage(),
     CollectionsPage(),
     Center(child: Text("Menjave")),
     Center(child: Text("Sporočila")),
