@@ -354,6 +354,7 @@ class _ItemsPageState extends State<ItemsPage> {
                               _savingItems.contains(item.number);
 
                           return ItemCard(
+                            collectionId: widget.collectionId,
                             item: item,
                             isSaving: isSaving,
                             onIncrease: () {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/item.dart';
+import 'package:swapstash/core/services/item_image_service.dart';
 
-class ItemCard extends StatelessWidget {
+class ItemCard extends StatefulWidget {
+  final String collectionId;
   final Item item;
   final bool isSaving;
   final VoidCallback onIncrease;
@@ -9,6 +11,7 @@ class ItemCard extends StatelessWidget {
 
   const ItemCard({
     super.key,
+    required this.collectionId,
     required this.item,
     required this.isSaving,
     required this.onIncrease,
@@ -16,7 +19,97 @@ class ItemCard extends StatelessWidget {
   });
 
   @override
+  State<ItemCard> createState() => _ItemCardState();
+}
+
+class _ItemCardState extends State<ItemCard> {
+  final ItemImageService _imageService = ItemImageService();
+
+  late Future<String?> _imageUrlFuture;
+  bool _isUploadingImage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+  }
+
+  @override
+  void didUpdateWidget(covariant ItemCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.collectionId != widget.collectionId ||
+        oldWidget.item.number != widget.item.number) {
+      _loadImage();
+    }
+  }
+
+  void _loadImage() {
+    _imageUrlFuture = _imageService.getItemImageUrl(
+      collectionId: widget.collectionId,
+      itemNumber: widget.item.number,
+    );
+  }
+
+  Future<void> _pickAndUploadImage() async {
+    if (_isUploadingImage) return;
+
+    debugPrint(
+      'Odpiram galerijo za predmet #${widget.item.number}',
+    );
+
+    setState(() {
+      _isUploadingImage = true;
+    });
+
+    try {
+      final imageUrl =
+          await _imageService.pickAndUploadItemImage(
+        collectionId: widget.collectionId,
+        itemNumber: widget.item.number,
+      );
+
+      debugPrint('Rezultat: $imageUrl');
+
+      if (!mounted || imageUrl == null) {
+        return;
+      }
+
+      setState(() {
+        _imageUrlFuture = Future.value(imageUrl);
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Slika uspešno naložena.'),
+        ),
+      );
+    } catch (error, stackTrace) {
+      debugPrint('NAPAKA: $error');
+      debugPrintStack(stackTrace: stackTrace);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Napaka pri nalaganju slike:\n$error',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploadingImage = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final item = widget.item;
+
     final Color backgroundColor;
     final Color foregroundColor;
     final IconData statusIcon;
@@ -39,8 +132,6 @@ class ItemCard extends StatelessWidget {
       status = 'Imam';
     }
 
-    final imagePath = 'assets/items/${item.number}.jpg';
-
     return Card(
       margin: EdgeInsets.zero,
       color: backgroundColor,
@@ -50,31 +141,84 @@ class ItemCard extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  width: double.infinity,
-                  color: Colors.white.withValues(alpha: 0.55),
-                  child: Image.asset(
-                    imagePath,
-                    fit: BoxFit.cover,
-                    errorBuilder: (
-                      context,
-                      error,
-                      stackTrace,
-                    ) {
-                      return Center(
-                        child: Icon(
-                          Icons.image_not_supported_outlined,
-                          size: 42,
-                          color: foregroundColor.withValues(
-                            alpha: 0.65,
-                          ),
-                        ),
-                      );
-                    },
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      color: Colors.white.withValues(alpha: 0.6),
+                      child: FutureBuilder<String?>(
+                        future: _imageUrlFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          final imageUrl = snapshot.data;
+
+                          if (imageUrl == null) {
+                            return Center(
+                              child: Icon(
+                                Icons.image_outlined,
+                                size: 48,
+                                color: foregroundColor,
+                              ),
+                            );
+                          }
+
+                          return Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) => Center(
+                              child: Icon(
+                                Icons.broken_image_outlined,
+                                size: 48,
+                                color: foregroundColor,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                ),
+
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: Material(
+                      color: Colors.white,
+                      elevation: 3,
+                      shape: const CircleBorder(),
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: _isUploadingImage
+                            ? null
+                            : _pickAndUploadImage,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: _isUploadingImage
+                              ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child:
+                                      CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.add_a_photo_outlined,
+                                  size: 24,
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 8),
@@ -82,15 +226,14 @@ class ItemCard extends StatelessWidget {
               children: [
                 Icon(
                   statusIcon,
-                  size: 20,
                   color: foregroundColor,
                 ),
                 const SizedBox(width: 6),
                 Text(
                   '#${item.number}',
                   style: TextStyle(
-                    fontSize: 17,
                     fontWeight: FontWeight.bold,
+                    fontSize: 17,
                     color: foregroundColor,
                   ),
                 ),
@@ -100,8 +243,8 @@ class ItemCard extends StatelessWidget {
                     status,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontWeight: FontWeight.w700,
                       color: foregroundColor,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -109,23 +252,25 @@ class ItemCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment:
+                  MainAxisAlignment.center,
               children: [
                 IconButton.filledTonal(
-                  tooltip: 'Zmanjšaj količino',
-                  visualDensity: VisualDensity.compact,
-                  onPressed:
-                      item.isMissing || isSaving ? null : onDecrease,
+                  onPressed: item.isMissing ||
+                          widget.isSaving
+                      ? null
+                      : widget.onDecrease,
                   icon: const Icon(Icons.remove),
                 ),
                 SizedBox(
                   width: 36,
                   child: Center(
-                    child: isSaving
+                    child: widget.isSaving
                         ? const SizedBox(
                             width: 18,
                             height: 18,
-                            child: CircularProgressIndicator(
+                            child:
+                                CircularProgressIndicator(
                               strokeWidth: 2,
                             ),
                           )
@@ -133,16 +278,17 @@ class ItemCard extends StatelessWidget {
                             '${item.quantity}',
                             style: TextStyle(
                               fontSize: 21,
-                              fontWeight: FontWeight.bold,
+                              fontWeight:
+                                  FontWeight.bold,
                               color: foregroundColor,
                             ),
                           ),
                   ),
                 ),
                 IconButton.filled(
-                  tooltip: 'Povečaj količino',
-                  visualDensity: VisualDensity.compact,
-                  onPressed: isSaving ? null : onIncrease,
+                  onPressed: widget.isSaving
+                      ? null
+                      : widget.onIncrease,
                   icon: const Icon(Icons.add),
                 ),
               ],
