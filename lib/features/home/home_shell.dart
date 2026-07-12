@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/features/collections/collections_page.dart';
 import 'package:swapstash/features/dashboard/dashboard_page.dart';
+import 'package:swapstash/features/trades/trades_page.dart';
+import 'package:swapstash/features/messages/messages_page.dart';
+import 'package:swapstash/features/profile/profile_page.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -15,9 +18,9 @@ class _HomeShellState extends State<HomeShell> {
   final List<Widget> _pages = const [
     DashboardPage(),
     CollectionsPage(),
-    Center(child: Text("Menjave")),
-    Center(child: Text("Sporočila")),
-    Center(child: Text("Profil")),
+    TradesPage(),
+    MessagesPage(),
+    ProfilePage(),
   ];
 
   @override

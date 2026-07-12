@@ -12,9 +12,11 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  final _displayNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
   final AuthService _authService = AuthService();
 
   bool _isLogin = true;
@@ -23,6 +25,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   void dispose() {
+    _displayNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -41,6 +44,8 @@ class _AuthScreenState extends State<AuthScreen> {
     });
 
     try {
+      final displayName =
+          _displayNameController.text.trim();
       final email = _emailController.text.trim();
       final password = _passwordController.text;
 
@@ -53,6 +58,7 @@ class _AuthScreenState extends State<AuthScreen> {
         await _authService.register(
           email: email,
           password: password,
+          displayName: displayName,
         );
       }
     } on FirebaseAuthException catch (error) {
@@ -60,15 +66,30 @@ class _AuthScreenState extends State<AuthScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(_firebaseErrorMessage(error.code)),
+          content: Text(
+            _firebaseErrorMessage(error.code),
+          ),
         ),
       );
-    } catch (_) {
+    } on ArgumentError catch (error) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Prišlo je do nepričakovane napake.'),
+        SnackBar(
+          content: Text(
+            error.message?.toString() ??
+                'Podatki niso veljavni.',
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Prišlo je do nepričakovane napake: $error',
+          ),
         ),
       );
     } finally {
@@ -97,14 +118,18 @@ class _AuthScreenState extends State<AuthScreen> {
       case 'network-request-failed':
         return 'Preveri internetno povezavo.';
       default:
-        return 'Prijava ni uspela. Poskusi ponovno.';
+        return 'Prijava ali registracija ni uspela.';
     }
   }
 
   void _switchMode() {
     setState(() {
       _isLogin = !_isLogin;
-      _confirmPasswordController.clear();
+
+      if (_isLogin) {
+        _displayNameController.clear();
+        _confirmPasswordController.clear();
+      }
     });
   }
 
@@ -147,30 +172,77 @@ class _AuthScreenState extends State<AuthScreen> {
                         fontSize: 16,
                         color: Colors.grey.shade700,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
+
+                    if (!_isLogin) ...[
+                      TextFormField(
+                        controller: _displayNameController,
+                        textInputAction: TextInputAction.next,
+                        textCapitalization:
+                            TextCapitalization.words,
+                        autocorrect: false,
+                        decoration: const InputDecoration(
+                          labelText: 'Prikazno ime',
+                          hintText: 'Na primer Uroš',
+                          prefixIcon:
+                              Icon(Icons.person_outline),
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (_isLogin) {
+                            return null;
+                          }
+
+                          final displayName =
+                              value?.trim() ?? '';
+
+                          if (displayName.isEmpty) {
+                            return 'Vpiši prikazno ime.';
+                          }
+
+                          if (displayName.length < 2) {
+                            return 'Ime mora imeti najmanj 2 znaka.';
+                          }
+
+                          if (displayName.length > 40) {
+                            return 'Ime ima lahko največ 40 znakov.';
+                          }
+
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
                     TextFormField(
-  controller: _emailController,
-  keyboardType: TextInputType.text,
-  textInputAction: TextInputAction.next,
-  autocorrect: false,
-  enableSuggestions: false,
-  autofillHints: const [
-    AutofillHints.email,
-  ],
-  decoration: const InputDecoration(
-    labelText: 'E-poštni naslov',
-    prefixIcon: Icon(Icons.email_outlined),
-    border: OutlineInputBorder(),
-  ),
+                      controller: _emailController,
+                      keyboardType:
+                          TextInputType.emailAddress,
+                      textInputAction:
+                          TextInputAction.next,
+                      autocorrect: false,
+                      enableSuggestions: false,
+                      autofillHints: const [
+                        AutofillHints.email,
+                      ],
+                      decoration: const InputDecoration(
+                        labelText: 'E-poštni naslov',
+                        prefixIcon:
+                            Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(),
+                      ),
                       validator: (value) {
-                        final email = value?.trim() ?? '';
+                        final email =
+                            value?.trim() ?? '';
 
                         if (email.isEmpty) {
                           return 'Vpiši e-poštni naslov.';
                         }
 
-                        if (!email.contains('@')) {
+                        if (!email.contains('@') ||
+                            !email.contains('.')) {
                           return 'Vpiši veljaven e-poštni naslov.';
                         }
 
@@ -178,31 +250,43 @@ class _AuthScreenState extends State<AuthScreen> {
                       },
                     ),
                     const SizedBox(height: 16),
+
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _hidePassword,
+                      textInputAction: _isLogin
+                          ? TextInputAction.done
+                          : TextInputAction.next,
                       autofillHints: const [
                         AutofillHints.password,
                       ],
                       decoration: InputDecoration(
                         labelText: 'Geslo',
-                        prefixIcon: const Icon(Icons.lock_outline),
-                        border: const OutlineInputBorder(),
+                        prefixIcon:
+                            const Icon(Icons.lock_outline),
+                        border:
+                            const OutlineInputBorder(),
                         suffixIcon: IconButton(
+                          tooltip: _hidePassword
+                              ? 'Prikaži geslo'
+                              : 'Skrij geslo',
                           onPressed: () {
                             setState(() {
-                              _hidePassword = !_hidePassword;
+                              _hidePassword =
+                                  !_hidePassword;
                             });
                           },
                           icon: Icon(
                             _hidePassword
                                 ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
+                                : Icons
+                                    .visibility_off_outlined,
                           ),
                         ),
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null ||
+                            value.isEmpty) {
                           return 'Vpiši geslo.';
                         }
 
@@ -212,48 +296,87 @@ class _AuthScreenState extends State<AuthScreen> {
 
                         return null;
                       },
+                      onFieldSubmitted: (_) {
+                        if (_isLogin && !_isLoading) {
+                          _submit();
+                        }
+                      },
                     ),
+
                     if (!_isLogin) ...[
                       const SizedBox(height: 16),
                       TextFormField(
-                        controller: _confirmPasswordController,
+                        controller:
+                            _confirmPasswordController,
                         obscureText: _hidePassword,
-                        decoration: const InputDecoration(
+                        textInputAction:
+                            TextInputAction.done,
+                        decoration:
+                            const InputDecoration(
                           labelText: 'Ponovi geslo',
-                          prefixIcon: Icon(Icons.lock_reset),
+                          prefixIcon:
+                              Icon(Icons.lock_reset),
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
-                          if (_isLogin) return null;
+                          if (_isLogin) {
+                            return null;
+                          }
 
-                          if (value != _passwordController.text) {
+                          if (value == null ||
+                              value.isEmpty) {
+                            return 'Ponovno vpiši geslo.';
+                          }
+
+                          if (value !=
+                              _passwordController.text) {
                             return 'Gesli se ne ujemata.';
                           }
 
                           return null;
                         },
+                        onFieldSubmitted: (_) {
+                          if (!_isLoading) {
+                            _submit();
+                          }
+                        },
                       ),
                     ],
+
                     const SizedBox(height: 24),
-                    FilledButton(
-                      onPressed: _isLoading ? null : _submit,
-                      child: _isLoading
-                          ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : Text(
-                              _isLogin
-                                  ? 'Prijava'
-                                  : 'Ustvari račun',
-                            ),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed:
+                            _isLoading ? null : _submit,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.symmetric(
+                            vertical: 12,
+                          ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child:
+                                      CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text(
+                                  _isLogin
+                                      ? 'Prijava'
+                                      : 'Ustvari račun',
+                                ),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
+
                     TextButton(
-                      onPressed: _isLoading ? null : _switchMode,
+                      onPressed:
+                          _isLoading ? null : _switchMode,
                       child: Text(
                         _isLogin
                             ? 'Še nimaš računa? Registriraj se'
