@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swapstash/core/models/user_profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:swapstash/core/models/user_collection.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -87,5 +89,21 @@ class FirestoreService {
               'uid': doc.id,
             }))
         .toList();
+  }
+  Future<void> addCollectionToUser(
+    UserCollection collection,
+  ) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      throw Exception("User not logged in.");
+    }
+
+    await _db
+        .collection('users')
+        .doc(user.uid)
+        .collection('collections')
+        .doc(collection.catalogCollectionId)
+        .set(collection.toMap());
   }
 }

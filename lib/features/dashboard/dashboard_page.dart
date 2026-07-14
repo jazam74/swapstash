@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/collection.dart';
 import 'package:swapstash/core/services/collection_service.dart';
+import 'package:swapstash/features/catalog/catalog_collections_page.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -12,7 +13,21 @@ class DashboardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Domov'),
-      ),
+        actions: [
+          IconButton(
+            tooltip: 'Katalog zbirk',
+            icon: const Icon(Icons.menu_book),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const CatalogCollectionsPage(),
+                ),
+              );
+           },
+         ),
+       ],
+     ),
       body: StreamBuilder<List<Collection>>(
         stream: collectionService.watchCollections(),
         builder: (context, snapshot) {

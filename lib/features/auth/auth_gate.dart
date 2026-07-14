@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:swapstash/features/auth/auth_screen.dart';
 import 'package:swapstash/features/home/home_shell.dart';
 
 class AuthGate extends StatelessWidget {
@@ -19,10 +20,10 @@ class AuthGate extends StatelessWidget {
         }
 
         if (snapshot.hasData) {
-          return HomeShell();
+          return const HomeShell();
         }
 
-        return const HomeShell();
+        return const AuthScreen();
       },
     );
   }
