@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/collection.dart';
 import 'package:swapstash/core/services/collection_service.dart';
 import 'package:swapstash/features/catalog/catalog_collections_page.dart';
+import 'package:swapstash/features/collections/my_collections_v2_page.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -25,7 +26,20 @@ class DashboardPage extends StatelessWidget {
                 ),
               );
            },
-         ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.folder_copy),
+            tooltip: 'Moje zbirke V2',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const MyCollectionsV2Page(),
+                ),
+              );
+            },
+          ),
        ],
      ),
       body: StreamBuilder<List<Collection>>(
