@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swapstash/core/models/user_item.dart';
+import 'package:swapstash/core/models/collection_stats.dart';
 
 class UserItemService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -169,6 +170,40 @@ class UserItemService {
             document.data(),
           ),
       };
+    });
+  }
+  Stream<CollectionStats> watchCollectionStats({
+    required String collectionId,
+  }) {
+    return _itemsReference(collectionId)
+        .snapshots()
+        .map((snapshot) {
+      int owned = 0;
+      int duplicates = 0;
+      int totalQuantity = 0;
+
+      for (final doc in snapshot.docs) {
+        final item = UserItem.fromMap(
+          doc.id,
+          doc.data(),
+        );
+
+        if (item.quantity > 0) {
+        owned++;
+        }
+
+        totalQuantity += item.quantity;
+
+        if (item.quantity > 1) {
+          duplicates += item.duplicateCount;
+        }
+      }
+
+      return CollectionStats(
+        owned: owned,
+        duplicates: duplicates,
+        totalQuantity: totalQuantity,
+      );
     });
   }
 }

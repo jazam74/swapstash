@@ -4,12 +4,11 @@ import 'package:swapstash/core/models/catalog_item.dart';
 import 'package:swapstash/core/models/user_item.dart';
 import 'package:swapstash/core/services/catalog_item_service.dart';
 import 'package:swapstash/core/services/user_item_service.dart';
-import 'package:swapstash/features/catalog/item_detail_page.dart';
 import 'package:swapstash/features/catalog/widgets/catalog_progress.dart';
 import 'package:swapstash/features/catalog/widgets/catalog_search_bar.dart';
-import 'package:swapstash/features/catalog/widgets/item_card.dart';
-
-enum InventoryFilter { all, owned, missing, duplicates }
+import 'package:swapstash/features/catalog/widgets/catalog_filter_bar.dart';
+import 'package:swapstash/features/catalog/widgets/catalog_grid.dart';
+import 'package:swapstash/core/models/collection_stats.dart';
 
 class CatalogItemsPage extends StatefulWidget {
   final CatalogCollection collection;
@@ -143,13 +142,19 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
 
               return Column(
                 children: [
-                  StreamBuilder<int>(
-                    stream: _userItemService.watchOwnedItemCount(
+                  StreamBuilder<CollectionStats>(
+                    stream: _userItemService.watchCollectionStats(
                       collectionId: collection.id,
                     ),
                     builder: (context, snapshot) {
                       return CatalogProgress(
-                        ownedCount: snapshot.data ?? 0,
+                        stats:
+                            snapshot.data ??
+                            const CollectionStats(
+                              owned: 0,
+                              duplicates: 0,
+                              totalQuantity: 0,
+                            ),
                         totalCount: collection.totalItems,
                       );
                     },
@@ -161,97 +166,21 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
                       });
                     },
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
-                    child: Row(
-                      children: [
-                        FilterChip(
-                          label: const Text('Vse'),
-                          selected: _selectedFilter == InventoryFilter.all,
-                          onSelected: (_) {
-                            setState(() {
-                              _selectedFilter = InventoryFilter.all;
-                            });
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        FilterChip(
-                          label: const Text('Imam'),
-                          selected: _selectedFilter == InventoryFilter.owned,
-                          onSelected: (_) {
-                            setState(() {
-                              _selectedFilter = InventoryFilter.owned;
-                            });
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        FilterChip(
-                          label: const Text('Manjkajo'),
-                          selected: _selectedFilter == InventoryFilter.missing,
-                          onSelected: (_) {
-                            setState(() {
-                              _selectedFilter = InventoryFilter.missing;
-                            });
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        FilterChip(
-                          label: const Text('Viški'),
-                          selected:
-                              _selectedFilter == InventoryFilter.duplicates,
-                          onSelected: (_) {
-                            setState(() {
-                              _selectedFilter = InventoryFilter.duplicates;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
+                  CatalogFilterBar(
+                    selectedFilter: _selectedFilter,
+                    onChanged: (filter) {
+                      setState(() {
+                        _selectedFilter = filter;
+                      });
+                    },
                   ),
                   Expanded(
-                    child: filteredItems.isEmpty
-                        ? Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(24),
-                              child: Text(
-                                _emptyMessage(),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          )
-                        : GridView.builder(
-                            padding: const EdgeInsets.all(12),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                  childAspectRatio: 1,
-                                ),
-                            itemCount: filteredItems.length,
-                            itemBuilder: (context, index) {
-                              final item = filteredItems[index];
-
-                              final quantity =
-                                  userItems[item.id]?.quantity ?? 0;
-
-                              return ItemCard(
-                                number: item.number,
-                                quantity: quantity,
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_) => ItemDetailPage(
-                                        collection: collection,
-                                        item: item,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                    child: CatalogGrid(
+                      collection: collection,
+                      items: filteredItems,
+                      userItems: userItems,
+                      emptyMessage: _emptyMessage(),
+                    ),
                   ),
                 ],
               );
