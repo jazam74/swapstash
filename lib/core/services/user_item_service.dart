@@ -138,6 +138,14 @@ class UserItemService {
     );
   }
 
+  Stream<int> watchOwnedItemCount({
+    required String collectionId,
+  }) {
+    return _itemsReference(collectionId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
   Future<void> markAsMissing({
     required String collectionId,
     required String itemId,

@@ -22,7 +22,28 @@ class CatalogItemsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(collection.name),
+        title: StreamBuilder<int>(
+          stream: userItemService.watchOwnedItemCount(
+            collectionId: collection.id,
+          ),
+          builder: (context, snapshot) {
+            final ownedCount = snapshot.data ?? 0;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(collection.name),
+                Text(
+                  '$ownedCount / ${collection.totalItems}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall,
+                ),
+              ],
+            );
+          },
+        ),
       ),
       body: StreamBuilder<List<CatalogItem>>(
         stream: itemService.watchItems(collection.id),
