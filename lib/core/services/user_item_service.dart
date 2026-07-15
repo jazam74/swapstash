@@ -156,4 +156,19 @@ class UserItemService {
       quantity: 0,
     );
   }
+  Stream<Map<String, UserItem>> watchItemsMap({
+    required String collectionId,
+  }) {
+    return _itemsReference(collectionId)
+        .snapshots()
+        .map((snapshot) {
+      return {
+        for (final document in snapshot.docs)
+          document.id: UserItem.fromMap(
+            document.id,
+            document.data(),
+          ),
+      };
+    });
+  }
 }

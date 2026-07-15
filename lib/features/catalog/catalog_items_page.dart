@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/catalog_item.dart';
-import 'package:swapstash/core/services/catalog_item_service.dart';
-import 'package:swapstash/features/catalog/widgets/item_card.dart';
-import 'package:swapstash/features/catalog/item_detail_page.dart';
 import 'package:swapstash/core/models/user_item.dart';
+import 'package:swapstash/core/services/catalog_item_service.dart';
 import 'package:swapstash/core/services/user_item_service.dart';
+import 'package:swapstash/features/catalog/item_detail_page.dart';
+import 'package:swapstash/features/catalog/widgets/item_card.dart';
+import 'package:swapstash/features/catalog/widgets/catalog_progress.dart';
 
-class CatalogItemsPage extends StatelessWidget {
+enum InventoryFilter {
+  all,
+  owned,
+  missing,
+  duplicates,
+}
+
+class CatalogItemsPage extends StatefulWidget {
   final CatalogCollection collection;
 
   const CatalogItemsPage({
@@ -16,106 +24,298 @@ class CatalogItemsPage extends StatelessWidget {
   });
 
   @override
+  State<CatalogItemsPage> createState() =>
+      _CatalogItemsPageState();
+}
+
+class _CatalogItemsPageState extends State<CatalogItemsPage> {
+  final CatalogItemService _catalogItemService =
+      CatalogItemService();
+
+  final UserItemService _userItemService =
+      UserItemService();
+
+  InventoryFilter _selectedFilter = InventoryFilter.all;
+  String _searchQuery = '';
+
+  List<CatalogItem> _filterItems({
+    required List<CatalogItem> catalogItems,
+    required Map<String, UserItem> userItems,
+  }) {
+    return catalogItems.where((item) {
+      final query = _searchQuery.trim().toLowerCase();
+
+      if (query.isNotEmpty) {
+        final matches = item.number
+                .toLowerCase()
+                .contains(query) ||
+            item.name
+                .toLowerCase()
+                .contains(query);
+
+        if (!matches) {
+          return false;
+        }
+      }
+      final quantity =
+          userItems[item.id]?.quantity ?? 0;
+
+      switch (_selectedFilter) {
+        case InventoryFilter.all:
+          return true;
+
+        case InventoryFilter.owned:
+          return quantity > 0;
+
+        case InventoryFilter.missing:
+          return quantity == 0;
+
+        case InventoryFilter.duplicates:
+          return quantity > 1;
+      }
+    }).toList();
+  }
+
+  String _emptyMessage() {
+    switch (_selectedFilter) {
+      case InventoryFilter.all:
+        return 'V tej zbirki še ni predmetov.';
+
+      case InventoryFilter.owned:
+        return 'Nimaš še nobenega predmeta.';
+
+      case InventoryFilter.missing:
+        return 'Zbirka je popolna. Ni manjkajočih predmetov.';
+
+      case InventoryFilter.duplicates:
+        return 'Nimaš še nobenih viškov.';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final itemService = CatalogItemService();
-    final userItemService = UserItemService();
+    final collection = widget.collection;
 
     return Scaffold(
       appBar: AppBar(
-        title: StreamBuilder<int>(
-          stream: userItemService.watchOwnedItemCount(
-            collectionId: collection.id,
-          ),
-          builder: (context, snapshot) {
-            final ownedCount = snapshot.data ?? 0;
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(collection.name),
-                Text(
-                  '$ownedCount / ${collection.totalItems}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall,
-                ),
-              ],
-            );
-          },
-        ),
+        title: Text(collection.name),
       ),
       body: StreamBuilder<List<CatalogItem>>(
-        stream: itemService.watchItems(collection.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState ==
+        stream: _catalogItemService.watchItems(
+          collection.id,
+        ),
+        builder: (context, catalogSnapshot) {
+          if (catalogSnapshot.connectionState ==
                   ConnectionState.waiting &&
-              !snapshot.hasData) {
+              !catalogSnapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          if (snapshot.hasError) {
+          if (catalogSnapshot.hasError) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
                   'Predmetov ni bilo mogoče naložiti:\n'
-                  '${snapshot.error}',
+                  '${catalogSnapshot.error}',
                   textAlign: TextAlign.center,
                 ),
               ),
             );
           }
 
-          final items = snapshot.data ?? [];
+          final catalogItems =
+              catalogSnapshot.data ?? [];
 
-          if (items.isEmpty) {
-            return const Center(
-              child: Text(
-                'V tej zbirki še ni predmetov.',
-              ),
-            );
-          }
-
-          return GridView.builder(
-            padding: const EdgeInsets.all(12),
-            gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1,
+          return StreamBuilder<Map<String, UserItem>>(
+            stream: _userItemService.watchItemsMap(
+              collectionId: collection.id,
             ),
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              final item = items[index];
+            builder: (context, userItemsSnapshot) {
+              if (userItemsSnapshot.connectionState ==
+                      ConnectionState.waiting &&
+                  !userItemsSnapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
 
-              return StreamBuilder<UserItem?>(
-                stream: userItemService.watchItem(
-                  collectionId: collection.id,
-                  itemId: item.id,
-                ),
-                builder: (context, userItemSnapshot) {
-                  final quantity =
-                      userItemSnapshot.data?.quantity ?? 0;
+              if (userItemsSnapshot.hasError) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      'Inventarja ni bilo mogoče naložiti:\n'
+                      '${userItemsSnapshot.error}',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              }
 
-                  return ItemCard(
-                    number: item.number,
-                    quantity: quantity,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => ItemDetailPage(
-                            collection: collection,
-                            item: item,
-                          ),
-                       ),
-                     );
+              final userItems =
+                  userItemsSnapshot.data ?? {};
+
+              final filteredItems = _filterItems(
+                catalogItems: catalogItems,
+                userItems: userItems,
+              );
+
+              return Column(
+                children: [
+                  StreamBuilder<int>(
+                    stream: _userItemService.watchOwnedItemCount(
+                      collectionId: collection.id,
+                    ),
+                    builder: (context, snapshot) {
+                      return CatalogProgress(
+                        ownedCount: snapshot.data ?? 0,
+                        totalCount: collection.totalItems,
+                      );
                     },
-                  );
-               },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      12,
+                      12,
+                      12,
+                      4,
+                  ),
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      hintText: 'Išči številko ali ime...',
+                      border: OutlineInputBorder(),
+                   ),
+                   onChanged: (value) {
+                     setState(() {
+                       _searchQuery = value;
+                     });
+                    },
+                   ),
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.fromLTRB(
+                      12,
+                      12,
+                      12,
+                      4,
+                    ),
+                    child: Row(
+                      children: [
+                        FilterChip(
+                          label: const Text('Vse'),
+                          selected:
+                              _selectedFilter ==
+                              InventoryFilter.all,
+                          onSelected: (_) {
+                            setState(() {
+                              _selectedFilter =
+                                  InventoryFilter.all;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        FilterChip(
+                          label: const Text('Imam'),
+                          selected:
+                              _selectedFilter ==
+                              InventoryFilter.owned,
+                          onSelected: (_) {
+                            setState(() {
+                              _selectedFilter =
+                                  InventoryFilter.owned;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        FilterChip(
+                          label: const Text('Manjkajo'),
+                          selected:
+                              _selectedFilter ==
+                              InventoryFilter.missing,
+                          onSelected: (_) {
+                            setState(() {
+                              _selectedFilter =
+                                  InventoryFilter.missing;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        FilterChip(
+                          label: const Text('Viški'),
+                          selected:
+                              _selectedFilter ==
+                              InventoryFilter.duplicates,
+                          onSelected: (_) {
+                            setState(() {
+                              _selectedFilter =
+                                  InventoryFilter.duplicates;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: filteredItems.isEmpty
+                        ? Center(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.all(24),
+                              child: Text(
+                                _emptyMessage(),
+                                textAlign:
+                                    TextAlign.center,
+                              ),
+                            ),
+                          )
+                        : GridView.builder(
+                            padding:
+                                const EdgeInsets.all(12),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 1,
+                            ),
+                            itemCount:
+                                filteredItems.length,
+                            itemBuilder:
+                                (context, index) {
+                              final item =
+                                  filteredItems[index];
+
+                              final quantity =
+                                  userItems[item.id]
+                                          ?.quantity ??
+                                      0;
+
+                              return ItemCard(
+                                number: item.number,
+                                quantity: quantity,
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .push(
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          ItemDetailPage(
+                                        collection:
+                                            collection,
+                                        item: item,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                  ),
+                ],
               );
             },
           );
