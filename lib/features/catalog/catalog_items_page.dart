@@ -5,35 +5,25 @@ import 'package:swapstash/core/models/user_item.dart';
 import 'package:swapstash/core/services/catalog_item_service.dart';
 import 'package:swapstash/core/services/user_item_service.dart';
 import 'package:swapstash/features/catalog/item_detail_page.dart';
-import 'package:swapstash/features/catalog/widgets/item_card.dart';
 import 'package:swapstash/features/catalog/widgets/catalog_progress.dart';
+import 'package:swapstash/features/catalog/widgets/catalog_search_bar.dart';
+import 'package:swapstash/features/catalog/widgets/item_card.dart';
 
-enum InventoryFilter {
-  all,
-  owned,
-  missing,
-  duplicates,
-}
+enum InventoryFilter { all, owned, missing, duplicates }
 
 class CatalogItemsPage extends StatefulWidget {
   final CatalogCollection collection;
 
-  const CatalogItemsPage({
-    super.key,
-    required this.collection,
-  });
+  const CatalogItemsPage({super.key, required this.collection});
 
   @override
-  State<CatalogItemsPage> createState() =>
-      _CatalogItemsPageState();
+  State<CatalogItemsPage> createState() => _CatalogItemsPageState();
 }
 
 class _CatalogItemsPageState extends State<CatalogItemsPage> {
-  final CatalogItemService _catalogItemService =
-      CatalogItemService();
+  final CatalogItemService _catalogItemService = CatalogItemService();
 
-  final UserItemService _userItemService =
-      UserItemService();
+  final UserItemService _userItemService = UserItemService();
 
   InventoryFilter _selectedFilter = InventoryFilter.all;
   String _searchQuery = '';
@@ -42,23 +32,20 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
     required List<CatalogItem> catalogItems,
     required Map<String, UserItem> userItems,
   }) {
-    return catalogItems.where((item) {
-      final query = _searchQuery.trim().toLowerCase();
+    final query = _searchQuery.trim().toLowerCase();
 
+    return catalogItems.where((item) {
       if (query.isNotEmpty) {
-        final matches = item.number
-                .toLowerCase()
-                .contains(query) ||
-            item.name
-                .toLowerCase()
-                .contains(query);
+        final matches =
+            item.number.toLowerCase().contains(query) ||
+            item.name.toLowerCase().contains(query);
 
         if (!matches) {
           return false;
         }
       }
-      final quantity =
-          userItems[item.id]?.quantity ?? 0;
+
+      final quantity = userItems[item.id]?.quantity ?? 0;
 
       switch (_selectedFilter) {
         case InventoryFilter.all:
@@ -77,6 +64,10 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
   }
 
   String _emptyMessage() {
+    if (_searchQuery.trim().isNotEmpty) {
+      return 'Za iskani izraz ni rezultatov.';
+    }
+
     switch (_selectedFilter) {
       case InventoryFilter.all:
         return 'V tej zbirki še ni predmetov.';
@@ -97,20 +88,13 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
     final collection = widget.collection;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(collection.name),
-      ),
+      appBar: AppBar(title: Text(collection.name)),
       body: StreamBuilder<List<CatalogItem>>(
-        stream: _catalogItemService.watchItems(
-          collection.id,
-        ),
+        stream: _catalogItemService.watchItems(collection.id),
         builder: (context, catalogSnapshot) {
-          if (catalogSnapshot.connectionState ==
-                  ConnectionState.waiting &&
+          if (catalogSnapshot.connectionState == ConnectionState.waiting &&
               !catalogSnapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (catalogSnapshot.hasError) {
@@ -126,20 +110,15 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
             );
           }
 
-          final catalogItems =
-              catalogSnapshot.data ?? [];
+          final catalogItems = catalogSnapshot.data ?? <CatalogItem>[];
 
           return StreamBuilder<Map<String, UserItem>>(
-            stream: _userItemService.watchItemsMap(
-              collectionId: collection.id,
-            ),
+            stream: _userItemService.watchItemsMap(collectionId: collection.id),
             builder: (context, userItemsSnapshot) {
               if (userItemsSnapshot.connectionState ==
                       ConnectionState.waiting &&
                   !userItemsSnapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               }
 
               if (userItemsSnapshot.hasError) {
@@ -155,8 +134,7 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
                 );
               }
 
-              final userItems =
-                  userItemsSnapshot.data ?? {};
+              final userItems = userItemsSnapshot.data ?? <String, UserItem>{};
 
               final filteredItems = _filterItems(
                 catalogItems: catalogItems,
@@ -176,71 +154,44 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
                       );
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      12,
-                      12,
-                      12,
-                      4,
-                  ),
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      hintText: 'Išči številko ali ime...',
-                      border: OutlineInputBorder(),
-                   ),
-                   onChanged: (value) {
-                     setState(() {
-                       _searchQuery = value;
-                     });
+                  CatalogSearchBar(
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
                     },
-                   ),
                   ),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.fromLTRB(
-                      12,
-                      12,
-                      12,
-                      4,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
                     child: Row(
                       children: [
                         FilterChip(
                           label: const Text('Vse'),
-                          selected:
-                              _selectedFilter ==
-                              InventoryFilter.all,
+                          selected: _selectedFilter == InventoryFilter.all,
                           onSelected: (_) {
                             setState(() {
-                              _selectedFilter =
-                                  InventoryFilter.all;
+                              _selectedFilter = InventoryFilter.all;
                             });
                           },
                         ),
                         const SizedBox(width: 8),
                         FilterChip(
                           label: const Text('Imam'),
-                          selected:
-                              _selectedFilter ==
-                              InventoryFilter.owned,
+                          selected: _selectedFilter == InventoryFilter.owned,
                           onSelected: (_) {
                             setState(() {
-                              _selectedFilter =
-                                  InventoryFilter.owned;
+                              _selectedFilter = InventoryFilter.owned;
                             });
                           },
                         ),
                         const SizedBox(width: 8),
                         FilterChip(
                           label: const Text('Manjkajo'),
-                          selected:
-                              _selectedFilter ==
-                              InventoryFilter.missing,
+                          selected: _selectedFilter == InventoryFilter.missing,
                           onSelected: (_) {
                             setState(() {
-                              _selectedFilter =
-                                  InventoryFilter.missing;
+                              _selectedFilter = InventoryFilter.missing;
                             });
                           },
                         ),
@@ -248,12 +199,10 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
                         FilterChip(
                           label: const Text('Viški'),
                           selected:
-                              _selectedFilter ==
-                              InventoryFilter.duplicates,
+                              _selectedFilter == InventoryFilter.duplicates,
                           onSelected: (_) {
                             setState(() {
-                              _selectedFilter =
-                                  InventoryFilter.duplicates;
+                              _selectedFilter = InventoryFilter.duplicates;
                             });
                           },
                         ),
@@ -264,48 +213,37 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
                     child: filteredItems.isEmpty
                         ? Center(
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.all(24),
+                              padding: const EdgeInsets.all(24),
                               child: Text(
                                 _emptyMessage(),
-                                textAlign:
-                                    TextAlign.center,
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           )
                         : GridView.builder(
-                            padding:
-                                const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(12),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              childAspectRatio: 1,
-                            ),
-                            itemCount:
-                                filteredItems.length,
-                            itemBuilder:
-                                (context, index) {
-                              final item =
-                                  filteredItems[index];
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 1,
+                                ),
+                            itemCount: filteredItems.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredItems[index];
 
                               final quantity =
-                                  userItems[item.id]
-                                          ?.quantity ??
-                                      0;
+                                  userItems[item.id]?.quantity ?? 0;
 
                               return ItemCard(
                                 number: item.number,
                                 quantity: quantity,
                                 onTap: () {
-                                  Navigator.of(context)
-                                      .push(
+                                  Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (_) =>
-                                          ItemDetailPage(
-                                        collection:
-                                            collection,
+                                      builder: (_) => ItemDetailPage(
+                                        collection: collection,
                                         item: item,
                                       ),
                                     ),
