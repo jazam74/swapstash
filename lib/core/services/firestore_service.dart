@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:swapstash/core/models/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swapstash/core/models/user_collection.dart';
+import 'package:swapstash/core/models/user_profile.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  CollectionReference<Map<String, dynamic>> get _users {
-    return _db.collection('users');
-  }
+  CollectionReference<Map<String, dynamic>> get _users =>
+      _db.collection('users');
 
   Future<void> createUserProfile(
     UserProfile user,
@@ -59,6 +58,16 @@ class FirestoreService {
     );
   }
 
+  Stream<UserProfile?> watchCurrentUserProfile() {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return Stream<UserProfile?>.value(null);
+    }
+
+    return watchUserProfile(user.uid);
+  }
+
   Future<void> updateUserProfile(
     UserProfile user,
   ) async {
@@ -67,6 +76,25 @@ class FirestoreService {
           SetOptions(merge: true),
         );
   }
+
+  Future<void> updateCurrentUserProfile(
+    UserProfile profile,
+  ) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      throw Exception('User not logged in.');
+    }
+
+    if (profile.uid != user.uid) {
+      throw Exception(
+        'Cannot update another user profile.',
+      );
+    }
+
+    await updateUserProfile(profile);
+  }
+
   Future<List<UserProfile>> searchUsers(
     String query,
   ) async {
@@ -76,6 +104,9 @@ class FirestoreService {
       return [];
     }
 
+    final currentUserId =
+        FirebaseAuth.instance.currentUser?.uid;
+
     final snapshot = await _users
         .orderBy('displayName')
         .startAt([value])
@@ -84,12 +115,16 @@ class FirestoreService {
         .get();
 
     return snapshot.docs
-        .map((doc) => UserProfile.fromMap({
-              ...doc.data(),
-              'uid': doc.id,
-            }))
+        .where((doc) => doc.id != currentUserId)
+        .map(
+          (doc) => UserProfile.fromMap({
+            ...doc.data(),
+            'uid': doc.id,
+          }),
+        )
         .toList();
   }
+
   Future<void> addCollectionToUser(
     UserCollection collection,
   ) async {

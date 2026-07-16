@@ -11,6 +11,11 @@ class UserProfile {
   final int completedTrades;
   final Timestamp createdAt;
 
+  final String city;
+  final String bio;
+  final String photoUrl;
+  final bool isPublic;
+
   const UserProfile({
     required this.uid,
     required this.email,
@@ -21,6 +26,10 @@ class UserProfile {
     required this.rating,
     required this.completedTrades,
     required this.createdAt,
+    this.city = '',
+    this.bio = '',
+    this.photoUrl = '',
+    this.isPublic = true,
   });
 
   factory UserProfile.fromMap(
@@ -42,6 +51,10 @@ class UserProfile {
       createdAt: createdAtValue is Timestamp
           ? createdAtValue
           : Timestamp.now(),
+      city: map['city'] as String? ?? '',
+      bio: map['bio'] as String? ?? '',
+      photoUrl: map['photoUrl'] as String? ?? '',
+      isPublic: map['isPublic'] as bool? ?? true,
     );
   }
 
@@ -56,6 +69,10 @@ class UserProfile {
       'rating': rating,
       'completedTrades': completedTrades,
       'createdAt': createdAt,
+      'city': city,
+      'bio': bio,
+      'photoUrl': photoUrl,
+      'isPublic': isPublic,
     };
   }
 
@@ -69,6 +86,10 @@ class UserProfile {
     double? rating,
     int? completedTrades,
     Timestamp? createdAt,
+    String? city,
+    String? bio,
+    String? photoUrl,
+    bool? isPublic,
   }) {
     return UserProfile(
       uid: uid ?? this.uid,
@@ -77,10 +98,16 @@ class UserProfile {
       country: country ?? this.country,
       language: language ?? this.language,
       allowInternationalTrades:
-          allowInternationalTrades ?? this.allowInternationalTrades,
+          allowInternationalTrades ??
+              this.allowInternationalTrades,
       rating: rating ?? this.rating,
-      completedTrades: completedTrades ?? this.completedTrades,
+      completedTrades:
+          completedTrades ?? this.completedTrades,
       createdAt: createdAt ?? this.createdAt,
+      city: city ?? this.city,
+      bio: bio ?? this.bio,
+      photoUrl: photoUrl ?? this.photoUrl,
+      isPublic: isPublic ?? this.isPublic,
     );
   }
 }
