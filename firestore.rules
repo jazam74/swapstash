@@ -1,0 +1,186 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===========================
+    // POMOŽNE FUNKCIJE
+    // ===========================
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // ===========================
+    // KATALOŠKE ZBIRKE
+    // ===========================
+
+    match /catalogCollections/{collectionId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+
+      match /items/{itemId} {
+        allow read: if isSignedIn();
+        allow write: if false;
+      }
+    }
+
+    // ===========================
+    // UPORABNIKI
+    // ===========================
+
+    match /users/{userId} {
+
+      // Prijavljeni uporabniki lahko berejo profile.
+      allow read: if isSignedIn();
+
+      // Profil lahko spreminja samo njegov lastnik.
+      allow create, update, delete: if isOwner(userId);
+
+      // ===========================
+      // UPORABNIKOVE ZBIRKE
+      // ===========================
+
+      match /collections/{collectionId} {
+
+        // Iskalnik menjav mora prebrati tudi zbirke drugih uporabnikov.
+        allow read: if isSignedIn();
+
+        // Zbirko lahko spreminja samo njen lastnik.
+        allow create, update, delete: if isOwner(userId);
+
+        // ===========================
+        // UPORABNIKOVI PREDMETI
+        // ===========================
+
+        match /items/{itemId} {
+
+          // Primerjava menjav mora prebrati inventar drugega uporabnika.
+          allow read: if isSignedIn();
+
+          // Količine lahko spreminja samo lastnik inventarja.
+          allow create, update, delete: if isOwner(userId);
+        }
+      }
+    }
+
+    // ===========================
+    // JAVNI INDEKS ČLANOV ZBIRKE
+    // ===========================
+
+    match /collectionMembers/{collectionId}/users/{userId} {
+
+      allow read: if isSignedIn();
+
+      allow create, update, delete: if isOwner(userId);
+    }
+
+    // ===========================
+    // MENJAVE
+    // ===========================
+
+    match /trades/{tradeId} {
+
+      allow create: if isSignedIn()
+          && request.resource.data.senderId == request.auth.uid
+          && request.resource.data.receiverId != request.auth.uid;
+
+      allow read: if isSignedIn()
+          && (
+            resource.data.senderId == request.auth.uid ||
+            resource.data.receiverId == request.auth.uid
+          );
+
+      allow update: if isSignedIn()
+          && (
+            resource.data.senderId == request.auth.uid ||
+            resource.data.receiverId == request.auth.uid
+          )
+          && request.resource.data.senderId
+              == resource.data.senderId
+          && request.resource.data.receiverId
+              == resource.data.receiverId;
+
+      allow delete: if false;
+    }
+
+    // ===========================
+    // POGOVORI
+    // ===========================
+
+    match /conversations/{conversationId} {
+
+      function isConversationParticipant() {
+        return isSignedIn()
+            && request.auth.uid in resource.data.participantIds;
+      }
+
+      function isParticipantOnCreate() {
+        return isSignedIn()
+            && request.auth.uid
+                in request.resource.data.participantIds;
+      }
+
+      // ChatService preveri, ali deterministični pogovor že obstaja.
+      allow get: if isSignedIn();
+
+      // Za watchConversations mora poizvedba uporabljati:
+      // where('participantIds', arrayContains: currentUserId)
+      allow list: if isConversationParticipant();
+
+      allow create: if isParticipantOnCreate()
+          && request.resource.data.participantIds is list
+          && request.resource.data.participantIds.size() == 2
+          && request.resource.data.participantIds[0]
+              != request.resource.data.participantIds[1];
+
+      allow update: if isConversationParticipant()
+          && request.resource.data.participantIds
+              == resource.data.participantIds;
+
+      allow delete: if false;
+
+      // ===========================
+      // SPOROČILA
+      // ===========================
+
+      match /messages/{messageId} {
+
+        function parentConversation() {
+          return get(
+            /databases/$(database)/documents/conversations/$(conversationId)
+          );
+        }
+
+        function isMessageParticipant() {
+          return isSignedIn()
+              && request.auth.uid
+                  in parentConversation().data.participantIds;
+        }
+
+        allow read: if isMessageParticipant();
+
+        allow create: if isMessageParticipant()
+            && request.resource.data.senderId
+                == request.auth.uid
+            && request.resource.data.text is string
+            && request.resource.data.text.size() > 0;
+
+        // Omogoča dodajanje uporabnika v readBy.
+        allow update: if isMessageParticipant()
+            && request.resource.data.senderId
+                == resource.data.senderId
+            && request.resource.data.text
+                == resource.data.text
+            && request.resource.data.createdAt
+                == resource.data.createdAt;
+
+        allow delete: if false;
+      }
+    }
+  }
+}

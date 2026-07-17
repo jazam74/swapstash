@@ -131,14 +131,64 @@ class FirestoreService {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      throw Exception("User not logged in.");
+      throw Exception('User not logged in.');
     }
 
-    await _db
-        .collection('users')
+    await _users
         .doc(user.uid)
         .collection('collections')
         .doc(collection.catalogCollectionId)
         .set(collection.toMap());
+  }
+
+  Future<void> saveNotificationToken(
+    String token,
+  ) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return;
+    }
+
+    final normalizedToken = token.trim();
+
+    if (normalizedToken.isEmpty) {
+      return;
+    }
+
+    await _users.doc(user.uid).set(
+      {
+        'notificationTokens': FieldValue.arrayUnion([
+          normalizedToken,
+        ]),
+        'notificationTokensUpdatedAt':
+            FieldValue.serverTimestamp(),
+      },
+      SetOptions(merge: true),
+    );
+  }
+
+  Future<void> removeNotificationToken(
+    String token,
+  ) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return;
+    }
+
+    final normalizedToken = token.trim();
+
+    if (normalizedToken.isEmpty) {
+      return;
+    }
+
+    await _users.doc(user.uid).update({
+      'notificationTokens': FieldValue.arrayRemove([
+        normalizedToken,
+      ]),
+      'notificationTokensUpdatedAt':
+          FieldValue.serverTimestamp(),
+    });
   }
 }

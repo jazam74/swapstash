@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/catalog_item.dart';
+import 'package:swapstash/core/models/collection_stats.dart';
 import 'package:swapstash/core/models/user_item.dart';
 import 'package:swapstash/core/services/catalog_item_service.dart';
 import 'package:swapstash/core/services/user_item_service.dart';
-import 'package:swapstash/features/catalog/widgets/catalog_progress.dart';
-import 'package:swapstash/features/catalog/widgets/catalog_search_bar.dart';
 import 'package:swapstash/features/catalog/widgets/catalog_filter_bar.dart';
 import 'package:swapstash/features/catalog/widgets/catalog_grid.dart';
-import 'package:swapstash/core/models/collection_stats.dart';
+import 'package:swapstash/features/catalog/widgets/catalog_progress.dart';
+import 'package:swapstash/features/catalog/widgets/catalog_search_bar.dart';
+import 'package:swapstash/features/trades/find_trades_page.dart';
 
 class CatalogItemsPage extends StatefulWidget {
   final CatalogCollection collection;
@@ -21,7 +22,6 @@ class CatalogItemsPage extends StatefulWidget {
 
 class _CatalogItemsPageState extends State<CatalogItemsPage> {
   final CatalogItemService _catalogItemService = CatalogItemService();
-
   final UserItemService _userItemService = UserItemService();
 
   InventoryFilter _selectedFilter = InventoryFilter.all;
@@ -80,6 +80,14 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
       case InventoryFilter.duplicates:
         return 'Nimaš še nobenih viškov.';
     }
+  }
+
+  void _openTradeFinder() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => FindTradesPage(collection: widget.collection),
+      ),
+    );
   }
 
   @override
@@ -173,6 +181,17 @@ class _CatalogItemsPageState extends State<CatalogItemsPage> {
                         _selectedFilter = filter;
                       });
                     },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: _openTradeFinder,
+                        icon: const Icon(Icons.handshake),
+                        label: const Text('Najdi menjave'),
+                      ),
+                    ),
                   ),
                   Expanded(
                     child: CatalogGrid(
