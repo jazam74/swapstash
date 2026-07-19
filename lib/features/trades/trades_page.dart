@@ -7,8 +7,12 @@ import 'package:swapstash/core/theme/app_radius.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/features/trades/counter_offer_page.dart';
 import 'package:swapstash/features/trades/create_trade_page.dart';
+import 'package:swapstash/features/trades/services/trade_action_service.dart';
 import 'package:swapstash/features/trades/services/trade_status_display_service.dart';
+import 'package:swapstash/features/trades/widgets/trade_action_card.dart';
+import 'package:swapstash/features/trades/widgets/trade_confirm_dialog.dart';
 import 'package:swapstash/features/trades/widgets/trade_header.dart';
+import 'package:swapstash/features/trades/widgets/trade_progress_card.dart';
 
 class TradesPage extends StatelessWidget {
   const TradesPage({super.key});
@@ -295,7 +299,14 @@ class _TradeCardState extends State<_TradeCard> {
               DateFormat('dd. MM. yyyy, HH:mm').format(trade.createdAt),
               style: Theme.of(context).textTheme.bodySmall,
             ),
-            const Divider(height: 24),
+            const SizedBox(height: AppSpacing.md),
+            TradeActionCard(
+              action: TradeActionService.build(
+                trade: trade,
+                currentUserId: widget.currentUserId,
+              ),
+            ),
+            const Divider(height: AppSpacing.lg),
             _TradeItemsSection(
               title: isIncoming ? 'Prejmeš' : 'Ponudil si',
               icon: Icons.inventory_2_outlined,
@@ -309,7 +320,7 @@ class _TradeCardState extends State<_TradeCard> {
             ),
             if (trade.status == TradeStatus.accepted) ...[
               const SizedBox(height: 16),
-              _ShippingProgress(
+              TradeProgressCard(
                 trade: trade,
                 currentUserId: widget.currentUserId,
               ),
@@ -321,6 +332,32 @@ class _TradeCardState extends State<_TradeCard> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _confirmHandover() async {
+    final confirmed = await TradeConfirmDialog.confirmHandover(context);
+
+    if (!confirmed || !mounted) {
+      return;
+    }
+
+    await _runAction(
+      () => widget.tradeService.markShipped(tradeId: widget.trade.id),
+      'Predaja kartic je potrjena in inventar je posodobljen.',
+    );
+  }
+
+  Future<void> _confirmReceipt() async {
+    final confirmed = await TradeConfirmDialog.confirmReceipt(context);
+
+    if (!confirmed || !mounted) {
+      return;
+    }
+
+    await _runAction(
+      () => widget.tradeService.markReceived(tradeId: widget.trade.id),
+      'Prejem kartic je potrjen in inventar je posodobljen.',
     );
   }
 
@@ -414,33 +451,21 @@ class _TradeCardState extends State<_TradeCard> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           FilledButton.icon(
-            onPressed: shipped
-                ? null
-                : () {
-                    _runAction(
-                      () => widget.tradeService.markShipped(tradeId: trade.id),
-                      'Kartice so označene kot poslane in odštete iz inventarja.',
-                    );
-                  },
+            onPressed: shipped ? null : _confirmHandover,
             icon: Icon(
-              shipped ? Icons.check_circle : Icons.local_shipping_outlined,
+              shipped ? Icons.check_circle : Icons.how_to_reg_outlined,
             ),
-            label: Text(shipped ? 'Poslano ✓' : 'Označi kot poslano'),
+            label: Text(
+              shipped ? 'Predaja potrjena ✓' : 'Potrdi predajo kartic',
+            ),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
-            onPressed: received
-                ? null
-                : () {
-                    _runAction(
-                      () => widget.tradeService.markReceived(tradeId: trade.id),
-                      'Prejete kartice so dodane v inventar.',
-                    );
-                  },
+            onPressed: received ? null : _confirmReceipt,
             icon: Icon(
               received ? Icons.check_circle : Icons.inventory_outlined,
             ),
-            label: Text(received ? 'Prejeto ✓' : 'Označi kot prejeto'),
+            label: Text(received ? 'Prejem potrjen ✓' : 'Potrdi prejem kartic'),
           ),
         ],
       );
@@ -452,70 +477,6 @@ class _TradeCardState extends State<_TradeCard> {
   String _shortUserId(String userId) {
     if (userId.length <= 10) return userId;
     return '${userId.substring(0, 10)}…';
-  }
-}
-
-class _ShippingProgress extends StatelessWidget {
-  final Trade trade;
-  final String currentUserId;
-
-  const _ShippingProgress({required this.trade, required this.currentUserId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Potek menjave',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            _ProgressRow(
-              label: 'Pošiljatelj je poslal',
-              done: trade.senderShipped,
-            ),
-            _ProgressRow(
-              label: 'Pošiljatelj je prejel',
-              done: trade.senderReceived,
-            ),
-            _ProgressRow(
-              label: 'Prejemnik je poslal',
-              done: trade.receiverShipped,
-            ),
-            _ProgressRow(
-              label: 'Prejemnik je prejel',
-              done: trade.receiverReceived,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ProgressRow extends StatelessWidget {
-  final String label;
-  final bool done;
-
-  const _ProgressRow({required this.label, required this.done});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          done ? Icons.check_circle : Icons.radio_button_unchecked,
-          size: 18,
-        ),
-        const SizedBox(width: 8),
-        Expanded(child: Text(label)),
-      ],
-    );
   }
 }
 
