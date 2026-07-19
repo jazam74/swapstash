@@ -219,7 +219,7 @@ class _SearchField extends StatelessWidget {
                       icon: const Icon(Icons.close_rounded),
                     ),
               filled: true,
-              fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.55),
+              fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.55),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
                 borderSide: BorderSide.none,
@@ -279,7 +279,7 @@ class _ConversationCard extends StatelessWidget {
 
     return Material(
       color: isUnread
-          ? colorScheme.primaryContainer.withOpacity(0.24)
+          ? colorScheme.primaryContainer.withValues(alpha: 0.24)
           : colorScheme.surfaceContainerLow,
       borderRadius: BorderRadius.circular(20),
       clipBehavior: Clip.antiAlias,
@@ -380,7 +380,7 @@ class _CollectionLabel extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: 220),
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
-        color: colorScheme.secondaryContainer.withOpacity(0.55),
+        color: colorScheme.secondaryContainer.withValues(alpha: 0.55),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
@@ -610,7 +610,7 @@ class _StateIcon extends StatelessWidget {
       width: 88,
       height: 88,
       decoration: BoxDecoration(
-        color: colorScheme.primaryContainer.withOpacity(0.65),
+        color: colorScheme.primaryContainer.withValues(alpha: 0.65),
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,

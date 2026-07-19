@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/catalog_item.dart';
 import 'package:swapstash/core/models/trade_candidate.dart';
+import 'package:swapstash/core/models/trade_item.dart';
 import 'package:swapstash/core/services/chat_service.dart';
+import 'package:swapstash/core/services/trade_service.dart';
 import 'package:swapstash/features/messages/chat_page.dart';
 
 class TradeDetailPage extends StatefulWidget {
@@ -21,8 +23,10 @@ class TradeDetailPage extends StatefulWidget {
 
 class _TradeDetailPageState extends State<TradeDetailPage> {
   final ChatService _chatService = ChatService();
+  final TradeService _tradeService = TradeService();
 
   bool _openingChat = false;
+  bool _creatingTrade = false;
 
   Future<void> _openChat() async {
     if (_openingChat) {
@@ -68,6 +72,145 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
     }
   }
 
+  Future<void> _createAutomaticTradeProposal() async {
+    if (_creatingTrade) {
+      return;
+    }
+
+    final comparison = widget.candidate.comparison;
+    final tradeCount = comparison.possibleTrades;
+
+    if (tradeCount <= 0) {
+      return;
+    }
+
+    // InventoryCompareService already sorts both lists so that items
+    // with the largest number of duplicates come first.
+    final offeredCatalogItems = comparison.canOffer.take(tradeCount).toList();
+    final requestedCatalogItems = comparison.needs.take(tradeCount).toList();
+
+    final shouldCreate = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Samodejni predlog menjave'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'SwapStash predlaga uravnoteženo menjavo '
+                    '$tradeCount za $tradeCount.',
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Ti ponudiš:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 6),
+                  ...offeredCatalogItems.map(
+                    (item) => Text(
+                      '• ${item.number}'
+                      '${item.name.trim().isEmpty ? '' : ' · ${item.name}'}',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '${widget.candidate.member.displayName} ponudi:',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 6),
+                  ...requestedCatalogItems.map(
+                    (item) => Text(
+                      '• ${item.number}'
+                      '${item.name.trim().isEmpty ? '' : ' · ${item.name}'}',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Prekliči'),
+            ),
+            FilledButton.icon(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              icon: const Icon(Icons.send),
+              label: const Text('Pošlji predlog'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldCreate != true || !mounted) {
+      return;
+    }
+
+    setState(() {
+      _creatingTrade = true;
+    });
+
+    try {
+      final offeredItems = offeredCatalogItems
+          .map(
+            (item) => TradeItem(
+              collectionId: widget.collection.id,
+              itemId: item.id,
+              itemNumber: item.number,
+              quantity: 1,
+            ),
+          )
+          .toList();
+
+      final requestedItems = requestedCatalogItems
+          .map(
+            (item) => TradeItem(
+              collectionId: widget.collection.id,
+              itemId: item.id,
+              itemNumber: item.number,
+              quantity: 1,
+            ),
+          )
+          .toList();
+
+      await _tradeService.createTrade(
+        receiverId: widget.candidate.member.uid,
+        offeredItems: offeredItems,
+        requestedItems: requestedItems,
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Predlog menjave je bil uspešno poslan.')),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Predloga menjave ni bilo mogoče poslati:\n$error'),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _creatingTrade = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final candidate = widget.candidate;
@@ -102,7 +245,27 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
           ),
           const SizedBox(height: 24),
           FilledButton.icon(
-            onPressed: comparison.hasPossibleTrade && !_openingChat
+            onPressed:
+                comparison.hasPossibleTrade && !_openingChat && !_creatingTrade
+                ? _createAutomaticTradeProposal
+                : null,
+            icon: _creatingTrade
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.auto_awesome),
+            label: Text(
+              _creatingTrade
+                  ? 'Pošiljam predlog...'
+                  : 'Samodejno predlagaj menjavo',
+            ),
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed:
+                comparison.hasPossibleTrade && !_openingChat && !_creatingTrade
                 ? _openChat
                 : null,
             icon: _openingChat

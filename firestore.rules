@@ -25,6 +25,8 @@ service cloud.firestore {
 
       match /items/{itemId} {
         allow read: if isSignedIn();
+
+        // Kataloške kartice trenutno urejamo samo administrativno.
         allow write: if false;
       }
     }
@@ -66,6 +68,16 @@ service cloud.firestore {
           allow create, update, delete: if isOwner(userId);
         }
       }
+
+      // ===========================
+      // FAVORITI
+      // ===========================
+
+      match /favorites/{favoriteId} {
+        allow read, create, update, delete:
+          if isSignedIn() &&
+             request.auth.uid == userId;
+      }
     }
 
     // ===========================
@@ -85,16 +97,30 @@ service cloud.firestore {
 
     match /trades/{tradeId} {
 
+      // Novo menjavo lahko ustvari samo prijavljeni pošiljatelj.
+      // Menjave samemu sebi ne dovolimo.
       allow create: if isSignedIn()
           && request.resource.data.senderId == request.auth.uid
           && request.resource.data.receiverId != request.auth.uid;
 
-      allow read: if isSignedIn()
+      // Posamezno menjavo lahko neposredno prebere samo eden
+      // od obeh udeležencev.
+      allow get: if isSignedIn()
           && (
             resource.data.senderId == request.auth.uid ||
             resource.data.receiverId == request.auth.uid
           );
 
+      // Potrebno za poizvedbe:
+      // - senderId == currentUser
+      // - receiverId == currentUser
+      // - senderId/receiverId + status == accepted
+      //
+      // Te poizvedbe uporablja seznam menjav in sistem rezervacij.
+      allow list: if isSignedIn();
+
+      // Menjavo lahko spreminja samo eden od udeležencev.
+      // senderId in receiverId se ne smeta spreminjati.
       allow update: if isSignedIn()
           && (
             resource.data.senderId == request.auth.uid ||

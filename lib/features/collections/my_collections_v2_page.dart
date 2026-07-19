@@ -246,6 +246,7 @@ class _MyCollectionsV2PageState
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'my_collections_v2_fab',
         onPressed: _openCatalog,
         icon: const Icon(Icons.add),
         label: const Text('Dodaj zbirko'),

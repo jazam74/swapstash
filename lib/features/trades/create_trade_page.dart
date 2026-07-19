@@ -9,16 +9,13 @@ class CreateTradePage extends StatefulWidget {
   const CreateTradePage({super.key});
 
   @override
-  State<CreateTradePage> createState() =>
-      _CreateTradePageState();
+  State<CreateTradePage> createState() => _CreateTradePageState();
 }
 
 class _CreateTradePageState extends State<CreateTradePage> {
-  final FirestoreService _firestoreService =
-      FirestoreService();
+  final FirestoreService _firestoreService = FirestoreService();
 
-  final TextEditingController _searchController =
-      TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   Timer? _searchDebounce;
 
@@ -62,11 +59,9 @@ class _CreateTradePageState extends State<CreateTradePage> {
     });
 
     try {
-      final users =
-          await _firestoreService.searchUsers(query);
+      final users = await _firestoreService.searchUsers(query);
 
-      final currentUserId =
-          FirebaseAuth.instance.currentUser?.uid;
+      final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
       final filteredUsers = users.where((user) {
         return user.uid != currentUserId;
@@ -82,8 +77,7 @@ class _CreateTradePageState extends State<CreateTradePage> {
 
       setState(() {
         _searchResults = [];
-        _searchError =
-            'Uporabnikov ni bilo mogoče poiskati:\n$error';
+        _searchError = 'Uporabnikov ni bilo mogoče poiskati:\n$error';
       });
     } finally {
       if (mounted) {
@@ -114,20 +108,15 @@ class _CreateTradePageState extends State<CreateTradePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Nova menjava'),
-      ),
+      appBar: AppBar(title: const Text('Nova menjava')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           Text(
             'Prejemnik',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
 
@@ -172,10 +161,7 @@ class _CreateTradePageState extends State<CreateTradePage> {
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Text(
-                    _searchError!,
-                    textAlign: TextAlign.center,
-                  ),
+                  child: Text(_searchError!, textAlign: TextAlign.center),
                 ),
               )
             else if (_searchController.text.trim().isNotEmpty &&
@@ -192,14 +178,10 @@ class _CreateTradePageState extends State<CreateTradePage> {
             else
               ..._searchResults.map(
                 (user) => Card(
-                  margin: const EdgeInsets.only(
-                    bottom: 8,
-                  ),
+                  margin: const EdgeInsets.only(bottom: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      child: Text(
-                        _initials(user.displayName),
-                      ),
+                      child: Text(_initials(user.displayName)),
                     ),
                     title: Text(
                       user.displayName.isEmpty
@@ -207,9 +189,7 @@ class _CreateTradePageState extends State<CreateTradePage> {
                           : user.displayName,
                     ),
                     subtitle: Text(user.email),
-                    trailing: const Icon(
-                      Icons.chevron_right,
-                    ),
+                    trailing: const Icon(Icons.chevron_right),
                     onTap: () => _selectUser(user),
                   ),
                 ),
@@ -219,20 +199,14 @@ class _CreateTradePageState extends State<CreateTradePage> {
               margin: EdgeInsets.zero,
               child: ListTile(
                 leading: CircleAvatar(
-                  child: Text(
-                    _initials(
-                      _selectedUser!.displayName,
-                    ),
-                  ),
+                  child: Text(_initials(_selectedUser!.displayName)),
                 ),
                 title: Text(
                   _selectedUser!.displayName.isEmpty
                       ? 'Neimenovan uporabnik'
                       : _selectedUser!.displayName,
                 ),
-                subtitle: Text(
-                  _selectedUser!.email,
-                ),
+                subtitle: Text(_selectedUser!.email),
                 trailing: IconButton(
                   tooltip: 'Odstrani prejemnika',
                   onPressed: _clearSelectedUser,
@@ -245,21 +219,16 @@ class _CreateTradePageState extends State<CreateTradePage> {
 
           Text(
             'Ponujam',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           const Card(
             margin: EdgeInsets.zero,
             child: Padding(
               padding: EdgeInsets.all(16),
-              child: Text(
-                'Seznam predmetov pride v naslednjem koraku.',
-              ),
+              child: Text('Seznam predmetov pride v naslednjem koraku.'),
             ),
           ),
 
@@ -267,12 +236,9 @@ class _CreateTradePageState extends State<CreateTradePage> {
 
           Text(
             'Želim',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           const Card(
@@ -291,8 +257,7 @@ class _CreateTradePageState extends State<CreateTradePage> {
             onPressed: _selectedUser == null
                 ? null
                 : () {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
                           'Izbira predmetov pride v naslednjem koraku.',

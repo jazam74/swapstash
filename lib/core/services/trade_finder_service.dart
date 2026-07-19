@@ -7,10 +7,8 @@ import 'package:swapstash/core/services/inventory_compare_service.dart';
 
 class TradeFinderService {
   final FirestoreService _firestoreService = FirestoreService();
-
   final CollectionMembersService _collectionMembersService =
       CollectionMembersService();
-
   final InventoryCompareService _inventoryCompareService =
       InventoryCompareService();
 
@@ -18,18 +16,12 @@ class TradeFinderService {
     required String collectionId,
   }) async {
     final currentUser = FirebaseAuth.instance.currentUser;
-
-    if (currentUser == null) {
-      throw Exception('User not logged in.');
-    }
+    if (currentUser == null) throw Exception('User not logged in.');
 
     final UserProfile? profile = await _firestoreService.getUserProfile(
       currentUser.uid,
     );
-
-    if (profile == null) {
-      throw Exception('Profile not found.');
-    }
+    if (profile == null) throw Exception('Profile not found.');
 
     final members = await _collectionMembersService.getEligibleMembers(
       collectionId: collectionId,
@@ -45,27 +37,17 @@ class TradeFinderService {
         otherUserId: member.uid,
       );
 
-      if (!comparison.hasPossibleTrade) {
-        continue;
-      }
+      if (!comparison.hasPossibleTrade) continue;
 
-      final candidate = TradeCandidate(member: member, comparison: comparison);
-
-      candidates.add(candidate);
+      candidates.add(TradeCandidate(member: member, comparison: comparison));
     }
 
     candidates.sort((a, b) {
       final trades = b.possibleTrades.compareTo(a.possibleTrades);
-
-      if (trades != 0) {
-        return trades;
-      }
+      if (trades != 0) return trades;
 
       final duplicates = b.duplicateCount.compareTo(a.duplicateCount);
-
-      if (duplicates != 0) {
-        return duplicates;
-      }
+      if (duplicates != 0) return duplicates;
 
       return a.member.displayName.toLowerCase().compareTo(
         b.member.displayName.toLowerCase(),

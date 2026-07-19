@@ -3,6 +3,7 @@ import 'package:swapstash/core/models/collection.dart';
 import 'package:swapstash/core/services/collection_service.dart';
 import 'package:swapstash/features/catalog/catalog_collections_page.dart';
 import 'package:swapstash/features/collections/my_collections_v2_page.dart';
+import 'package:swapstash/features/favorites/favorites_page.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -25,7 +26,17 @@ class DashboardPage extends StatelessWidget {
                   builder: (_) => const CatalogCollectionsPage(),
                 ),
               );
-           },
+            },
+          ),
+          IconButton(
+            tooltip: 'Moji favoriti',
+            icon: const Icon(Icons.favorite_rounded),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const FavoritesPage()),
+              );
+            },
           ),
           IconButton(
             icon: const Icon(Icons.folder_copy),
@@ -33,23 +44,18 @@ class DashboardPage extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      const MyCollectionsV2Page(),
-                ),
+                MaterialPageRoute(builder: (_) => const MyCollectionsV2Page()),
               );
             },
           ),
-       ],
-     ),
+        ],
+      ),
       body: StreamBuilder<List<Collection>>(
         stream: collectionService.watchCollections(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting &&
               !snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -84,15 +90,11 @@ class DashboardPage extends StatelessWidget {
             (sum, collection) => sum + collection.missingCount,
           );
 
-          final bestCollection = _findBestCollection(
-            collections,
-          );
+          final bestCollection = _findBestCollection(collections);
 
           return RefreshIndicator(
             onRefresh: () async {
-              await Future<void>.delayed(
-                const Duration(milliseconds: 400),
-              );
+              await Future<void>.delayed(const Duration(milliseconds: 400));
             },
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -100,12 +102,9 @@ class DashboardPage extends StatelessWidget {
               children: [
                 Text(
                   '👋 Dobrodošel!',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium
-                      ?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Text(
@@ -146,36 +145,29 @@ class DashboardPage extends StatelessWidget {
                 const SizedBox(height: 24),
                 Text(
                   'Najbolj napredna zbirka',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
                 if (bestCollection == null)
                   const _EmptyDashboardCard()
                 else
-                  _BestCollectionCard(
-                    collection: bestCollection,
-                  ),
+                  _BestCollectionCard(collection: bestCollection),
                 if (collections.isNotEmpty) ...[
                   const SizedBox(height: 24),
                   Text(
                     'Tvoje zbirke',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
-                  ...collections.take(3).map(
-                        (collection) => _RecentCollectionCard(
-                          collection: collection,
-                        ),
+                  ...collections
+                      .take(3)
+                      .map(
+                        (collection) =>
+                            _RecentCollectionCard(collection: collection),
                       ),
                 ],
               ],
@@ -186,9 +178,7 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Collection? _findBestCollection(
-    List<Collection> collections,
-  ) {
+  Collection? _findBestCollection(List<Collection> collections) {
     if (collections.isEmpty) {
       return null;
     }
@@ -220,26 +210,17 @@ class _StatisticCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 10,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                size: 26,
-              ),
+              Icon(icon, size: 26),
               const SizedBox(height: 6),
               Text(
                 '$value',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall
-                    ?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 2),
               Text(
@@ -259,9 +240,7 @@ class _StatisticCard extends StatelessWidget {
 class _BestCollectionCard extends StatelessWidget {
   final Collection collection;
 
-  const _BestCollectionCard({
-    required this.collection,
-  });
+  const _BestCollectionCard({required this.collection});
 
   @override
   Widget build(BuildContext context) {
@@ -274,26 +253,19 @@ class _BestCollectionCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
-                  Icons.emoji_events_outlined,
-                ),
+                const Icon(Icons.emoji_events_outlined),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     collection.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Text(
                   '${collection.completionPercent} %',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -312,9 +284,7 @@ class _BestCollectionCard extends StatelessWidget {
             ),
             if (collection.duplicateCount > 0) ...[
               const SizedBox(height: 4),
-              Text(
-                '${collection.duplicateCount} viškov',
-              ),
+              Text('${collection.duplicateCount} viškov'),
             ],
           ],
         ),
@@ -326,9 +296,7 @@ class _BestCollectionCard extends StatelessWidget {
 class _RecentCollectionCard extends StatelessWidget {
   final Collection collection;
 
-  const _RecentCollectionCard({
-    required this.collection,
-  });
+  const _RecentCollectionCard({required this.collection});
 
   @override
   Widget build(BuildContext context) {
@@ -341,21 +309,15 @@ class _RecentCollectionCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
-                  Icons.collections_bookmark_outlined,
-                ),
+                const Icon(Icons.collections_bookmark_outlined),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     collection.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                Text(
-                  '${collection.completionPercent} %',
-                ),
+                Text('${collection.completionPercent} %'),
               ],
             ),
             const SizedBox(height: 10),
@@ -387,17 +349,11 @@ class _EmptyDashboardCard extends StatelessWidget {
         padding: EdgeInsets.all(24),
         child: Column(
           children: [
-            Icon(
-              Icons.collections_bookmark_outlined,
-              size: 48,
-            ),
+            Icon(Icons.collections_bookmark_outlined, size: 48),
             SizedBox(height: 12),
             Text(
               'Še nimaš nobene zbirke.',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 6),
             Text(

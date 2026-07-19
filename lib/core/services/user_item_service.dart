@@ -40,7 +40,7 @@ class UserItemService {
         .collection('items');
   }
 
-  Future<void> _syncCollectionMember({required String collectionId}) async {
+  Future<void> syncCollectionMember({required String collectionId}) async {
     final profile = await _firestoreService.getUserProfile(_currentUserId);
 
     if (profile == null) {
@@ -121,7 +121,7 @@ class UserItemService {
     if (quantity == 0) {
       await _itemsReference(collectionId).doc(id).delete();
 
-      await _syncCollectionMember(collectionId: collectionId);
+      await syncCollectionMember(collectionId: collectionId);
 
       return;
     }
@@ -136,7 +136,7 @@ class UserItemService {
       collectionId,
     ).doc(id).set(userItem.toMap(), SetOptions(merge: true));
 
-    await _syncCollectionMember(collectionId: collectionId);
+    await syncCollectionMember(collectionId: collectionId);
   }
 
   Future<void> markAsOwned({

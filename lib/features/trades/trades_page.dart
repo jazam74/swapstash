@@ -3,7 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/core/models/trade_item.dart';
 import 'package:swapstash/core/services/trade_service.dart';
+import 'package:swapstash/core/theme/app_radius.dart';
+import 'package:swapstash/core/theme/app_spacing.dart';
+import 'package:swapstash/features/trades/counter_offer_page.dart';
 import 'package:swapstash/features/trades/create_trade_page.dart';
+import 'package:swapstash/features/trades/services/trade_status_display_service.dart';
+import 'package:swapstash/features/trades/widgets/trade_header.dart';
 
 class TradesPage extends StatelessWidget {
   const TradesPage({super.key});
@@ -19,18 +24,9 @@ class TradesPage extends StatelessWidget {
           title: const Text('Menjave'),
           bottom: const TabBar(
             tabs: [
-              Tab(
-                icon: Icon(Icons.inbox_outlined),
-                text: 'Prejete',
-              ),
-              Tab(
-                icon: Icon(Icons.send_outlined),
-                text: 'Poslane',
-              ),
-              Tab(
-                icon: Icon(Icons.check_circle_outline),
-                text: 'Zaključene',
-              ),
+              Tab(icon: Icon(Icons.inbox_outlined), text: 'Prejete'),
+              Tab(icon: Icon(Icons.send_outlined), text: 'Poslane'),
+              Tab(icon: Icon(Icons.check_circle_outline), text: 'Zaključene'),
             ],
           ),
         ),
@@ -57,12 +53,11 @@ class TradesPage extends StatelessWidget {
           ],
         ),
         floatingActionButton: FloatingActionButton.extended(
+          heroTag: 'trades_fab',
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const CreateTradePage(),
-              ),
-            );
+            Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const CreateTradePage()));
           },
           icon: const Icon(Icons.add),
           label: const Text('Nova menjava'),
@@ -72,10 +67,7 @@ class TradesPage extends StatelessWidget {
   }
 }
 
-enum _TradeDirection {
-  incoming,
-  outgoing,
-}
+enum _TradeDirection { incoming, outgoing }
 
 class _TradesStreamView extends StatelessWidget {
   final Stream<List<Trade>> stream;
@@ -99,18 +91,16 @@ class _TradesStreamView extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting &&
             !snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
-          return _TradeErrorView(
-            error: snapshot.error,
-          );
+          return _TradeErrorView(error: snapshot.error);
         }
 
-        final trades = snapshot.data ?? [];
+        final trades = (snapshot.data ?? [])
+            .where((trade) => trade.status != TradeStatus.completed)
+            .toList();
 
         if (trades.isEmpty) {
           return _EmptyTrades(
@@ -122,18 +112,11 @@ class _TradesStreamView extends StatelessWidget {
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(
-            12,
-            12,
-            12,
-            96,
-          ),
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
           itemCount: trades.length,
           itemBuilder: (context, index) {
-            final trade = trades[index];
-
             return _TradeCard(
-              trade: trade,
+              trade: trades[index],
               tradeService: tradeService,
               currentUserId: currentUserId,
               direction: direction,
@@ -160,46 +143,31 @@ class _CompletedTradesView extends StatelessWidget {
       stream: tradeService.watchIncomingTrades(),
       builder: (context, incomingSnapshot) {
         if (incomingSnapshot.hasError) {
-          return _TradeErrorView(
-            error: incomingSnapshot.error,
-          );
+          return _TradeErrorView(error: incomingSnapshot.error);
         }
 
         return StreamBuilder<List<Trade>>(
           stream: tradeService.watchOutgoingTrades(),
           builder: (context, outgoingSnapshot) {
             if (outgoingSnapshot.hasError) {
-              return _TradeErrorView(
-                error: outgoingSnapshot.error,
-              );
+              return _TradeErrorView(error: outgoingSnapshot.error);
             }
 
-            final isWaiting =
-                incomingSnapshot.connectionState ==
-                        ConnectionState.waiting ||
-                    outgoingSnapshot.connectionState ==
-                        ConnectionState.waiting;
+            final completed = <String, Trade>{};
 
-            if (isWaiting &&
-                !incomingSnapshot.hasData &&
-                !outgoingSnapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            final completedTrades = [
+            for (final trade in [
               ...incomingSnapshot.data ?? <Trade>[],
               ...outgoingSnapshot.data ?? <Trade>[],
-            ].where((trade) {
-              return trade.status == TradeStatus.completed;
-            }).toList()
-              ..sort(
-                (first, second) =>
-                    second.createdAt.compareTo(first.createdAt),
-              );
+            ]) {
+              if (trade.status == TradeStatus.completed) {
+                completed[trade.id] = trade;
+              }
+            }
 
-            if (completedTrades.isEmpty) {
+            final trades = completed.values.toList()
+              ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+            if (trades.isEmpty) {
               return const _EmptyTrades(
                 icon: Icons.check_circle_outline,
                 text: 'Ni zaključenih menjav.',
@@ -207,25 +175,18 @@ class _CompletedTradesView extends StatelessWidget {
             }
 
             return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(
-                12,
-                12,
-                12,
-                96,
-              ),
-              itemCount: completedTrades.length,
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
+              itemCount: trades.length,
               itemBuilder: (context, index) {
-                final trade = completedTrades[index];
-
-                final direction = trade.receiverId == currentUserId
-                    ? _TradeDirection.incoming
-                    : _TradeDirection.outgoing;
+                final trade = trades[index];
 
                 return _TradeCard(
                   trade: trade,
                   tradeService: tradeService,
                   currentUserId: currentUserId,
-                  direction: direction,
+                  direction: trade.receiverId == currentUserId
+                      ? _TradeDirection.incoming
+                      : _TradeDirection.outgoing,
                 );
               },
             );
@@ -260,9 +221,7 @@ class _TradeCardState extends State<_TradeCard> {
     Future<void> Function() action,
     String successMessage,
   ) async {
-    if (_isUpdating) {
-      return;
-    }
+    if (_isUpdating) return;
 
     setState(() {
       _isUpdating = true;
@@ -273,20 +232,14 @@ class _TradeCardState extends State<_TradeCard> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(successMessage),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(successMessage)));
     } catch (error) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Dejanja ni bilo mogoče izvesti: $error',
-          ),
-        ),
+        SnackBar(content: Text('Dejanja ni bilo mogoče izvesti: $error')),
       );
     } finally {
       if (mounted) {
@@ -297,52 +250,39 @@ class _TradeCardState extends State<_TradeCard> {
     }
   }
 
+  Future<void> _openCounterOffer() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => CounterOfferPage(trade: widget.trade)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final trade = widget.trade;
-    final isIncoming =
-        widget.direction == _TradeDirection.incoming;
-
-    final otherUserId = isIncoming
-        ? trade.senderId
-        : trade.receiverId;
-
-    final dateText = DateFormat(
-      'dd. MM. yyyy, HH:mm',
-    ).format(trade.createdAt);
+    final isIncoming = widget.direction == _TradeDirection.incoming;
+    final otherUserId = isIncoming ? trade.senderId : trade.receiverId;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.card),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(
-                  isIncoming
-                      ? Icons.call_received
-                      : Icons.call_made,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    isIncoming
-                        ? 'Prejeta ponudba'
-                        : 'Poslana ponudba',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-                _TradeStatusChip(
-                  status: trade.status,
-                ),
-              ],
+            TradeHeader(
+              status: TradeStatusDisplayService.build(
+                trade: trade,
+                currentUserId: widget.currentUserId,
+              ),
+              directionLabel: trade.status == TradeStatus.countered
+                  ? 'PROTIPONUDBA'
+                  : isIncoming
+                  ? 'PREJETA PONUDBA'
+                  : 'POSLANA PONUDBA',
             ),
             const SizedBox(height: 8),
             Text(
@@ -352,25 +292,28 @@ class _TradeCardState extends State<_TradeCard> {
             ),
             const SizedBox(height: 4),
             Text(
-              dateText,
+              DateFormat('dd. MM. yyyy, HH:mm').format(trade.createdAt),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const Divider(height: 24),
             _TradeItemsSection(
-              title: isIncoming
-                  ? 'Prejmeš'
-                  : 'Ponudil si',
+              title: isIncoming ? 'Prejmeš' : 'Ponudil si',
               icon: Icons.inventory_2_outlined,
               items: trade.offeredItems,
             ),
             const SizedBox(height: 12),
             _TradeItemsSection(
-              title: isIncoming
-                  ? 'Oddaš'
-                  : 'Želiš',
+              title: isIncoming ? 'Oddaš' : 'Želiš',
               icon: Icons.search_outlined,
               items: trade.requestedItems,
             ),
+            if (trade.status == TradeStatus.accepted) ...[
+              const SizedBox(height: 16),
+              _ShippingProgress(
+                trade: trade,
+                currentUserId: widget.currentUserId,
+              ),
+            ],
             if (_buildActions() case final actions?) ...[
               const SizedBox(height: 14),
               actions,
@@ -383,8 +326,6 @@ class _TradeCardState extends State<_TradeCard> {
 
   Widget? _buildActions() {
     final trade = widget.trade;
-    final isIncoming =
-        widget.direction == _TradeDirection.incoming;
 
     if (_isUpdating) {
       return const Center(
@@ -395,77 +336,113 @@ class _TradeCardState extends State<_TradeCard> {
       );
     }
 
-    if (trade.status == TradeStatus.pending &&
-        isIncoming) {
-      return Row(
-        children: [
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: () {
-                _runAction(
-                  () => widget.tradeService.rejectTrade(
-                    tradeId: trade.id,
-                  ),
-                  'Menjava je bila zavrnjena.',
-                );
-              },
-              icon: const Icon(Icons.close),
-              label: const Text('Zavrni'),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: FilledButton.icon(
-              onPressed: () {
-                _runAction(
-                  () => widget.tradeService.acceptTrade(
-                    tradeId: trade.id,
-                  ),
-                  'Menjava je bila sprejeta.',
-                );
-              },
-              icon: const Icon(Icons.check),
-              label: const Text('Sprejmi'),
-            ),
-          ),
-        ],
-      );
-    }
+    if (trade.isAwaitingResponse) {
+      final awaitingMe = trade.awaitingUserId.isEmpty
+          ? widget.direction == _TradeDirection.incoming
+          : trade.awaitingUserId == widget.currentUserId;
 
-    if (trade.status == TradeStatus.pending &&
-        !isIncoming) {
-      return SizedBox(
-        width: double.infinity,
-        child: OutlinedButton.icon(
+      if (awaitingMe) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      _runAction(
+                        () =>
+                            widget.tradeService.rejectTrade(tradeId: trade.id),
+                        'Ponudba je bila zavrnjena.',
+                      );
+                    },
+                    icon: const Icon(Icons.close),
+                    label: const Text('Zavrni'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      _runAction(
+                        () =>
+                            widget.tradeService.acceptTrade(tradeId: trade.id),
+                        'Menjava je bila sprejeta.',
+                      );
+                    },
+                    icon: const Icon(Icons.check),
+                    label: const Text('Sprejmi'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: _openCounterOffer,
+              icon: const Icon(Icons.swap_horiz),
+              label: const Text('Pošlji protiponudbo'),
+            ),
+          ],
+        );
+      }
+
+      if (trade.lastProposedBy == widget.currentUserId) {
+        return OutlinedButton.icon(
           onPressed: () {
             _runAction(
-              () => widget.tradeService.cancelTrade(
-                tradeId: trade.id,
-              ),
-              'Menjava je bila preklicana.',
+              () => widget.tradeService.cancelTrade(tradeId: trade.id),
+              'Ponudba je bila preklicana.',
             );
           },
           icon: const Icon(Icons.cancel_outlined),
           label: const Text('Prekliči ponudbo'),
-        ),
+        );
+      }
+
+      return const Text(
+        'Čaka se odgovor drugega uporabnika.',
+        textAlign: TextAlign.center,
       );
     }
 
     if (trade.status == TradeStatus.accepted) {
-      return SizedBox(
-        width: double.infinity,
-        child: FilledButton.icon(
-          onPressed: () {
-            _runAction(
-              () => widget.tradeService.completeTrade(
-                tradeId: trade.id,
-              ),
-              'Menjava je označena kot zaključena.',
-            );
-          },
-          icon: const Icon(Icons.done_all),
-          label: const Text('Označi kot zaključeno'),
-        ),
+      final isSender = trade.senderId == widget.currentUserId;
+      final shipped = isSender ? trade.senderShipped : trade.receiverShipped;
+      final received = isSender ? trade.senderReceived : trade.receiverReceived;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          FilledButton.icon(
+            onPressed: shipped
+                ? null
+                : () {
+                    _runAction(
+                      () => widget.tradeService.markShipped(tradeId: trade.id),
+                      'Kartice so označene kot poslane in odštete iz inventarja.',
+                    );
+                  },
+            icon: Icon(
+              shipped ? Icons.check_circle : Icons.local_shipping_outlined,
+            ),
+            label: Text(shipped ? 'Poslano ✓' : 'Označi kot poslano'),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: received
+                ? null
+                : () {
+                    _runAction(
+                      () => widget.tradeService.markReceived(tradeId: trade.id),
+                      'Prejete kartice so dodane v inventar.',
+                    );
+                  },
+            icon: Icon(
+              received ? Icons.check_circle : Icons.inventory_outlined,
+            ),
+            label: Text(received ? 'Prejeto ✓' : 'Označi kot prejeto'),
+          ),
+        ],
       );
     }
 
@@ -473,11 +450,72 @@ class _TradeCardState extends State<_TradeCard> {
   }
 
   String _shortUserId(String userId) {
-    if (userId.length <= 10) {
-      return userId;
-    }
-
+    if (userId.length <= 10) return userId;
     return '${userId.substring(0, 10)}…';
+  }
+}
+
+class _ShippingProgress extends StatelessWidget {
+  final Trade trade;
+  final String currentUserId;
+
+  const _ShippingProgress({required this.trade, required this.currentUserId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Potek menjave',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            _ProgressRow(
+              label: 'Pošiljatelj je poslal',
+              done: trade.senderShipped,
+            ),
+            _ProgressRow(
+              label: 'Pošiljatelj je prejel',
+              done: trade.senderReceived,
+            ),
+            _ProgressRow(
+              label: 'Prejemnik je poslal',
+              done: trade.receiverShipped,
+            ),
+            _ProgressRow(
+              label: 'Prejemnik je prejel',
+              done: trade.receiverReceived,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProgressRow extends StatelessWidget {
+  final String label;
+  final bool done;
+
+  const _ProgressRow({required this.label, required this.done});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          done ? Icons.check_circle : Icons.radio_button_unchecked,
+          size: 18,
+        ),
+        const SizedBox(width: 8),
+        Expanded(child: Text(label)),
+      ],
+    );
   }
 }
 
@@ -499,17 +537,9 @@ class _TradeItemsSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(
-              icon,
-              size: 20,
-            ),
+            Icon(icon, size: 20),
             const SizedBox(width: 6),
-            Text(
-              title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
         const SizedBox(height: 8),
@@ -524,59 +554,10 @@ class _TradeItemsSection extends StatelessWidget {
                   ? ' ×${item.quantity}'
                   : '';
 
-              return Chip(
-                label: Text(
-                  '#${item.itemNumber}$quantityText',
-                ),
-              );
+              return Chip(label: Text('#${item.itemNumber}$quantityText'));
             }).toList(),
           ),
       ],
-    );
-  }
-}
-
-class _TradeStatusChip extends StatelessWidget {
-  final TradeStatus status;
-
-  const _TradeStatusChip({
-    required this.status,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final String label;
-    final IconData icon;
-
-    switch (status) {
-      case TradeStatus.pending:
-        label = 'Čaka';
-        icon = Icons.schedule;
-
-      case TradeStatus.accepted:
-        label = 'Sprejeta';
-        icon = Icons.check_circle_outline;
-
-      case TradeStatus.rejected:
-        label = 'Zavrnjena';
-        icon = Icons.cancel_outlined;
-
-      case TradeStatus.completed:
-        label = 'Zaključena';
-        icon = Icons.done_all;
-
-      case TradeStatus.cancelled:
-        label = 'Preklicana';
-        icon = Icons.block;
-    }
-
-    return Chip(
-      avatar: Icon(
-        icon,
-        size: 18,
-      ),
-      label: Text(label),
-      visualDensity: VisualDensity.compact,
     );
   }
 }
@@ -585,10 +566,7 @@ class _EmptyTrades extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const _EmptyTrades({
-    required this.icon,
-    required this.text,
-  });
+  const _EmptyTrades({required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -598,10 +576,7 @@ class _EmptyTrades extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 56,
-            ),
+            Icon(icon, size: 56),
             const SizedBox(height: 12),
             Text(
               text,
@@ -618,9 +593,7 @@ class _EmptyTrades extends StatelessWidget {
 class _TradeErrorView extends StatelessWidget {
   final Object? error;
 
-  const _TradeErrorView({
-    required this.error,
-  });
+  const _TradeErrorView({required this.error});
 
   @override
   Widget build(BuildContext context) {

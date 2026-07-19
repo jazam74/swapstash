@@ -242,6 +242,7 @@ class CollectionsPage extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'collections_fab',
         onPressed: () async {
           await showDialog<bool>(
             context: context,

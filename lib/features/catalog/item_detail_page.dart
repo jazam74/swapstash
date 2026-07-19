@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/catalog_item.dart';
 import 'package:swapstash/core/models/user_item.dart';
+import 'package:swapstash/core/services/favorite_service.dart';
 import 'package:swapstash/core/services/user_item_service.dart';
+import 'package:swapstash/core/models/favorite_item.dart';
 
 class ItemDetailPage extends StatefulWidget {
   final CatalogCollection collection;
@@ -21,8 +23,10 @@ class ItemDetailPage extends StatefulWidget {
 
 class _ItemDetailPageState extends State<ItemDetailPage> {
   final UserItemService _service = UserItemService();
+  final FavoriteService _favoriteService = FavoriteService();
 
   bool _isSaving = false;
+  bool _isSavingFavorite = false;
 
   Future<void> _saveQuantity(int quantity) async {
     if (_isSaving || quantity < 0) {
@@ -40,7 +44,9 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
         quantity: quantity,
       );
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -52,7 +58,9 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
         ),
       );
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -70,11 +78,100 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
     }
   }
 
+  Future<void> _toggleFavorite() async {
+    if (_isSavingFavorite) {
+      return;
+    }
+
+    setState(() {
+      _isSavingFavorite = true;
+    });
+
+    try {
+      final isFavorite = await _favoriteService.toggleFavorite(
+        favorite: FavoriteItem(
+          collectionId: widget.collection.id,
+          itemId: widget.item.id,
+          number: widget.item.number,
+          name: widget.item.name,
+          imageUrl: widget.item.imageUrl,
+        ),
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isFavorite
+                ? 'Predmet je dodan med priljubljene.'
+                : 'Predmet je odstranjen iz priljubljenih.',
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Priljubljenega stanja ni bilo mogoče spremeniti: '
+            '$error',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSavingFavorite = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.item.number),
+        actions: [
+          StreamBuilder<bool>(
+            stream: _favoriteService.watchIsFavorite(
+              collectionId: widget.collection.id,
+              itemId: widget.item.id,
+            ),
+            initialData: false,
+            builder: (context, snapshot) {
+              final isFavorite = snapshot.data ?? false;
+
+              return IconButton(
+                tooltip: isFavorite
+                    ? 'Odstrani iz priljubljenih'
+                    : 'Dodaj med priljubljene',
+                onPressed:
+                    _isSavingFavorite ? null : _toggleFavorite,
+                icon: _isSavingFavorite
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Icon(
+                        isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: isFavorite ? Colors.red : null,
+                      ),
+              );
+            },
+          ),
+        ],
       ),
       body: StreamBuilder<UserItem?>(
         stream: _service.watchItem(
