@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/trade.dart';
-import 'package:swapstash/core/models/trade_item.dart';
 import 'package:swapstash/core/services/trade_service.dart';
 import 'package:swapstash/core/theme/app_radius.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
@@ -13,6 +12,7 @@ import 'package:swapstash/features/trades/widgets/trade_confirm_dialog.dart';
 import 'package:swapstash/features/trades/widgets/trade_header.dart';
 import 'package:swapstash/features/trades/widgets/trade_progress_card.dart';
 import 'package:swapstash/features/trades/widgets/trade_summary_card.dart';
+import 'package:swapstash/features/trades/widgets/trade_items_card.dart';
 
 class TradesPage extends StatelessWidget {
   const TradesPage({super.key});
@@ -302,16 +302,22 @@ class _TradeCardState extends State<_TradeCard> {
               ),
             ),
             const Divider(height: AppSpacing.lg),
-            _TradeItemsSection(
-              title: isIncoming ? 'Prejmeš' : 'Ponudil si',
-              icon: Icons.inventory_2_outlined,
-              items: trade.offeredItems,
+            TradeItemsCard(
+              title: isIncoming ? 'Prejmeš' : 'Oddaš',
+              icon: isIncoming ? Icons.download_rounded : Icons.upload_rounded,
+              accentColor: isIncoming
+                  ? Theme.of(context).colorScheme.tertiary
+                  : Theme.of(context).colorScheme.primary,
+              items: isIncoming ? trade.offeredItems : trade.offeredItems,
             ),
-            const SizedBox(height: 12),
-            _TradeItemsSection(
-              title: isIncoming ? 'Oddaš' : 'Želiš',
-              icon: Icons.search_outlined,
-              items: trade.requestedItems,
+            const SizedBox(height: AppSpacing.sm),
+            TradeItemsCard(
+              title: isIncoming ? 'Oddaš' : 'Prejmeš',
+              icon: isIncoming ? Icons.upload_rounded : Icons.download_rounded,
+              accentColor: isIncoming
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.tertiary,
+              items: isIncoming ? trade.requestedItems : trade.requestedItems,
             ),
             if (trade.status == TradeStatus.accepted) ...[
               const SizedBox(height: 16),
@@ -472,49 +478,6 @@ class _TradeCardState extends State<_TradeCard> {
   String _shortUserId(String userId) {
     if (userId.length <= 10) return userId;
     return '${userId.substring(0, 10)}…';
-  }
-}
-
-class _TradeItemsSection extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final List<TradeItem> items;
-
-  const _TradeItemsSection({
-    required this.title,
-    required this.icon,
-    required this.items,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 20),
-            const SizedBox(width: 6),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          ],
-        ),
-        const SizedBox(height: 8),
-        if (items.isEmpty)
-          const Text('Ni predmetov.')
-        else
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: items.map((item) {
-              final quantityText = item.quantity > 1
-                  ? ' ×${item.quantity}'
-                  : '';
-
-              return Chip(label: Text('#${item.itemNumber}$quantityText'));
-            }).toList(),
-          ),
-      ],
-    );
   }
 }
 
