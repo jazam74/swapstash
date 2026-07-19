@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/core/models/trade_item.dart';
 import 'package:swapstash/core/services/trade_service.dart';
@@ -13,6 +12,7 @@ import 'package:swapstash/features/trades/widgets/trade_action_card.dart';
 import 'package:swapstash/features/trades/widgets/trade_confirm_dialog.dart';
 import 'package:swapstash/features/trades/widgets/trade_header.dart';
 import 'package:swapstash/features/trades/widgets/trade_progress_card.dart';
+import 'package:swapstash/features/trades/widgets/trade_summary_card.dart';
 
 class TradesPage extends StatelessWidget {
   const TradesPage({super.key});
@@ -289,15 +289,10 @@ class _TradeCardState extends State<_TradeCard> {
                   : 'POSLANA PONUDBA',
             ),
             const SizedBox(height: 8),
-            Text(
-              isIncoming
-                  ? 'Pošiljatelj: ${_shortUserId(otherUserId)}'
-                  : 'Prejemnik: ${_shortUserId(otherUserId)}',
-            ),
-            const SizedBox(height: 4),
-            Text(
-              DateFormat('dd. MM. yyyy, HH:mm').format(trade.createdAt),
-              style: Theme.of(context).textTheme.bodySmall,
+            TradeSummaryCard(
+              trade: trade,
+              currentUserId: widget.currentUserId,
+              otherUserLabel: _shortUserId(otherUserId),
             ),
             const SizedBox(height: AppSpacing.md),
             TradeActionCard(
