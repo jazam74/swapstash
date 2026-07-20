@@ -5,6 +5,7 @@ import 'package:swapstash/core/theme/app_colors.dart';
 import 'package:swapstash/core/theme/app_radius.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/core/theme/app_text_styles.dart';
+import 'package:swapstash/shared/widgets/app_card.dart';
 
 class TradeSummaryCard extends StatelessWidget {
   final Trade trade;
@@ -21,7 +22,6 @@ class TradeSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSender = trade.senderId == currentUserId;
-
     final outgoingItems = isSender ? trade.offeredItems : trade.requestedItems;
     final incomingItems = isSender ? trade.requestedItems : trade.offeredItems;
 
@@ -34,14 +34,7 @@ class TradeSummaryCard extends StatelessWidget {
       (sum, item) => sum + item.quantity,
     );
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(AppRadius.button),
-        border: Border.all(color: AppColors.border),
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

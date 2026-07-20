@@ -116,7 +116,12 @@ class _TradesStreamView extends StatelessWidget {
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.sm,
+            AppSpacing.sm,
+            AppSpacing.sm,
+            96,
+          ),
           itemCount: trades.length,
           itemBuilder: (context, index) {
             return _TradeCard(
@@ -179,7 +184,12 @@ class _CompletedTradesView extends StatelessWidget {
             }
 
             return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.sm,
+                AppSpacing.sm,
+                AppSpacing.sm,
+                96,
+              ),
               itemCount: trades.length,
               itemBuilder: (context, index) {
                 final trade = trades[index];
@@ -266,72 +276,77 @@ class _TradeCardState extends State<_TradeCard> {
     final isIncoming = widget.direction == _TradeDirection.incoming;
     final otherUserId = isIncoming ? trade.senderId : trade.receiverId;
 
+    final offeredItems = isIncoming ? trade.requestedItems : trade.offeredItems;
+    final receivedItems = isIncoming
+        ? trade.offeredItems
+        : trade.requestedItems;
+
     return Card(
-      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.card),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TradeHeader(
-              status: TradeStatusDisplayService.build(
-                trade: trade,
-                currentUserId: widget.currentUserId,
-              ),
-              directionLabel: trade.status == TradeStatus.countered
-                  ? 'PROTIPONUDBA'
-                  : isIncoming
-                  ? 'PREJETA PONUDBA'
-                  : 'POSLANA PONUDBA',
-            ),
-            const SizedBox(height: 8),
-            TradeSummaryCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TradeHeader(
+            status: TradeStatusDisplayService.build(
               trade: trade,
               currentUserId: widget.currentUserId,
-              otherUserLabel: _shortUserId(otherUserId),
             ),
-            const SizedBox(height: AppSpacing.md),
-            TradeActionCard(
-              action: TradeActionService.build(
-                trade: trade,
-                currentUserId: widget.currentUserId,
-              ),
+            directionLabel: trade.status == TradeStatus.countered
+                ? 'PROTIPONUDBA'
+                : isIncoming
+                ? 'PREJETA PONUDBA'
+                : 'POSLANA PONUDBA',
+          ),
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TradeActionCard(
+                  action: TradeActionService.build(
+                    trade: trade,
+                    currentUserId: widget.currentUserId,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                TradeSummaryCard(
+                  trade: trade,
+                  currentUserId: widget.currentUserId,
+                  otherUserLabel: _shortUserId(otherUserId),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                TradeItemsCard(
+                  title: 'Oddaš',
+                  icon: Icons.upload_rounded,
+                  accentColor: Theme.of(context).colorScheme.primary,
+                  items: offeredItems,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                TradeItemsCard(
+                  title: 'Prejmeš',
+                  icon: Icons.download_rounded,
+                  accentColor: Theme.of(context).colorScheme.tertiary,
+                  items: receivedItems,
+                ),
+                if (trade.status == TradeStatus.accepted) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  TradeProgressCard(
+                    trade: trade,
+                    currentUserId: widget.currentUserId,
+                  ),
+                ],
+                if (_buildActions() case final actions?) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  actions,
+                ],
+              ],
             ),
-            const Divider(height: AppSpacing.lg),
-            TradeItemsCard(
-              title: isIncoming ? 'Prejmeš' : 'Oddaš',
-              icon: isIncoming ? Icons.download_rounded : Icons.upload_rounded,
-              accentColor: isIncoming
-                  ? Theme.of(context).colorScheme.tertiary
-                  : Theme.of(context).colorScheme.primary,
-              items: isIncoming ? trade.offeredItems : trade.offeredItems,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            TradeItemsCard(
-              title: isIncoming ? 'Oddaš' : 'Prejmeš',
-              icon: isIncoming ? Icons.upload_rounded : Icons.download_rounded,
-              accentColor: isIncoming
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.tertiary,
-              items: isIncoming ? trade.requestedItems : trade.requestedItems,
-            ),
-            if (trade.status == TradeStatus.accepted) ...[
-              const SizedBox(height: 16),
-              TradeProgressCard(
-                trade: trade,
-                currentUserId: widget.currentUserId,
-              ),
-            ],
-            if (_buildActions() case final actions?) ...[
-              const SizedBox(height: 14),
-              actions,
-            ],
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -437,10 +452,8 @@ class _TradeCardState extends State<_TradeCard> {
         );
       }
 
-      return const Text(
-        'Čaka se odgovor drugega uporabnika.',
-        textAlign: TextAlign.center,
-      );
+      // TradeActionCard already explains that the other side must respond.
+      return null;
     }
 
     if (trade.status == TradeStatus.accepted) {
@@ -491,12 +504,12 @@ class _EmptyTrades extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 56),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               text,
               textAlign: TextAlign.center,
@@ -518,7 +531,7 @@ class _TradeErrorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Text(
           'Menjav ni bilo mogoče naložiti:\n$error',
           textAlign: TextAlign.center,

@@ -1,23 +1,24 @@
-# PR-004.2 – Trade Items Card
+# PR-005.0 – Shared UI Components
 
 ## Dodano
-- `TradeItemsCard`
-- `TradeItemTile`
-- prostor za prihodnje slike kartic
-- prikaz količine samo, kadar je večja od 1
+- `AppCard`
+- `AppSection`
+- `AppInfoRow`
+- `AppEmptyState`
+- `AppLoadingCard`
+- `AppConfirmDialog`
 
-## Spremenjeno
-- `trades_page.dart`
-- odstranjena stara zasebna komponenta `_TradeItemsSection`
+## Preverjanje zasnove
+- `TradeSummaryCard` je posodobljen tako, da uporablja `AppCard`.
+- Videz in poslovna logika povzetka menjave ostaneta enaka.
 
 ## Test
-- [ ] `dart format lib/features/trades`
+- [ ] `dart format lib/shared lib/features/trades/widgets/trade_summary_card.dart`
 - [ ] `flutter analyze`
-- [ ] Prejeta menjava: Oddaš/Prejmeš sta pravilno obrnjena
-- [ ] Poslana menjava: Oddaš/Prejmeš sta pravilno obrnjena
-- [ ] Količina 1 se ne prikazuje kot ×1
-- [ ] Količina nad 1 se prikaže kot ×N
-- [ ] Prazna stran se izriše brez napake
+- [ ] Povzetek menjave se še vedno pravilno izriše
+- [ ] Oddaš/Prejmeš ostaneta pravilna
+- [ ] Datum in oznaka drugega uporabnika ostaneta vidna
+- [ ] Kartica nima dvojnega roba ali dvojnega notranjega odmika
 
 ## Commit
-`feat(trades): add trade items cards`
+`refactor(ui): add shared application components`
