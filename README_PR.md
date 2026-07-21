@@ -1,25 +1,24 @@
-# PR-006.0 – CollectionCard
+# PR-007.0 – Collection Statistics Foundation
 
 ## Dodano
-- `CollectionCardData`
-- `CollectionCard`
-- `CollectionProgress`
-- `CollectionStatsRow`
-- `CollectionPopupMenu`
+- `CollectionStatistics`
+- `CollectionStatisticsService`
+
+## Kaj izračuna
+- zbrane različne kartice
+- viške nad prvim izvodom
+- manjkajoče kartice
+- odstotek dokončanosti
+- skupno fizično količino kartic
 
 ## Pomembno
-Ta PR še ne spreminja obstoječih strani.
-
-Nova komponenta:
-- ne pozna Firestore modelov,
-- ne kliče servisov,
-- podpira navadni in kompaktni prikaz,
-- podpira klik in meni,
-- prikazuje napredek, viške in manjkajoče kartice.
+Ta PR ne spreminja Firestore strukture in še ne spreminja uporabniškega vmesnika.
 
 ## Test
-- [ ] `dart format lib/features/collections/models lib/features/collections/widgets`
-- [ ] `flutter analyze`
+```powershell
+dart format lib\core\models\collection_statistics.dart lib\core\services\collection_statistics_service.dart
+flutter analyze
+```
 
 ## Commit
-`feat(collections): add reusable collection card`
+`feat(collections): add collection statistics foundation`
