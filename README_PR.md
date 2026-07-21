@@ -1,24 +1,25 @@
-# PR-005.0 – Shared UI Components
+# PR-006.0 – CollectionCard
 
 ## Dodano
-- `AppCard`
-- `AppSection`
-- `AppInfoRow`
-- `AppEmptyState`
-- `AppLoadingCard`
-- `AppConfirmDialog`
+- `CollectionCardData`
+- `CollectionCard`
+- `CollectionProgress`
+- `CollectionStatsRow`
+- `CollectionPopupMenu`
 
-## Preverjanje zasnove
-- `TradeSummaryCard` je posodobljen tako, da uporablja `AppCard`.
-- Videz in poslovna logika povzetka menjave ostaneta enaka.
+## Pomembno
+Ta PR še ne spreminja obstoječih strani.
+
+Nova komponenta:
+- ne pozna Firestore modelov,
+- ne kliče servisov,
+- podpira navadni in kompaktni prikaz,
+- podpira klik in meni,
+- prikazuje napredek, viške in manjkajoče kartice.
 
 ## Test
-- [ ] `dart format lib/shared lib/features/trades/widgets/trade_summary_card.dart`
+- [ ] `dart format lib/features/collections/models lib/features/collections/widgets`
 - [ ] `flutter analyze`
-- [ ] Povzetek menjave se še vedno pravilno izriše
-- [ ] Oddaš/Prejmeš ostaneta pravilna
-- [ ] Datum in oznaka drugega uporabnika ostaneta vidna
-- [ ] Kartica nima dvojnega roba ali dvojnega notranjega odmika
 
 ## Commit
-`refactor(ui): add shared application components`
+`feat(collections): add reusable collection card`
