@@ -17,6 +17,12 @@ import 'package:swapstash/shared/widgets/app_section.dart';
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
+  void _openCollections(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const MyCollectionsV2Page()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final dashboardService = DashboardService();
@@ -47,16 +53,6 @@ class DashboardPage extends StatelessWidget {
               );
             },
           ),
-          IconButton(
-            tooltip: 'Moje zbirke V2',
-            icon: const Icon(Icons.folder_copy),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const MyCollectionsV2Page()),
-              );
-            },
-          ),
         ],
       ),
       body: StreamBuilder<DashboardData>(
@@ -78,7 +74,7 @@ class DashboardPage extends StatelessWidget {
             );
           }
 
-          final data = snapshot.data ?? DashboardData.fromCollections([]);
+          final data = snapshot.data ?? DashboardData.empty();
 
           return RefreshIndicator(
             onRefresh: () async {
@@ -95,8 +91,13 @@ class DashboardPage extends StatelessWidget {
                 AppSection(
                   icon: Icons.collections_bookmark_outlined,
                   title: 'Moje zbirke',
+                  trailing: TextButton(
+                    onPressed: () => _openCollections(context),
+                    child: const Text('Prikaži vse'),
+                  ),
                   child: DashboardBestCollectionCard(
                     collection: data.bestCollection,
+                    onTap: () => _openCollections(context),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
@@ -108,6 +109,7 @@ class DashboardPage extends StatelessWidget {
                     ownedCount: data.ownedCount,
                     duplicateCount: data.duplicateCount,
                     missingCount: data.missingCount,
+                    onCollectionsTap: () => _openCollections(context),
                   ),
                 ),
                 if (data.recentCollections.isNotEmpty) ...[
@@ -117,6 +119,7 @@ class DashboardPage extends StatelessWidget {
                     title: 'Tvoje zbirke',
                     child: DashboardRecentCollectionsCard(
                       collections: data.recentCollections,
+                      onCollectionTap: (_) => _openCollections(context),
                     ),
                   ),
                 ],

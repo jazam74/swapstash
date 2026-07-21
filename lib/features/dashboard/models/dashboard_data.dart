@@ -1,10 +1,10 @@
-import 'package:swapstash/core/models/collection.dart';
+import 'package:swapstash/core/models/collection_statistics.dart';
 import 'package:swapstash/features/dashboard/models/dashboard_action.dart';
 
 class DashboardData {
-  final List<Collection> collections;
-  final Collection? bestCollection;
-  final List<Collection> recentCollections;
+  final List<CollectionStatistics> collections;
+  final CollectionStatistics? bestCollection;
+  final List<CollectionStatistics> recentCollections;
   final List<DashboardAction> actions;
   final int collectionCount;
   final int ownedCount;
@@ -22,26 +22,11 @@ class DashboardData {
     required this.missingCount,
   });
 
-  factory DashboardData.fromCollections(
-    List<Collection> collections, {
+  factory DashboardData.fromStatistics(
+    List<CollectionStatistics> collections, {
     List<DashboardAction> actions = const [],
   }) {
-    final ownedCount = collections.fold<int>(
-      0,
-      (sum, collection) => sum + collection.ownedCount,
-    );
-
-    final duplicateCount = collections.fold<int>(
-      0,
-      (sum, collection) => sum + collection.duplicateCount,
-    );
-
-    final missingCount = collections.fold<int>(
-      0,
-      (sum, collection) => sum + collection.missingCount,
-    );
-
-    Collection? bestCollection;
+    CollectionStatistics? bestCollection;
 
     if (collections.isNotEmpty) {
       bestCollection = collections.reduce((first, second) {
@@ -50,14 +35,29 @@ class DashboardData {
     }
 
     return DashboardData(
-      collections: List<Collection>.unmodifiable(collections),
+      collections: List<CollectionStatistics>.unmodifiable(collections),
       bestCollection: bestCollection,
-      recentCollections: List<Collection>.unmodifiable(collections.take(3)),
+      recentCollections: List<CollectionStatistics>.unmodifiable(
+        collections.take(3),
+      ),
       actions: List<DashboardAction>.unmodifiable(actions),
       collectionCount: collections.length,
-      ownedCount: ownedCount,
-      duplicateCount: duplicateCount,
-      missingCount: missingCount,
+      ownedCount: collections.fold<int>(
+        0,
+        (sum, collection) => sum + collection.ownedCount,
+      ),
+      duplicateCount: collections.fold<int>(
+        0,
+        (sum, collection) => sum + collection.duplicateCount,
+      ),
+      missingCount: collections.fold<int>(
+        0,
+        (sum, collection) => sum + collection.missingCount,
+      ),
     );
+  }
+
+  factory DashboardData.empty() {
+    return DashboardData.fromStatistics(const []);
   }
 }

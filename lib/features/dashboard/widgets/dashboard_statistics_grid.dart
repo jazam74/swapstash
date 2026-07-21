@@ -10,6 +10,7 @@ class DashboardStatisticsGrid extends StatelessWidget {
   final int ownedCount;
   final int duplicateCount;
   final int missingCount;
+  final VoidCallback? onCollectionsTap;
 
   const DashboardStatisticsGrid({
     super.key,
@@ -17,6 +18,7 @@ class DashboardStatisticsGrid extends StatelessWidget {
     required this.ownedCount,
     required this.duplicateCount,
     required this.missingCount,
+    this.onCollectionsTap,
   });
 
   @override
@@ -27,6 +29,7 @@ class DashboardStatisticsGrid extends StatelessWidget {
         label: 'Zbirke',
         value: collectionCount,
         color: AppColors.primary,
+        onTap: onCollectionsTap,
       ),
       _StatisticData(
         icon: Icons.check_circle_outline,
@@ -73,6 +76,7 @@ class _StatisticCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      onTap: data.onTap,
       padding: const EdgeInsets.all(AppSpacing.sm),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -106,11 +110,13 @@ class _StatisticData {
   final String label;
   final int value;
   final Color color;
+  final VoidCallback? onTap;
 
   const _StatisticData({
     required this.icon,
     required this.label,
     required this.value,
     required this.color,
+    this.onTap,
   });
 }

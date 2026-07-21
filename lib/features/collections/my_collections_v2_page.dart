@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/catalog_collection.dart';
+import 'package:swapstash/core/models/collection_statistics.dart';
 import 'package:swapstash/core/models/user_collection.dart';
 import 'package:swapstash/core/services/catalog_service.dart';
+import 'package:swapstash/core/services/collection_statistics_service.dart';
 import 'package:swapstash/core/services/user_collection_service.dart';
 import 'package:swapstash/features/catalog/catalog_collections_page.dart';
 import 'package:swapstash/features/catalog/catalog_items_page.dart';
@@ -20,6 +22,9 @@ class _MyCollectionsV2PageState extends State<MyCollectionsV2Page> {
   final UserCollectionService _userCollectionService = UserCollectionService();
 
   final CatalogService _catalogService = CatalogService();
+
+  final CollectionStatisticsService _collectionStatisticsService =
+      CollectionStatisticsService();
 
   final Map<String, Future<CatalogCollection?>> _catalogCollectionFutures = {};
 
@@ -176,35 +181,79 @@ class _MyCollectionsV2PageState extends State<MyCollectionsV2Page> {
                     );
                   }
 
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: CollectionCard(
-                      data: CollectionCardData(
-                        title: collection.name,
-                        subtitle:
-                            '${collection.publisher} • '
-                            '${collection.category} • '
-                            '${collection.year}',
-                        ownedCount: 0,
-                        totalCount: collection.totalItems,
-                        duplicateCount: 0,
-                        missingCount: collection.totalItems,
-                      ),
-                      showMenu: true,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                CatalogItemsPage(collection: collection),
+                  return StreamBuilder<CollectionStatistics>(
+                    stream: _collectionStatisticsService.watchStatistics(
+                      collection: collection,
+                    ),
+                    builder: (context, statisticsSnapshot) {
+                      if (statisticsSnapshot.connectionState ==
+                              ConnectionState.waiting &&
+                          !statisticsSnapshot.hasData) {
+                        return const Card(
+                          margin: EdgeInsets.only(bottom: 12),
+                          child: SizedBox(
+                            height: 160,
+                            child: Center(child: CircularProgressIndicator()),
                           ),
                         );
-                      },
-                      onMenuSelected: (action) {
-                        if (action == CollectionMenuAction.remove) {
-                          _removeCollection(collection);
-                        }
-                      },
-                    ),
+                      }
+
+                      if (statisticsSnapshot.hasError) {
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: ListTile(
+                            leading: const Icon(Icons.error_outline),
+                            title: const Text(
+                              'Statistike zbirke ni bilo mogoče naložiti.',
+                            ),
+                            subtitle: Text('${statisticsSnapshot.error}'),
+                          ),
+                        );
+                      }
+
+                      final statistics = statisticsSnapshot.data;
+
+                      if (statistics == null) {
+                        return const Card(
+                          margin: EdgeInsets.only(bottom: 12),
+                          child: ListTile(
+                            leading: Icon(Icons.warning_amber_outlined),
+                            title: Text('Statistika zbirke ni na voljo.'),
+                          ),
+                        );
+                      }
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: CollectionCard(
+                          data: CollectionCardData(
+                            title: statistics.name,
+                            subtitle:
+                                '${statistics.publisher} • '
+                                '${statistics.category} • '
+                                '${statistics.year}',
+                            ownedCount: statistics.ownedCount,
+                            totalCount: statistics.totalItems,
+                            duplicateCount: statistics.duplicateCount,
+                            missingCount: statistics.missingCount,
+                          ),
+                          showMenu: true,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    CatalogItemsPage(collection: collection),
+                              ),
+                            );
+                          },
+                          onMenuSelected: (action) {
+                            if (action == CollectionMenuAction.remove) {
+                              _removeCollection(collection);
+                            }
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
               );
