@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/user_profile.dart';
 import 'package:swapstash/core/services/firestore_service.dart';
+import 'package:swapstash/features/users/public_user_profile_page.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
@@ -75,12 +76,10 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   void _openUserProfile(UserProfile profile) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Javni profil uporabnika '
-          '${profile.displayName} bo dodan v naslednjem koraku.',
-        ),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            PublicUserProfilePage(userId: profile.uid, initialProfile: profile),
       ),
     );
   }

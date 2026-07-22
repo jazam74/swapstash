@@ -84,6 +84,38 @@ class TradeRatingService {
         });
   }
 
+  Stream<List<TradeRating>> watchRatingsForUser({
+    required String userId,
+    int limit = 20,
+  }) {
+    final id = userId.trim();
+
+    if (id.isEmpty) {
+      return Stream<List<TradeRating>>.value(const []);
+    }
+
+    final safeLimit = limit < 1
+        ? 1
+        : limit > 50
+        ? 50
+        : limit;
+
+    return _db
+        .collection('users')
+        .doc(id)
+        .collection('ratings')
+        .orderBy('createdAt', descending: true)
+        .limit(safeLimit)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (document) => TradeRating.fromMap(document.id, document.data()),
+              )
+              .toList(growable: false),
+        );
+  }
+
   Future<void> submitRating({
     required Trade trade,
     required int stars,

@@ -6,6 +6,7 @@ import 'package:swapstash/core/models/trade_item.dart';
 import 'package:swapstash/core/services/chat_service.dart';
 import 'package:swapstash/core/services/trade_service.dart';
 import 'package:swapstash/features/messages/chat_page.dart';
+import 'package:swapstash/features/users/public_user_profile_page.dart';
 
 class TradeDetailPage extends StatefulWidget {
   final CatalogCollection collection;
@@ -70,6 +71,15 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
         });
       }
     }
+  }
+
+  void _openPublicProfile() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            PublicUserProfilePage(userId: widget.candidate.member.uid),
+      ),
+    );
   }
 
   Future<void> _createAutomaticTradeProposal() async {
@@ -222,7 +232,7 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _MemberHeader(candidate: candidate),
+          _MemberHeader(candidate: candidate, onTap: _openPublicProfile),
           const SizedBox(height: 20),
           _SummaryCard(candidate: candidate),
           const SizedBox(height: 20),
@@ -299,8 +309,9 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
 
 class _MemberHeader extends StatelessWidget {
   final TradeCandidate candidate;
+  final VoidCallback onTap;
 
-  const _MemberHeader({required this.candidate});
+  const _MemberHeader({required this.candidate, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -316,51 +327,69 @@ class _MemberHeader extends StatelessWidget {
       if (member.country.trim().isNotEmpty) member.country.trim(),
     ];
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        CircleAvatar(
-          radius: 32,
-          backgroundImage: member.photoUrl.trim().isNotEmpty
-              ? NetworkImage(member.photoUrl)
-              : null,
-          child: member.photoUrl.trim().isEmpty
-              ? Text(initial, style: Theme.of(context).textTheme.headlineSmall)
-              : null,
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(16),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                displayName.isEmpty ? 'Neimenovan uporabnik' : displayName,
-                style: Theme.of(context).textTheme.headlineSmall,
+              CircleAvatar(
+                radius: 32,
+                backgroundImage: member.photoUrl.trim().isNotEmpty
+                    ? NetworkImage(member.photoUrl)
+                    : null,
+                child: member.photoUrl.trim().isEmpty
+                    ? Text(
+                        initial,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      )
+                    : null,
               ),
-              if (locationParts.isNotEmpty) ...[
-                const SizedBox(height: 4),
-                Row(
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.location_on_outlined, size: 18),
-                    const SizedBox(width: 4),
-                    Expanded(child: Text(locationParts.join(', '))),
+                    Text(
+                      displayName.isEmpty
+                          ? 'Neimenovan uporabnik'
+                          : displayName,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    if (locationParts.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on_outlined, size: 18),
+                          const SizedBox(width: 4),
+                          Expanded(child: Text(locationParts.join(', '))),
+                        ],
+                      ),
+                    ],
+                    if (member.allowInternationalTrades) ...[
+                      const SizedBox(height: 4),
+                      const Row(
+                        children: [
+                          Icon(Icons.public, size: 18),
+                          SizedBox(width: 4),
+                          Expanded(child: Text('Dovoljuje mednarodne menjave')),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
-              ],
-              if (member.allowInternationalTrades) ...[
-                const SizedBox(height: 4),
-                const Row(
-                  children: [
-                    Icon(Icons.public, size: 18),
-                    SizedBox(width: 4),
-                    Expanded(child: Text('Dovoljuje mednarodne menjave')),
-                  ],
-                ),
-              ],
+              ),
+              const SizedBox(width: 8),
+              const Icon(Icons.chevron_right),
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }
