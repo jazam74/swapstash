@@ -1,53 +1,55 @@
-# PR-008.2 – Neprebrana sporočila na Dashboardu
+# PR-008.3 – Zavihek Vse menjave
 
 ## Namen
-Kartica **Danes te čaka** poleg opravil menjav prikazuje tudi pogovore
-z neprebranimi sporočili.
+Ob običajnem odprtju strani **Menjave** uporabnik najprej vidi vse svoje
+menjave skupaj in mu ni treba vedeti, ali je bila posamezna menjava prejeta,
+poslana ali zaključena.
 
 ## Novo vedenje
-- vsak pogovor z neprebranimi sporočili ustvari svoje opravilo
-- opravilo pokaže število neprebranih sporočil
-- pod naslovom sta prikazana sogovornik in zbirka
-- klik odpre točno povezani pogovor
-- ob odprtju se pogovor označi kot prebran
-- opravilo nato samodejno izgine z Dashboarda
+Zavihki so po novem:
 
-## Prednost opravil
-1. odgovor na ponudbo ali protiponudbo
-2. neprebrana sporočila
-3. potrditev prejema
-4. potrditev predaje
+1. **Vse**
+2. **Prejete**
+3. **Poslane**
+4. **Zaključene**
 
-Na Dashboardu je še vedno prikazanih največ pet opravil.
+Zavihek **Vse** je privzet in združuje:
+- prejete menjave
+- poslane menjave
+- zaključene menjave
+- zavrnjene in preklicane menjave
 
-## Firestore
-Struktura podatkov se ne spremeni. Uporabljajo se obstoječi:
-- `Conversation.unreadCounts`
-- `ChatService.watchConversations()`
-- `ChatService.markConversationRead()`
+Vsaka menjava je prikazana samo enkrat. Razvrščene so po zadnji spremembi,
+najnovejše najprej.
+
+## Neposredno odpiranje iz Dashboarda
+Opravila še naprej odpirajo namenski zavihek:
+- prejeta menjava → **Prejete**
+- poslana menjava → **Poslane**
+- zaključena menjava → **Zaključene**
+
+Povezana menjava ostane premaknjena na vrh in poudarjena.
 
 ## Spremenjene datoteke
-- `lib/core/services/chat_service.dart`
-- `lib/features/messages/messages_page.dart`
-- `lib/features/dashboard/models/dashboard_action.dart`
+- `lib/features/trades/trades_page.dart`
 - `lib/features/dashboard/services/dashboard_trade_action_mapper.dart`
-- `lib/features/dashboard/services/dashboard_message_action_mapper.dart`
-- `lib/features/dashboard/services/dashboard_service.dart`
-- `lib/features/dashboard/dashboard_page.dart`
+
+## Firestore
+Struktura podatkov se ne spremeni.
 
 ## Preverjanje
 ```powershell
-dart format lib\core\services\chat_service.dart lib\features\messages\messages_page.dart lib\features\dashboard
+dart format lib\features\trades\trades_page.dart lib\features\dashboard\services\dashboard_trade_action_mapper.dart
 flutter analyze
 ```
 
 Ročni test:
-1. Z drugim računom pošlji eno ali več sporočil.
-2. Na prejemnikovem Dashboardu mora biti prikazano opravilo.
-3. Naslov mora pokazati število neprebranih sporočil.
-4. Klik mora odpreti pravi pogovor.
-5. Po odprtju in vrnitvi na Dashboard mora opravilo izginiti.
-6. Opravila menjav morajo še vedno odpirati pravo menjavo.
+1. Spodaj klikni **Menjave**.
+2. Privzeto mora biti izbran zavihek **Vse**.
+3. Na seznamu morajo biti skupaj prejete, poslane in zaključene menjave.
+4. Najnovejša oziroma nazadnje spremenjena menjava mora biti prva.
+5. Klik na opravilo na Dashboardu mora še vedno odpreti pravi namenski zavihek
+   in poudariti pravo menjavo.
 
 ## Commit
-`feat(dashboard): show unread message tasks`
+`feat(trades): add all trades overview tab`

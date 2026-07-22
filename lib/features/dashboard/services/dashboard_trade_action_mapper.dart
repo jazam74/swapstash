@@ -76,10 +76,10 @@ abstract final class DashboardTradeActionMapper {
     required String currentUserId,
   }) {
     if (trade.status == TradeStatus.completed) {
-      return 2;
+      return 3;
     }
 
-    return trade.senderId == currentUserId ? 1 : 0;
+    return trade.senderId == currentUserId ? 2 : 1;
   }
 
   static String _titleFor({

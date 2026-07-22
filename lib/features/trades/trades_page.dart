@@ -30,18 +30,19 @@ class TradesPage extends StatelessWidget {
 
     final selectedTabIndex = initialTabIndex < 0
         ? 0
-        : initialTabIndex > 2
-        ? 2
+        : initialTabIndex > 3
+        ? 3
         : initialTabIndex;
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
       initialIndex: selectedTabIndex,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Menjave'),
           bottom: const TabBar(
             tabs: [
+              Tab(icon: Icon(Icons.view_list_outlined), text: 'Vse'),
               Tab(icon: Icon(Icons.inbox_outlined), text: 'Prejete'),
               Tab(icon: Icon(Icons.send_outlined), text: 'Poslane'),
               Tab(icon: Icon(Icons.check_circle_outline), text: 'Zaključene'),
@@ -50,6 +51,11 @@ class TradesPage extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
+            _AllTradesView(
+              tradeService: tradeService,
+              currentUserId: tradeService.currentUserId,
+              highlightedTradeId: highlightedTradeId,
+            ),
             _TradesStreamView(
               stream: tradeService.watchIncomingTrades(),
               tradeService: tradeService,
@@ -84,6 +90,101 @@ class TradesPage extends StatelessWidget {
           label: const Text('Nova menjava'),
         ),
       ),
+    );
+  }
+}
+
+class _AllTradesView extends StatelessWidget {
+  final TradeService tradeService;
+  final String currentUserId;
+  final String? highlightedTradeId;
+
+  const _AllTradesView({
+    required this.tradeService,
+    required this.currentUserId,
+    this.highlightedTradeId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<Trade>>(
+      stream: tradeService.watchIncomingTrades(),
+      builder: (context, incomingSnapshot) {
+        if (incomingSnapshot.hasError) {
+          return _TradeErrorView(error: incomingSnapshot.error);
+        }
+
+        return StreamBuilder<List<Trade>>(
+          stream: tradeService.watchOutgoingTrades(),
+          builder: (context, outgoingSnapshot) {
+            if (outgoingSnapshot.hasError) {
+              return _TradeErrorView(error: outgoingSnapshot.error);
+            }
+
+            final isWaiting =
+                (incomingSnapshot.connectionState == ConnectionState.waiting &&
+                    !incomingSnapshot.hasData) ||
+                (outgoingSnapshot.connectionState == ConnectionState.waiting &&
+                    !outgoingSnapshot.hasData);
+
+            if (isWaiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final tradesById = <String, Trade>{};
+
+            for (final trade in [
+              ...incomingSnapshot.data ?? <Trade>[],
+              ...outgoingSnapshot.data ?? <Trade>[],
+            ]) {
+              tradesById[trade.id] = trade;
+            }
+
+            final trades = tradesById.values.toList()
+              ..sort((first, second) {
+                final firstDate = first.updatedAt ?? first.createdAt;
+                final secondDate = second.updatedAt ?? second.createdAt;
+
+                return secondDate.compareTo(firstDate);
+              });
+
+            _moveTradeToTop(
+              trades: trades,
+              highlightedTradeId: highlightedTradeId,
+            );
+
+            if (trades.isEmpty) {
+              return const _EmptyTrades(
+                icon: Icons.view_list_outlined,
+                text: 'Še nimaš nobene menjave.',
+              );
+            }
+
+            return ListView.builder(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.sm,
+                AppSpacing.sm,
+                AppSpacing.sm,
+                96,
+              ),
+              itemCount: trades.length,
+              itemBuilder: (context, index) {
+                final trade = trades[index];
+
+                return _TradeCard(
+                  trade: trade,
+                  tradeService: tradeService,
+                  currentUserId: currentUserId,
+                  direction: trade.receiverId == currentUserId
+                      ? _TradeDirection.incoming
+                      : _TradeDirection.outgoing,
+                  isHighlighted: trade.id == highlightedTradeId,
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }
