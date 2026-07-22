@@ -5,7 +5,9 @@ import 'package:swapstash/core/services/chat_service.dart';
 import 'package:swapstash/features/messages/chat_page.dart';
 
 class MessagesPage extends StatefulWidget {
-  const MessagesPage({super.key});
+  final String? initialConversationId;
+
+  const MessagesPage({super.key, this.initialConversationId});
 
   @override
   State<MessagesPage> createState() => _MessagesPageState();
@@ -18,6 +20,7 @@ class _MessagesPageState extends State<MessagesPage> {
   final FocusNode _searchFocusNode = FocusNode();
 
   String _searchQuery = '';
+  bool _initialConversationHandled = false;
 
   String? get _currentUserId => _auth.currentUser?.uid;
 
@@ -36,6 +39,49 @@ class _MessagesPageState extends State<MessagesPage> {
         builder: (context) => ChatPage(conversation: conversation),
       ),
     );
+  }
+
+  void _openInitialConversationIfNeeded(List<Conversation> conversations) {
+    if (_initialConversationHandled) {
+      return;
+    }
+
+    final initialConversationId = widget.initialConversationId?.trim() ?? '';
+
+    if (initialConversationId.isEmpty) {
+      _initialConversationHandled = true;
+      return;
+    }
+
+    Conversation? matchingConversation;
+
+    for (final conversation in conversations) {
+      if (conversation.id == initialConversationId) {
+        matchingConversation = conversation;
+        break;
+      }
+    }
+
+    _initialConversationHandled = true;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+
+      final conversation = matchingConversation;
+
+      if (conversation == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Povezanega pogovora ni bilo mogoče najti.'),
+          ),
+        );
+        return;
+      }
+
+      _openConversation(conversation);
+    });
   }
 
   void _updateSearchQuery(String value) {
@@ -105,6 +151,9 @@ class _MessagesPageState extends State<MessagesPage> {
                 }
 
                 final conversations = snapshot.data ?? const <Conversation>[];
+
+                _openInitialConversationIfNeeded(conversations);
+
                 final filteredConversations = _filterConversations(
                   conversations,
                   currentUserId,

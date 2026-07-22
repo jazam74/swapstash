@@ -2,13 +2,17 @@ import 'dart:async';
 
 import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/collection_statistics.dart';
+import 'package:swapstash/core/models/conversation.dart';
 import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/core/models/user_collection.dart';
 import 'package:swapstash/core/services/catalog_service.dart';
+import 'package:swapstash/core/services/chat_service.dart';
 import 'package:swapstash/core/services/collection_statistics_service.dart';
 import 'package:swapstash/core/services/trade_service.dart';
 import 'package:swapstash/core/services/user_collection_service.dart';
+import 'package:swapstash/features/dashboard/models/dashboard_action.dart';
 import 'package:swapstash/features/dashboard/models/dashboard_data.dart';
+import 'package:swapstash/features/dashboard/services/dashboard_message_action_mapper.dart';
 import 'package:swapstash/features/dashboard/services/dashboard_trade_action_mapper.dart';
 
 class DashboardService {
@@ -16,18 +20,21 @@ class DashboardService {
   final CatalogService _catalogService;
   final CollectionStatisticsService _collectionStatisticsService;
   final TradeService _tradeService;
+  final ChatService _chatService;
 
   DashboardService({
     UserCollectionService? userCollectionService,
     CatalogService? catalogService,
     CollectionStatisticsService? collectionStatisticsService,
     TradeService? tradeService,
+    ChatService? chatService,
   }) : _userCollectionService =
            userCollectionService ?? UserCollectionService(),
        _catalogService = catalogService ?? CatalogService(),
        _collectionStatisticsService =
            collectionStatisticsService ?? CollectionStatisticsService(),
-       _tradeService = tradeService ?? TradeService();
+       _tradeService = tradeService ?? TradeService(),
+       _chatService = chatService ?? ChatService();
 
   Stream<DashboardData> watchDashboard() {
     late final StreamController<DashboardData> controller;
@@ -35,6 +42,7 @@ class DashboardService {
     StreamSubscription<List<UserCollection>>? collectionsSubscription;
     StreamSubscription<List<Trade>>? incomingTradesSubscription;
     StreamSubscription<List<Trade>>? outgoingTradesSubscription;
+    StreamSubscription<List<Conversation>>? conversationsSubscription;
 
     final statisticsSubscriptions =
         <StreamSubscription<CollectionStatistics>>[];
@@ -42,28 +50,57 @@ class DashboardService {
     List<CollectionStatistics> latestStatistics = const [];
     List<Trade> latestIncomingTrades = const [];
     List<Trade> latestOutgoingTrades = const [];
+    List<Conversation> latestConversations = const [];
 
     var collectionsReady = false;
     var incomingTradesReady = false;
     var outgoingTradesReady = false;
+    var conversationsReady = false;
     var generation = 0;
 
     void emitDashboardWhenReady() {
       if (controller.isClosed ||
           !collectionsReady ||
           !incomingTradesReady ||
-          !outgoingTradesReady) {
+          !outgoingTradesReady ||
+          !conversationsReady) {
         return;
       }
 
-      final actions = DashboardTradeActionMapper.build(
+      final tradeActions = DashboardTradeActionMapper.build(
         incomingTrades: latestIncomingTrades,
         outgoingTrades: latestOutgoingTrades,
         currentUserId: _tradeService.currentUserId,
+        limit: 50,
       );
 
+      final messageActions = DashboardMessageActionMapper.build(
+        conversations: latestConversations,
+        currentUserId: _chatService.currentUserId,
+        limit: 50,
+      );
+
+      final actions = <DashboardAction>[...tradeActions, ...messageActions]
+        ..sort((first, second) {
+          final priorityComparison = first.priority.compareTo(second.priority);
+
+          if (priorityComparison != 0) {
+            return priorityComparison;
+          }
+
+          final firstDate =
+              first.sortAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+          final secondDate =
+              second.sortAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+
+          return secondDate.compareTo(firstDate);
+        });
+
       controller.add(
-        DashboardData.fromStatistics(latestStatistics, actions: actions),
+        DashboardData.fromStatistics(
+          latestStatistics,
+          actions: actions.take(5).toList(growable: false),
+        ),
       );
     }
 
@@ -196,6 +233,14 @@ class DashboardService {
                 outgoingTradesReady = true;
                 emitDashboardWhenReady();
               }, onError: addStreamError);
+
+          conversationsSubscription = _chatService.watchConversations().listen((
+            conversations,
+          ) {
+            latestConversations = conversations;
+            conversationsReady = true;
+            emitDashboardWhenReady();
+          }, onError: addStreamError);
         } catch (error, stackTrace) {
           controller.addError(error, stackTrace);
         }
@@ -206,6 +251,7 @@ class DashboardService {
         await collectionsSubscription?.cancel();
         await incomingTradesSubscription?.cancel();
         await outgoingTradesSubscription?.cancel();
+        await conversationsSubscription?.cancel();
         await cancelStatisticsSubscriptions();
       },
     );

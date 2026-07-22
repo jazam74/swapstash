@@ -46,6 +46,8 @@ abstract final class DashboardTradeActionMapper {
               trade: trade,
               currentUserId: currentUserId,
             ),
+            priority: _priorityFor(tradeAction.type),
+            sortAt: trade.updatedAt ?? trade.createdAt,
           ),
           priority: _priorityFor(tradeAction.type),
           updatedAt: trade.updatedAt ?? trade.createdAt,
@@ -105,9 +107,9 @@ abstract final class DashboardTradeActionMapper {
       case TradeActionType.respondToOffer:
         return 0;
       case TradeActionType.confirmReceipt:
-        return 1;
-      case TradeActionType.confirmHandover:
         return 2;
+      case TradeActionType.confirmHandover:
+        return 3;
       case TradeActionType.waiting:
       case TradeActionType.completed:
       case TradeActionType.unavailable:

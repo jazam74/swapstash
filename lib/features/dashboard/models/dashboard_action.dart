@@ -7,6 +7,9 @@ class DashboardAction {
   final String subtitle;
   final String? tradeId;
   final int? tradeTabIndex;
+  final String? conversationId;
+  final int priority;
+  final DateTime? sortAt;
   final VoidCallback? onTap;
 
   const DashboardAction({
@@ -16,6 +19,9 @@ class DashboardAction {
     required this.subtitle,
     this.tradeId,
     this.tradeTabIndex,
+    this.conversationId,
+    this.priority = 100,
+    this.sortAt,
     this.onTap,
   });
 
@@ -27,6 +33,9 @@ class DashboardAction {
       subtitle: subtitle,
       tradeId: tradeId,
       tradeTabIndex: tradeTabIndex,
+      conversationId: conversationId,
+      priority: priority,
+      sortAt: sortAt,
       onTap: onTap ?? this.onTap,
     );
   }

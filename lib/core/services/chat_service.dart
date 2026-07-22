@@ -22,6 +22,8 @@ class ChatService {
 
   String get _currentUserId => _currentUser.uid;
 
+  String get currentUserId => _currentUserId;
+
   CollectionReference<Map<String, dynamic>> get _conversationsReference {
     return _db.collection('conversations');
   }

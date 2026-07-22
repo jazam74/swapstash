@@ -11,6 +11,7 @@ import 'package:swapstash/features/dashboard/widgets/dashboard_recent_collection
 import 'package:swapstash/features/dashboard/widgets/dashboard_statistics_grid.dart';
 import 'package:swapstash/features/dashboard/widgets/dashboard_welcome_card.dart';
 import 'package:swapstash/features/favorites/favorites_page.dart';
+import 'package:swapstash/features/messages/messages_page.dart';
 import 'package:swapstash/features/trades/trades_page.dart';
 import 'package:swapstash/shared/widgets/app_empty_state.dart';
 import 'package:swapstash/shared/widgets/app_loading_card.dart';
@@ -23,6 +24,15 @@ class DashboardPage extends StatelessWidget {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const MyCollectionsV2Page()));
+  }
+
+  void _openConversation(BuildContext context, DashboardAction action) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) =>
+            MessagesPage(initialConversationId: action.conversationId),
+      ),
+    );
   }
 
   void _openTrade(BuildContext context, DashboardAction action) {
@@ -42,11 +52,17 @@ class DashboardPage extends StatelessWidget {
   ) {
     return actions
         .map((action) {
-          if (action.tradeId == null || action.tradeId!.isEmpty) {
-            return action;
+          if (action.conversationId?.trim().isNotEmpty ?? false) {
+            return action.copyWith(
+              onTap: () => _openConversation(context, action),
+            );
           }
 
-          return action.copyWith(onTap: () => _openTrade(context, action));
+          if (action.tradeId?.trim().isNotEmpty ?? false) {
+            return action.copyWith(onTap: () => _openTrade(context, action));
+          }
+
+          return action;
         })
         .toList(growable: false);
   }
