@@ -45,7 +45,7 @@ class TradesPage extends StatelessWidget {
               Tab(icon: Icon(Icons.view_list_outlined), text: 'Vse'),
               Tab(icon: Icon(Icons.inbox_outlined), text: 'Prejete'),
               Tab(icon: Icon(Icons.send_outlined), text: 'Poslane'),
-              Tab(icon: Icon(Icons.check_circle_outline), text: 'Zaključene'),
+              Tab(icon: Icon(Icons.archive_outlined), text: 'Arhiv'),
             ],
           ),
         ),
@@ -72,7 +72,7 @@ class TradesPage extends StatelessWidget {
               emptyMessage: 'Ni poslanih menjav.',
               highlightedTradeId: highlightedTradeId,
             ),
-            _CompletedTradesView(
+            _ArchivedTradesView(
               tradeService: tradeService,
               currentUserId: tradeService.currentUserId,
               highlightedTradeId: highlightedTradeId,
@@ -222,9 +222,7 @@ class _TradesStreamView extends StatelessWidget {
           return _TradeErrorView(error: snapshot.error);
         }
 
-        final trades = (snapshot.data ?? [])
-            .where((trade) => trade.status != TradeStatus.completed)
-            .toList();
+        final trades = (snapshot.data ?? []).where(_isActiveTrade).toList();
 
         _moveTradeToTop(trades: trades, highlightedTradeId: highlightedTradeId);
 
@@ -260,84 +258,216 @@ class _TradesStreamView extends StatelessWidget {
   }
 }
 
-class _CompletedTradesView extends StatelessWidget {
+enum _ArchiveFilter { all, completed, rejected, cancelled }
+
+class _ArchivedTradesView extends StatefulWidget {
   final TradeService tradeService;
   final String currentUserId;
   final String? highlightedTradeId;
 
-  const _CompletedTradesView({
+  const _ArchivedTradesView({
     required this.tradeService,
     required this.currentUserId,
     this.highlightedTradeId,
   });
 
   @override
+  State<_ArchivedTradesView> createState() => _ArchivedTradesViewState();
+}
+
+class _ArchivedTradesViewState extends State<_ArchivedTradesView> {
+  _ArchiveFilter _selectedFilter = _ArchiveFilter.all;
+
+  bool _matchesSelectedFilter(Trade trade) {
+    switch (_selectedFilter) {
+      case _ArchiveFilter.all:
+        return true;
+      case _ArchiveFilter.completed:
+        return trade.status == TradeStatus.completed;
+      case _ArchiveFilter.rejected:
+        return trade.status == TradeStatus.rejected;
+      case _ArchiveFilter.cancelled:
+        return trade.status == TradeStatus.cancelled;
+    }
+  }
+
+  String get _emptyMessage {
+    switch (_selectedFilter) {
+      case _ArchiveFilter.all:
+        return 'Arhiv je prazen.';
+      case _ArchiveFilter.completed:
+        return 'Ni zaključenih menjav.';
+      case _ArchiveFilter.rejected:
+        return 'Ni zavrnjenih menjav.';
+      case _ArchiveFilter.cancelled:
+        return 'Ni preklicanih menjav.';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Trade>>(
-      stream: tradeService.watchIncomingTrades(),
+      stream: widget.tradeService.watchIncomingTrades(),
       builder: (context, incomingSnapshot) {
         if (incomingSnapshot.hasError) {
           return _TradeErrorView(error: incomingSnapshot.error);
         }
 
         return StreamBuilder<List<Trade>>(
-          stream: tradeService.watchOutgoingTrades(),
+          stream: widget.tradeService.watchOutgoingTrades(),
           builder: (context, outgoingSnapshot) {
             if (outgoingSnapshot.hasError) {
               return _TradeErrorView(error: outgoingSnapshot.error);
             }
 
-            final completed = <String, Trade>{};
+            final isWaiting =
+                (incomingSnapshot.connectionState == ConnectionState.waiting &&
+                    !incomingSnapshot.hasData) ||
+                (outgoingSnapshot.connectionState == ConnectionState.waiting &&
+                    !outgoingSnapshot.hasData);
+
+            if (isWaiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final archivedById = <String, Trade>{};
 
             for (final trade in [
               ...incomingSnapshot.data ?? <Trade>[],
               ...outgoingSnapshot.data ?? <Trade>[],
             ]) {
-              if (trade.status == TradeStatus.completed) {
-                completed[trade.id] = trade;
+              if (_isArchivedTrade(trade)) {
+                archivedById[trade.id] = trade;
               }
             }
 
-            final trades = completed.values.toList()
-              ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+            final trades =
+                archivedById.values.where(_matchesSelectedFilter).toList()
+                  ..sort((first, second) {
+                    final firstDate = first.updatedAt ?? first.createdAt;
+                    final secondDate = second.updatedAt ?? second.createdAt;
+
+                    return secondDate.compareTo(firstDate);
+                  });
 
             _moveTradeToTop(
               trades: trades,
-              highlightedTradeId: highlightedTradeId,
+              highlightedTradeId: widget.highlightedTradeId,
             );
 
-            if (trades.isEmpty) {
-              return const _EmptyTrades(
-                icon: Icons.check_circle_outline,
-                text: 'Ni zaključenih menjav.',
-              );
-            }
+            return Column(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.sm,
+                    AppSpacing.sm,
+                    AppSpacing.sm,
+                    4,
+                  ),
+                  child: Row(
+                    children: [
+                      _ArchiveFilterChip(
+                        label: 'Vse',
+                        selected: _selectedFilter == _ArchiveFilter.all,
+                        onSelected: () {
+                          setState(() {
+                            _selectedFilter = _ArchiveFilter.all;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      _ArchiveFilterChip(
+                        label: 'Zaključene',
+                        selected: _selectedFilter == _ArchiveFilter.completed,
+                        onSelected: () {
+                          setState(() {
+                            _selectedFilter = _ArchiveFilter.completed;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      _ArchiveFilterChip(
+                        label: 'Zavrnjene',
+                        selected: _selectedFilter == _ArchiveFilter.rejected,
+                        onSelected: () {
+                          setState(() {
+                            _selectedFilter = _ArchiveFilter.rejected;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      _ArchiveFilterChip(
+                        label: 'Preklicane',
+                        selected: _selectedFilter == _ArchiveFilter.cancelled,
+                        onSelected: () {
+                          setState(() {
+                            _selectedFilter = _ArchiveFilter.cancelled;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: trades.isEmpty
+                      ? _EmptyTrades(
+                          icon: Icons.archive_outlined,
+                          text: _emptyMessage,
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSpacing.sm,
+                            AppSpacing.sm,
+                            AppSpacing.sm,
+                            96,
+                          ),
+                          itemCount: trades.length,
+                          itemBuilder: (context, index) {
+                            final trade = trades[index];
 
-            return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.sm,
-                AppSpacing.sm,
-                AppSpacing.sm,
-                96,
-              ),
-              itemCount: trades.length,
-              itemBuilder: (context, index) {
-                final trade = trades[index];
-
-                return _TradeCard(
-                  trade: trade,
-                  tradeService: tradeService,
-                  currentUserId: currentUserId,
-                  direction: trade.receiverId == currentUserId
-                      ? _TradeDirection.incoming
-                      : _TradeDirection.outgoing,
-                  isHighlighted: trade.id == highlightedTradeId,
-                );
-              },
+                            return _TradeCard(
+                              trade: trade,
+                              tradeService: widget.tradeService,
+                              currentUserId: widget.currentUserId,
+                              direction:
+                                  trade.receiverId == widget.currentUserId
+                                  ? _TradeDirection.incoming
+                                  : _TradeDirection.outgoing,
+                              isHighlighted:
+                                  trade.id == widget.highlightedTradeId,
+                            );
+                          },
+                        ),
+                ),
+              ],
             );
           },
         );
       },
+    );
+  }
+}
+
+class _ArchiveFilterChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onSelected;
+
+  const _ArchiveFilterChip({
+    required this.label,
+    required this.selected,
+    required this.onSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      showCheckmark: false,
+      visualDensity: VisualDensity.compact,
+      onSelected: (_) => onSelected(),
     );
   }
 }
@@ -657,6 +787,18 @@ class _TradeCardState extends State<_TradeCard> {
     if (userId.length <= 10) return userId;
     return '${userId.substring(0, 10)}…';
   }
+}
+
+bool _isActiveTrade(Trade trade) {
+  return trade.status == TradeStatus.pending ||
+      trade.status == TradeStatus.countered ||
+      trade.status == TradeStatus.accepted;
+}
+
+bool _isArchivedTrade(Trade trade) {
+  return trade.status == TradeStatus.completed ||
+      trade.status == TradeStatus.rejected ||
+      trade.status == TradeStatus.cancelled;
 }
 
 void _moveTradeToTop({
