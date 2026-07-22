@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:swapstash/core/models/trade_rating_summary.dart';
 import 'package:swapstash/core/models/user_profile.dart';
 import 'package:swapstash/core/services/firestore_service.dart';
+import 'package:swapstash/core/services/trade_rating_service.dart';
 import 'package:swapstash/features/profile/edit_profile_page.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -115,11 +117,7 @@ class ProfilePage extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      _ProfileStatRow(
-                        icon: Icons.star_outline,
-                        label: 'Ocena',
-                        value: profile.rating.toStringAsFixed(1),
-                      ),
+                      _ProfileRatingRow(userId: profile.uid),
                       const Divider(),
                       _ProfileStatRow(
                         icon: Icons.handshake_outlined,
@@ -190,6 +188,42 @@ class ProfilePage extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _ProfileRatingRow extends StatelessWidget {
+  final String userId;
+
+  const _ProfileRatingRow({required this.userId});
+
+  @override
+  Widget build(BuildContext context) {
+    final ratingService = TradeRatingService();
+
+    return StreamBuilder<TradeRatingSummary>(
+      stream: ratingService.watchRatingSummary(userId: userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const _ProfileStatRow(
+            icon: Icons.star_outline_rounded,
+            label: 'Ocena',
+            value: 'Ni na voljo',
+          );
+        }
+
+        final summary = snapshot.data ?? const TradeRatingSummary.empty();
+
+        return _ProfileStatRow(
+          icon: Icons.star_rounded,
+          label: 'Ocena',
+          value:
+              snapshot.connectionState == ConnectionState.waiting &&
+                  !snapshot.hasData
+              ? 'Nalagam ...'
+              : summary.displayValue,
+        );
+      },
     );
   }
 }

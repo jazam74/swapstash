@@ -8,6 +8,7 @@ class UserProfile {
   final String language;
   final bool allowInternationalTrades;
   final double rating;
+  final int ratingCount;
   final int completedTrades;
   final Timestamp createdAt;
 
@@ -24,6 +25,7 @@ class UserProfile {
     required this.language,
     required this.allowInternationalTrades,
     required this.rating,
+    this.ratingCount = 0,
     required this.completedTrades,
     required this.createdAt,
     this.city = '',
@@ -44,6 +46,7 @@ class UserProfile {
       allowInternationalTrades:
           map['allowInternationalTrades'] as bool? ?? false,
       rating: (map['rating'] as num?)?.toDouble() ?? 0,
+      ratingCount: (map['ratingCount'] as num?)?.toInt() ?? 0,
       completedTrades: (map['completedTrades'] as num?)?.toInt() ?? 0,
       createdAt: createdAtValue is Timestamp ? createdAtValue : Timestamp.now(),
       city: map['city'] as String? ?? '',
@@ -62,6 +65,7 @@ class UserProfile {
       'language': language,
       'allowInternationalTrades': allowInternationalTrades,
       'rating': rating,
+      'ratingCount': ratingCount,
       'completedTrades': completedTrades,
       'createdAt': createdAt,
       'city': city,
@@ -79,6 +83,7 @@ class UserProfile {
     String? language,
     bool? allowInternationalTrades,
     double? rating,
+    int? ratingCount,
     int? completedTrades,
     Timestamp? createdAt,
     String? city,
@@ -95,6 +100,7 @@ class UserProfile {
       allowInternationalTrades:
           allowInternationalTrades ?? this.allowInternationalTrades,
       rating: rating ?? this.rating,
+      ratingCount: ratingCount ?? this.ratingCount,
       completedTrades: completedTrades ?? this.completedTrades,
       createdAt: createdAt ?? this.createdAt,
       city: city ?? this.city,

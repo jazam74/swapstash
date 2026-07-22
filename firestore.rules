@@ -40,8 +40,22 @@ service cloud.firestore {
       // Prijavljeni uporabniki lahko berejo profile.
       allow read: if isSignedIn();
 
-      // Profil lahko spreminja samo njegov lastnik.
-      allow create, update, delete: if isOwner(userId);
+      // Profil lahko ustvari in spreminja samo njegov lastnik.
+      // Sistemske statistike niso uporabniško nastavljive.
+      allow create: if isOwner(userId)
+          && request.resource.data.get('rating', 0) == 0
+          && request.resource.data.get('ratingCount', 0) == 0
+          && request.resource.data.get('completedTrades', 0) == 0;
+
+      allow update: if isOwner(userId)
+          && request.resource.data.get('rating', 0)
+              == resource.data.get('rating', 0)
+          && request.resource.data.get('ratingCount', 0)
+              == resource.data.get('ratingCount', 0)
+          && request.resource.data.get('completedTrades', 0)
+              == resource.data.get('completedTrades', 0);
+
+      allow delete: if isOwner(userId);
 
       // ===========================
       // UPORABNIKOVE ZBIRKE
@@ -77,6 +91,74 @@ service cloud.firestore {
         allow read, create, update, delete:
           if isSignedIn() &&
              request.auth.uid == userId;
+      }
+
+      // ===========================
+      // OCENE PO ZAKLJUČENI MENJAVI
+      // ===========================
+
+      match /ratings/{ratingId} {
+
+        function ratingTradePath() {
+          return /databases/$(database)/documents/trades/$(request.resource.data.tradeId);
+        }
+
+        function ratingTradeExists() {
+          return exists(ratingTradePath());
+        }
+
+        function ratingTrade() {
+          return get(ratingTradePath()).data;
+        }
+
+        function isValidCompletedTradeRating() {
+          return isSignedIn()
+              && request.resource.data.keys().hasOnly([
+                'tradeId',
+                'reviewerId',
+                'reviewedUserId',
+                'stars',
+                'comment',
+                'createdAt'
+              ])
+              && request.resource.data.tradeId is string
+              && request.resource.data.tradeId.size() > 0
+              && request.resource.data.reviewerId == request.auth.uid
+              && request.resource.data.reviewedUserId == userId
+              && request.resource.data.reviewerId != userId
+              && ratingId
+                  == request.resource.data.tradeId + '_' + request.auth.uid
+              && request.resource.data.stars is int
+              && request.resource.data.stars >= 1
+              && request.resource.data.stars <= 5
+              && request.resource.data.comment is string
+              && request.resource.data.comment.size() <= 300
+              && request.resource.data.createdAt is timestamp
+              && ratingTradeExists()
+              && ratingTrade().status == 'completed'
+              && (
+                (
+                  ratingTrade().senderId == request.auth.uid
+                  && ratingTrade().receiverId == userId
+                )
+                ||
+                (
+                  ratingTrade().receiverId == request.auth.uid
+                  && ratingTrade().senderId == userId
+                )
+              );
+        }
+
+        // Ocene so vidne prijavljenim uporabnikom.
+        // To omogoča prikaz povprečja in komentarjev na profilu.
+        allow get, list: if isSignedIn();
+
+        // Dokument ima deterministični ID, zato ga isti uporabnik
+        // za isto menjavo lahko ustvari samo enkrat.
+        allow create: if isValidCompletedTradeRating();
+
+        // Oddane ocene ni mogoče spreminjati ali brisati.
+        allow update, delete: if false;
       }
     }
 

@@ -11,6 +11,7 @@ import 'package:swapstash/features/trades/widgets/trade_action_card.dart';
 import 'package:swapstash/features/trades/widgets/trade_confirm_dialog.dart';
 import 'package:swapstash/features/trades/widgets/trade_header.dart';
 import 'package:swapstash/features/trades/widgets/trade_progress_card.dart';
+import 'package:swapstash/features/trades/widgets/trade_rating_section.dart';
 import 'package:swapstash/features/trades/widgets/trade_summary_card.dart';
 import 'package:swapstash/features/trades/widgets/trade_items_card.dart';
 
@@ -637,6 +638,10 @@ class _TradeCardState extends State<_TradeCard> {
                 if (_buildActions() case final actions?) ...[
                   const SizedBox(height: AppSpacing.md),
                   actions,
+                ],
+                if (trade.status == TradeStatus.completed) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  TradeRatingSection(trade: trade),
                 ],
               ],
             ),
