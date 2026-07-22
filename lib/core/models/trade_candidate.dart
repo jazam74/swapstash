@@ -6,10 +6,7 @@ class TradeCandidate {
 
   final InventoryComparison comparison;
 
-  const TradeCandidate({
-    required this.member,
-    required this.comparison,
-  });
+  const TradeCandidate({required this.member, required this.comparison});
 
   int get possibleTrades => comparison.possibleTrades;
 
@@ -20,9 +17,7 @@ class TradeCandidate {
   int get duplicateCount => member.duplicateCount;
 
   double get matchScore {
-    final total =
-        comparison.canOffer.length +
-        comparison.needs.length;
+    final total = comparison.canOffer.length + comparison.needs.length;
 
     if (total == 0) {
       return 0;

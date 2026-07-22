@@ -25,10 +25,7 @@ class CatalogCollection {
     this.updatedAt,
   });
 
-  factory CatalogCollection.fromMap(
-    String id,
-    Map<String, dynamic> map,
-  ) {
+  factory CatalogCollection.fromMap(String id, Map<String, dynamic> map) {
     return CatalogCollection(
       id: id,
       name: map['name'] as String? ?? '',
@@ -52,12 +49,8 @@ class CatalogCollection {
       'totalItems': totalItems,
       'coverImageUrl': coverImageUrl,
       'isActive': isActive,
-      'createdAt': createdAt == null
-          ? null
-          : Timestamp.fromDate(createdAt!),
-      'updatedAt': updatedAt == null
-          ? null
-          : Timestamp.fromDate(updatedAt!),
+      'createdAt': createdAt == null ? null : Timestamp.fromDate(createdAt!),
+      'updatedAt': updatedAt == null ? null : Timestamp.fromDate(updatedAt!),
     };
   }
 

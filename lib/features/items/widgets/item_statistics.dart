@@ -24,32 +24,20 @@ class ItemStatistics extends StatelessWidget {
       child: Card(
         margin: EdgeInsets.zero,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 12,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                size: 24,
-              ),
+              Icon(icon, size: 24),
               const SizedBox(height: 6),
               Text(
                 '$value',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 2),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-              ),
+              Text(label, textAlign: TextAlign.center),
             ],
           ),
         ),
@@ -78,28 +66,18 @@ class ItemStatistics extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(
-                        Icons.insights_outlined,
-                      ),
+                      const Icon(Icons.insights_outlined),
                       const SizedBox(width: 8),
                       Text(
                         'Napredek zbirke',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       Text(
                         '$progressPercent %',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -110,9 +88,7 @@ class ItemStatistics extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    '$ownedCount od $totalItems zbranih predmetov',
-                  ),
+                  Text('$ownedCount od $totalItems zbranih predmetov'),
                 ],
               ),
             ),

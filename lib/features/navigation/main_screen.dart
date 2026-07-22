@@ -38,15 +38,10 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Text(
           _titles[_selectedIndex],
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: _screens),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: _selectScreen,
@@ -61,10 +56,7 @@ class _MainScreenState extends State<MainScreen> {
             selectedIcon: Icon(Icons.collections_bookmark),
             label: 'Zbirke',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.swap_horiz),
-            label: 'Menjave',
-          ),
+          NavigationDestination(icon: Icon(Icons.swap_horiz), label: 'Menjave'),
           NavigationDestination(
             icon: Icon(Icons.chat_bubble_outline),
             selectedIcon: Icon(Icons.chat_bubble),
@@ -91,18 +83,12 @@ class _HomeScreen extends StatelessWidget {
       children: [
         const Text(
           'Dobrodošel, Uroš!',
-          style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
           'Uredi svoje zbirke in poišči najboljše menjave.',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey.shade700,
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
         ),
         const SizedBox(height: 24),
         const _DashboardCard(
@@ -217,27 +203,16 @@ class _ProfileScreen extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       children: [
         const SizedBox(height: 16),
-        const CircleAvatar(
-          radius: 50,
-          child: Icon(
-            Icons.person,
-            size: 52,
-          ),
-        ),
+        const CircleAvatar(radius: 50, child: Icon(Icons.person, size: 52)),
         const SizedBox(height: 16),
         const Center(
           child: Text(
             'Uroš',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 4),
-        const Center(
-          child: Text('Slovenija'),
-        ),
+        const Center(child: Text('Slovenija')),
         const SizedBox(height: 24),
         Card(
           child: Column(
@@ -287,10 +262,7 @@ class _DashboardCard extends StatelessWidget {
         padding: const EdgeInsets.all(18),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 26,
-              child: Icon(icon),
-            ),
+            CircleAvatar(radius: 26, child: Icon(icon)),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -310,10 +282,7 @@ class _DashboardCard extends StatelessWidget {
             ),
             Text(
               value,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -345,19 +314,11 @@ class _CollectionCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              publisher,
-              style: TextStyle(
-                color: Colors.grey.shade700,
-              ),
-            ),
+            Text(publisher, style: TextStyle(color: Colors.grey.shade700)),
             const SizedBox(height: 4),
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 18),
             LinearProgressIndicator(
@@ -398,9 +359,7 @@ class _TradeCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const CircleAvatar(
-                  child: Icon(Icons.person),
-                ),
+                const CircleAvatar(child: Icon(Icons.person)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -422,9 +381,7 @@ class _TradeCard extends StatelessWidget {
                     international ? Icons.public : Icons.home_outlined,
                     size: 18,
                   ),
-                  label: Text(
-                    international ? 'Mednarodno' : 'Ista država',
-                  ),
+                  label: Text(international ? 'Mednarodno' : 'Ista država'),
                 ),
               ],
             ),
@@ -432,15 +389,9 @@ class _TradeCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _TradeAmount(
-                  label: 'Ti daš',
-                  amount: giveCount,
-                ),
+                _TradeAmount(label: 'Ti daš', amount: giveCount),
                 const Icon(Icons.swap_horiz, size: 34),
-                _TradeAmount(
-                  label: 'Ti dobiš',
-                  amount: receiveCount,
-                ),
+                _TradeAmount(label: 'Ti dobiš', amount: receiveCount),
               ],
             ),
             const SizedBox(height: 18),
@@ -456,10 +407,7 @@ class _TradeCard extends StatelessWidget {
 }
 
 class _TradeAmount extends StatelessWidget {
-  const _TradeAmount({
-    required this.label,
-    required this.amount,
-  });
+  const _TradeAmount({required this.label, required this.amount});
 
   final String label;
   final int amount;
@@ -470,10 +418,7 @@ class _TradeAmount extends StatelessWidget {
       children: [
         Text(
           '$amount',
-          style: const TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
         ),
         Text(label),
       ],
@@ -500,24 +445,14 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 72,
-              color: Colors.grey,
-            ),
+            Icon(icon, size: 72, color: Colors.grey),
             const SizedBox(height: 16),
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text(
-              description,
-              textAlign: TextAlign.center,
-            ),
+            Text(description, textAlign: TextAlign.center),
           ],
         ),
       ),

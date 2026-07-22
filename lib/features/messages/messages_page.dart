@@ -63,18 +63,22 @@ class _MessagesPageState extends State<MessagesPage> {
       return conversations;
     }
 
-    return conversations.where((conversation) {
-      final otherUserName = conversation
-          .otherUserName(currentUserId)
-          .trim()
-          .toLowerCase();
-      final collectionName = conversation.collectionName.trim().toLowerCase();
-      final lastMessage = conversation.lastMessage.trim().toLowerCase();
+    return conversations
+        .where((conversation) {
+          final otherUserName = conversation
+              .otherUserName(currentUserId)
+              .trim()
+              .toLowerCase();
+          final collectionName = conversation.collectionName
+              .trim()
+              .toLowerCase();
+          final lastMessage = conversation.lastMessage.trim().toLowerCase();
 
-      return otherUserName.contains(_searchQuery) ||
-          collectionName.contains(_searchQuery) ||
-          lastMessage.contains(_searchQuery);
-    }).toList(growable: false);
+          return otherUserName.contains(_searchQuery) ||
+              collectionName.contains(_searchQuery) ||
+              lastMessage.contains(_searchQuery);
+        })
+        .toList(growable: false);
   }
 
   @override
@@ -82,10 +86,7 @@ class _MessagesPageState extends State<MessagesPage> {
     final currentUserId = _currentUserId;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sporočila'),
-        centerTitle: false,
-      ),
+      appBar: AppBar(title: const Text('Sporočila'), centerTitle: false),
       body: currentUserId == null
           ? const _NotSignedInView()
           : StreamBuilder<List<Conversation>>(
@@ -219,7 +220,9 @@ class _SearchField extends StatelessWidget {
                       icon: const Icon(Icons.close_rounded),
                     ),
               filled: true,
-              fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.55),
+              fillColor: colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.55,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
                 borderSide: BorderSide.none,
@@ -230,10 +233,7 @@ class _SearchField extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide(
-                  color: colorScheme.primary,
-                  width: 1.4,
-                ),
+                borderSide: BorderSide(color: colorScheme.primary, width: 1.4),
               ),
               contentPadding: const EdgeInsets.symmetric(vertical: 14),
             ),
@@ -261,7 +261,9 @@ class _ConversationCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     final otherUserName = conversation.otherUserName(currentUserId).trim();
-    final displayName = otherUserName.isEmpty ? 'Neznan uporabnik' : otherUserName;
+    final displayName = otherUserName.isEmpty
+        ? 'Neznan uporabnik'
+        : otherUserName;
     final otherUserPhotoUrl = conversation
         .otherUserPhotoUrl(currentUserId)
         .trim();
@@ -400,10 +402,7 @@ class _ConversationAvatar extends StatelessWidget {
   final String name;
   final String photoUrl;
 
-  const _ConversationAvatar({
-    required this.name,
-    required this.photoUrl,
-  });
+  const _ConversationAvatar({required this.name, required this.photoUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -472,9 +471,9 @@ class _EmptyMessagesView extends StatelessWidget {
         Text(
           'Še nimaš pogovorov',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 10),
         Text(
@@ -506,9 +505,9 @@ class _NoSearchResultsView extends StatelessWidget {
         Text(
           'Ni zadetkov',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 10),
         Text(
@@ -529,10 +528,7 @@ class _MessagesErrorView extends StatelessWidget {
   final Object? error;
   final Future<void> Function() onRetry;
 
-  const _MessagesErrorView({
-    required this.error,
-    required this.onRetry,
-  });
+  const _MessagesErrorView({required this.error, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -547,9 +543,9 @@ class _MessagesErrorView extends StatelessWidget {
             Text(
               'Pogovorov ni bilo mogoče naložiti',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             Text(
@@ -614,11 +610,7 @@ class _StateIcon extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,
-      child: Icon(
-        icon,
-        size: 42,
-        color: colorScheme.onPrimaryContainer,
-      ),
+      child: Icon(icon, size: 42, color: colorScheme.onPrimaryContainer),
     );
   }
 }

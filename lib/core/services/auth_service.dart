@@ -26,13 +26,10 @@ class AuthService {
     final trimmedDisplayName = displayName.trim();
 
     if (trimmedDisplayName.isEmpty) {
-      throw ArgumentError(
-        'Prikazno ime ne sme biti prazno.',
-      );
+      throw ArgumentError('Prikazno ime ne sme biti prazno.');
     }
 
-    final credential =
-        await _auth.createUserWithEmailAndPassword(
+    final credential = await _auth.createUserWithEmailAndPassword(
       email: trimmedEmail,
       password: password,
     );
@@ -40,14 +37,10 @@ class AuthService {
     final user = credential.user;
 
     if (user == null) {
-      throw Exception(
-        'Uporabniškega računa ni bilo mogoče ustvariti.',
-      );
+      throw Exception('Uporabniškega računa ni bilo mogoče ustvariti.');
     }
 
-    await user.updateDisplayName(
-      trimmedDisplayName,
-    );
+    await user.updateDisplayName(trimmedDisplayName);
 
     final profile = UserProfile(
       uid: user.uid,
@@ -64,10 +57,7 @@ class AuthService {
     await _firestore.createUserProfile(profile);
   }
 
-  Future<void> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<void> login({required String email, required String password}) async {
     await _auth.signInWithEmailAndPassword(
       email: email.trim(),
       password: password,

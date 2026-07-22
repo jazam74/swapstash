@@ -91,21 +91,10 @@ class _StatRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: 18,
-          ),
+          Icon(icon, color: color, size: 18),
           const SizedBox(width: 8),
-          Expanded(
-            child: Text(label),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Expanded(child: Text(label)),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
         ],
       ),
     );

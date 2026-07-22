@@ -9,20 +9,16 @@ class CatalogCollectionsPage extends StatefulWidget {
   const CatalogCollectionsPage({super.key});
 
   @override
-  State<CatalogCollectionsPage> createState() =>
-      _CatalogCollectionsPageState();
+  State<CatalogCollectionsPage> createState() => _CatalogCollectionsPageState();
 }
 
-class _CatalogCollectionsPageState
-    extends State<CatalogCollectionsPage> {
+class _CatalogCollectionsPageState extends State<CatalogCollectionsPage> {
   final CatalogService _catalogService = CatalogService();
   final FirestoreService _firestoreService = FirestoreService();
 
   final Set<String> _savingCollectionIds = {};
 
-  Future<void> _addCollection(
-    CatalogCollection collection,
-  ) async {
+  Future<void> _addCollection(CatalogCollection collection) async {
     if (_savingCollectionIds.contains(collection.id)) {
       return;
     }
@@ -43,20 +39,14 @@ class _CatalogCollectionsPageState
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            '${collection.name} je bila dodana med tvoje zbirke.',
-          ),
+          content: Text('${collection.name} je bila dodana med tvoje zbirke.'),
         ),
       );
     } catch (error) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Zbirke ni bilo mogoče dodati: $error',
-          ),
-        ),
+        SnackBar(content: Text('Zbirke ni bilo mogoče dodati: $error')),
       );
     } finally {
       if (mounted) {
@@ -70,18 +60,13 @@ class _CatalogCollectionsPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Katalog zbirk'),
-      ),
+      appBar: AppBar(title: const Text('Katalog zbirk')),
       body: StreamBuilder<List<CatalogCollection>>(
         stream: _catalogService.watchActiveCollections(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState ==
-                  ConnectionState.waiting &&
+          if (snapshot.connectionState == ConnectionState.waiting &&
               !snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -100,36 +85,23 @@ class _CatalogCollectionsPageState
           final collections = snapshot.data ?? [];
 
           if (collections.isEmpty) {
-            return const Center(
-              child: Text('Ni najdenih zbirk.'),
-            );
+            return const Center(child: Text('Ni najdenih zbirk.'));
           }
 
           return ListView.separated(
-            padding: const EdgeInsets.symmetric(
-              vertical: 8,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             itemCount: collections.length,
-            separatorBuilder: (_, _) =>
-                const Divider(height: 1),
+            separatorBuilder: (_, _) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final collection = collections[index];
-              final isSaving =
-                  _savingCollectionIds.contains(collection.id);
+              final isSaving = _savingCollectionIds.contains(collection.id);
 
-              final publisherInitial =
-                  collection.publisher.trim().isEmpty
-                      ? '?'
-                      : collection.publisher
-                          .trim()
-                          .characters
-                          .first
-                          .toUpperCase();
+              final publisherInitial = collection.publisher.trim().isEmpty
+                  ? '?'
+                  : collection.publisher.trim().characters.first.toUpperCase();
 
               return ListTile(
-                leading: CircleAvatar(
-                  child: Text(publisherInitial),
-                ),
+                leading: CircleAvatar(child: Text(publisherInitial)),
                 title: Text(collection.name),
                 subtitle: Text(
                   '${collection.publisher} • '
@@ -140,16 +112,10 @@ class _CatalogCollectionsPageState
                     ? const SizedBox(
                         width: 24,
                         height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Icon(
-                        Icons.add_circle_outline,
-                      ),
-                onTap: isSaving
-                    ? null
-                    : () => _addCollection(collection),
+                    : const Icon(Icons.add_circle_outline),
+                onTap: isSaving ? null : () => _addCollection(collection),
               );
             },
           );

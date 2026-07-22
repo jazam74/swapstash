@@ -13,10 +13,7 @@ class CatalogItem {
     required this.imageUrl,
   });
 
-  factory CatalogItem.fromMap(
-    String id,
-    Map<String, dynamic> map,
-  ) {
+  factory CatalogItem.fromMap(String id, Map<String, dynamic> map) {
     return CatalogItem(
       id: id,
       collectionId: map['collectionId'] ?? '',

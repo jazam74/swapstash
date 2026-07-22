@@ -91,9 +91,7 @@ class FavoriteService {
     return document.exists;
   }
 
-  Future<void> addFavorite({
-    required FavoriteItem favorite,
-  }) async {
+  Future<void> addFavorite({required FavoriteItem favorite}) async {
     final normalizedCollectionId = _normalizeRequiredId(
       favorite.collectionId,
       fieldName: 'ID zbirke',
@@ -127,9 +125,7 @@ class FavoriteService {
     ).delete();
   }
 
-  Future<bool> toggleFavorite({
-    required FavoriteItem favorite,
-  }) async {
+  Future<bool> toggleFavorite({required FavoriteItem favorite}) async {
     final normalizedCollectionId = _normalizeRequiredId(
       favorite.collectionId,
       fieldName: 'ID zbirke',

@@ -42,93 +42,65 @@ class ItemService {
     }
 
     if (itemNumber <= 0) {
-      throw ArgumentError(
-        'Številka predmeta mora biti večja od 0.',
-      );
+      throw ArgumentError('Številka predmeta mora biti večja od 0.');
     }
 
     if (quantity < 0 || quantity > 999) {
-      throw ArgumentError(
-        'Količina mora biti med 0 in 999.',
-      );
+      throw ArgumentError('Količina mora biti med 0 in 999.');
     }
 
-    final collectionDocument =
-        _collectionDocument(collectionId);
+    final collectionDocument = _collectionDocument(collectionId);
 
-    final itemDocument = _itemsCollection(collectionId)
-        .doc(itemNumber.toString());
+    final itemDocument = _itemsCollection(
+      collectionId,
+    ).doc(itemNumber.toString());
 
     await _db.runTransaction((transaction) async {
-      final itemSnapshot =
-          await transaction.get(itemDocument);
+      final itemSnapshot = await transaction.get(itemDocument);
 
       final oldQuantity = itemSnapshot.exists
           ? _quantityFromData(itemSnapshot.data()!)
           : 0;
 
-      final ownedDelta =
-          _ownedValue(quantity) - _ownedValue(oldQuantity);
+      final ownedDelta = _ownedValue(quantity) - _ownedValue(oldQuantity);
 
       final duplicateDelta =
-          _duplicateValue(quantity) -
-          _duplicateValue(oldQuantity);
+          _duplicateValue(quantity) - _duplicateValue(oldQuantity);
 
       if (quantity == 0) {
         transaction.delete(itemDocument);
       } else {
-        final item = Item(
-          number: itemNumber,
-          quantity: quantity,
-        );
+        final item = Item(number: itemNumber, quantity: quantity);
 
-        transaction.set(
-          itemDocument,
-          {
-            ...item.toMap(),
-            'updatedAt': FieldValue.serverTimestamp(),
-          },
-        );
+        transaction.set(itemDocument, {
+          ...item.toMap(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
       }
 
-      transaction.update(
-        collectionDocument,
-        {
-          'stats.ownedCount':
-              FieldValue.increment(ownedDelta),
-          'stats.duplicateCount':
-              FieldValue.increment(duplicateDelta),
-          'stats.updatedAt':
-              FieldValue.serverTimestamp(),
-        },
-      );
+      transaction.update(collectionDocument, {
+        'stats.ownedCount': FieldValue.increment(ownedDelta),
+        'stats.duplicateCount': FieldValue.increment(duplicateDelta),
+        'stats.updatedAt': FieldValue.serverTimestamp(),
+      });
     });
   }
 
-  Stream<List<Item>> watchItems(
-    String collectionId,
-  ) {
-    return _itemsCollection(collectionId)
-        .snapshots()
-        .map((snapshot) {
+  Stream<List<Item>> watchItems(String collectionId) {
+    return _itemsCollection(collectionId).snapshots().map((snapshot) {
       final items = snapshot.docs
           .map((document) {
             final data = document.data();
 
             return Item(
-              number: data['number'] as int? ??
-                  int.tryParse(document.id) ??
-                  0,
+              number: data['number'] as int? ?? int.tryParse(document.id) ?? 0,
               quantity: _quantityFromData(data),
             );
           })
           .where((item) => item.number > 0)
           .toList();
 
-      items.sort(
-        (first, second) =>
-            first.number.compareTo(second.number),
-      );
+      items.sort((first, second) => first.number.compareTo(second.number));
 
       return items;
     });
@@ -136,43 +108,33 @@ class ItemService {
 
   /// Enkratno preračuna statistiko za stare zbirke, ki so
   /// obstajale, preden je bilo dodano polje `stats`.
-  Future<void> rebuildCollectionStats({
-    required String collectionId,
-  }) async {
+  Future<void> rebuildCollectionStats({required String collectionId}) async {
     if (collectionId.trim().isEmpty) {
       throw ArgumentError('ID zbirke ne sme biti prazen.');
     }
 
-    final snapshot =
-        await _itemsCollection(collectionId).get();
+    final snapshot = await _itemsCollection(collectionId).get();
 
     var ownedCount = 0;
     var duplicateCount = 0;
 
     for (final document in snapshot.docs) {
-      final quantity = _quantityFromData(
-        document.data(),
-      );
+      final quantity = _quantityFromData(document.data());
 
       ownedCount += _ownedValue(quantity);
       duplicateCount += _duplicateValue(quantity);
     }
 
-    await _collectionDocument(collectionId).set(
-      {
-        'stats': {
-          'ownedCount': ownedCount,
-          'duplicateCount': duplicateCount,
-          'updatedAt': FieldValue.serverTimestamp(),
-        },
+    await _collectionDocument(collectionId).set({
+      'stats': {
+        'ownedCount': ownedCount,
+        'duplicateCount': duplicateCount,
+        'updatedAt': FieldValue.serverTimestamp(),
       },
-      SetOptions(merge: true),
-    );
+    }, SetOptions(merge: true));
   }
 
-  int _quantityFromData(
-    Map<String, dynamic> data,
-  ) {
+  int _quantityFromData(Map<String, dynamic> data) {
     final quantity = data['quantity'];
 
     if (quantity is int) {

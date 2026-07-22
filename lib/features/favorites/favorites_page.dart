@@ -60,27 +60,25 @@ class _FavoritesPageState extends State<FavoritesPage> {
       return favorites;
     }
 
-    return favorites.where((item) {
-      return item.name.toLowerCase().contains(_searchQuery) ||
-          item.number.toLowerCase().contains(_searchQuery) ||
-          item.collectionId.toLowerCase().contains(_searchQuery);
-    }).toList(growable: false);
+    return favorites
+        .where((item) {
+          return item.name.toLowerCase().contains(_searchQuery) ||
+              item.number.toLowerCase().contains(_searchQuery) ||
+              item.collectionId.toLowerCase().contains(_searchQuery);
+        })
+        .toList(growable: false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Moji favoriti'),
-      ),
+      appBar: AppBar(title: const Text('Moji favoriti')),
       body: StreamBuilder<List<FavoriteItem>>(
         stream: _favoriteService.watchFavorites(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting &&
               !snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -126,8 +124,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     : ListView.separated(
                         padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
                         itemCount: filteredFavorites.length,
-                        separatorBuilder: (_, _) =>
-                            const SizedBox(height: 8),
+                        separatorBuilder: (_, _) => const SizedBox(height: 8),
                         itemBuilder: (context, index) {
                           final item = filteredFavorites[index];
 
@@ -150,10 +147,7 @@ class _FavoriteCard extends StatelessWidget {
   final FavoriteItem item;
   final VoidCallback onRemove;
 
-  const _FavoriteCard({
-    required this.item,
-    required this.onRemove,
-  });
+  const _FavoriteCard({required this.item, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -166,10 +160,7 @@ class _FavoriteCard extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            _FavoriteImage(
-              imageUrl: item.imageUrl,
-              label: item.name,
-            ),
+            _FavoriteImage(imageUrl: item.imageUrl, label: item.name),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -222,10 +213,7 @@ class _FavoriteImage extends StatelessWidget {
   final String imageUrl;
   final String label;
 
-  const _FavoriteImage({
-    required this.imageUrl,
-    required this.label,
-  });
+  const _FavoriteImage({required this.imageUrl, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -238,10 +226,7 @@ class _FavoriteImage extends StatelessWidget {
         height: 96,
         color: colorScheme.surfaceContainerHighest,
         child: imageUrl.trim().isEmpty
-            ? Icon(
-                Icons.image_outlined,
-                color: colorScheme.onSurfaceVariant,
-              )
+            ? Icon(Icons.image_outlined, color: colorScheme.onSurfaceVariant)
             : Image.network(
                 imageUrl,
                 fit: BoxFit.cover,
@@ -278,17 +263,17 @@ class _EmptyFavoritesView extends StatelessWidget {
             Text(
               'Še nimaš favoritov',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 10),
             Text(
               'Na podrobnostih kartice pritisni srček in kartica se bo pojavila tukaj.',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -300,9 +285,7 @@ class _EmptyFavoritesView extends StatelessWidget {
 class _NoResultsView extends StatelessWidget {
   final String query;
 
-  const _NoResultsView({
-    required this.query,
-  });
+  const _NoResultsView({required this.query});
 
   @override
   Widget build(BuildContext context) {
@@ -324,9 +307,7 @@ class _NoResultsView extends StatelessWidget {
 class _ErrorView extends StatelessWidget {
   final Object? error;
 
-  const _ErrorView({
-    required this.error,
-  });
+  const _ErrorView({required this.error});
 
   @override
   Widget build(BuildContext context) {
@@ -336,17 +317,14 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.error_outline_rounded,
-              size: 64,
-            ),
+            const Icon(Icons.error_outline_rounded, size: 64),
             const SizedBox(height: 16),
             Text(
               'Favoritov ni bilo mogoče naložiti.',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             Text(

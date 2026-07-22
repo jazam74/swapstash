@@ -16,23 +16,18 @@ class UserCollectionService {
     return user.uid;
   }
 
-  CollectionReference<Map<String, dynamic>>
-      get _userCollections {
+  CollectionReference<Map<String, dynamic>> get _userCollections {
     return _db
         .collection('users')
         .doc(_currentUserId)
         .collection('collections');
   }
 
-  Future<void> addCollection(
-    String catalogCollectionId,
-  ) async {
+  Future<void> addCollection(String catalogCollectionId) async {
     final id = catalogCollectionId.trim();
 
     if (id.isEmpty) {
-      throw ArgumentError(
-        'ID kataloške zbirke ne sme biti prazen.',
-      );
+      throw ArgumentError('ID kataloške zbirke ne sme biti prazen.');
     }
 
     final collection = UserCollection(
@@ -40,10 +35,9 @@ class UserCollectionService {
       createdAt: Timestamp.now(),
     );
 
-    await _userCollections.doc(id).set(
-          collection.toMap(),
-          SetOptions(merge: true),
-        );
+    await _userCollections
+        .doc(id)
+        .set(collection.toMap(), SetOptions(merge: true));
   }
 
   Stream<List<UserCollection>> watchCollections() {
@@ -60,9 +54,7 @@ class UserCollectionService {
         );
   }
 
-  Future<bool> hasCollection(
-    String catalogCollectionId,
-  ) async {
+  Future<bool> hasCollection(String catalogCollectionId) async {
     final id = catalogCollectionId.trim();
 
     if (id.isEmpty) {
@@ -74,15 +66,11 @@ class UserCollectionService {
     return document.exists;
   }
 
-  Future<void> removeCollection(
-    String catalogCollectionId,
-  ) async {
+  Future<void> removeCollection(String catalogCollectionId) async {
     final id = catalogCollectionId.trim();
 
     if (id.isEmpty) {
-      throw ArgumentError(
-        'ID kataloške zbirke ne sme biti prazen.',
-      );
+      throw ArgumentError('ID kataloške zbirke ne sme biti prazen.');
     }
 
     await _userCollections.doc(id).delete();

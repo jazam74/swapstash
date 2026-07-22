@@ -17,8 +17,7 @@ class ItemDetailPage extends StatefulWidget {
   });
 
   @override
-  State<ItemDetailPage> createState() =>
-      _ItemDetailPageState();
+  State<ItemDetailPage> createState() => _ItemDetailPageState();
 }
 
 class _ItemDetailPageState extends State<ItemDetailPage> {
@@ -63,11 +62,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Količine ni bilo mogoče shraniti: $error',
-          ),
-        ),
+        SnackBar(content: Text('Količine ni bilo mogoče shraniti: $error')),
       );
     } finally {
       if (mounted) {
@@ -152,20 +147,15 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                 tooltip: isFavorite
                     ? 'Odstrani iz priljubljenih'
                     : 'Dodaj med priljubljene',
-                onPressed:
-                    _isSavingFavorite ? null : _toggleFavorite,
+                onPressed: _isSavingFavorite ? null : _toggleFavorite,
                 icon: _isSavingFavorite
                     ? const SizedBox(
                         width: 22,
                         height: 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : Icon(
-                        isFavorite
-                            ? Icons.favorite
-                            : Icons.favorite_border,
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
                         color: isFavorite ? Colors.red : null,
                       ),
               );
@@ -179,12 +169,9 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
           itemId: widget.item.id,
         ),
         builder: (context, snapshot) {
-          if (snapshot.connectionState ==
-                  ConnectionState.waiting &&
+          if (snapshot.connectionState == ConnectionState.waiting &&
               !snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -202,14 +189,12 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
 
           final userItem = snapshot.data;
           final quantity = userItem?.quantity ?? 0;
-          final duplicateCount =
-              userItem?.duplicateCount ?? 0;
+          final duplicateCount = userItem?.duplicateCount ?? 0;
 
           return Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   widget.item.number,
@@ -223,9 +208,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                   widget.item.name.isEmpty
                       ? 'Predmet ${widget.item.number}'
                       : widget.item.name,
-                  style: const TextStyle(
-                    fontSize: 22,
-                  ),
+                  style: const TextStyle(fontSize: 22),
                 ),
                 const SizedBox(height: 32),
                 Row(
@@ -234,42 +217,31 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                       quantity > 0
                           ? Icons.check_circle
                           : Icons.radio_button_unchecked,
-                      color: quantity > 0
-                          ? Colors.green
-                          : Colors.grey,
+                      color: quantity > 0 ? Colors.green : Colors.grey,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       quantity > 0 ? 'Imam' : 'Nimam',
-                      style: const TextStyle(
-                        fontSize: 18,
-                      ),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ],
                 ),
                 const SizedBox(height: 28),
                 Text(
                   'Količina',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton.filledTonal(
                       tooltip: 'Zmanjšaj količino',
-                      onPressed:
-                          quantity == 0 || _isSaving
-                              ? null
-                              : () => _saveQuantity(
-                                    quantity - 1,
-                                  ),
+                      onPressed: quantity == 0 || _isSaving
+                          ? null
+                          : () => _saveQuantity(quantity - 1),
                       icon: const Icon(Icons.remove),
                     ),
                     SizedBox(
@@ -279,8 +251,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                             ? const SizedBox(
                                 width: 22,
                                 height: 22,
-                                child:
-                                    CircularProgressIndicator(
+                                child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                 ),
                               )
@@ -297,9 +268,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                       tooltip: 'Povečaj količino',
                       onPressed: _isSaving
                           ? null
-                          : () => _saveQuantity(
-                                quantity + 1,
-                              ),
+                          : () => _saveQuantity(quantity + 1),
                       icon: const Icon(Icons.add),
                     ),
                   ],
@@ -317,8 +286,8 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                             duplicateCount == 0
                                 ? 'Nimaš viškov.'
                                 : duplicateCount == 1
-                                    ? 'Imaš 1 višek.'
-                                    : 'Imaš $duplicateCount viškov.',
+                                ? 'Imaš 1 višek.'
+                                : 'Imaš $duplicateCount viškov.',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,

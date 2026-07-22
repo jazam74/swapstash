@@ -47,9 +47,7 @@ class ItemCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Icon(
-                _owned
-                    ? Icons.check_circle
-                    : Icons.radio_button_unchecked,
+                _owned ? Icons.check_circle : Icons.radio_button_unchecked,
                 color: foregroundColor,
                 size: 28,
               ),
@@ -58,8 +56,8 @@ class ItemCard extends StatelessWidget {
                 _hasDuplicates
                     ? '×$quantity'
                     : _owned
-                        ? 'Imam'
-                        : 'Nimam',
+                    ? 'Imam'
+                    : 'Nimam',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: foregroundColor,

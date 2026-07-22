@@ -2,18 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:swapstash/core/models/app_user.dart';
 
 class UserService {
-  final FirebaseFirestore _db =
-      FirebaseFirestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  CollectionReference<Map<String, dynamic>>
-      get _users =>
-          _db.collection('users');
+  CollectionReference<Map<String, dynamic>> get _users =>
+      _db.collection('users');
 
   Future<void> saveUser(AppUser user) async {
-    await _users.doc(user.uid).set(
-          user.toMap(),
-          SetOptions(merge: true),
-        );
+    await _users.doc(user.uid).set(user.toMap(), SetOptions(merge: true));
   }
 
   Future<AppUser?> getUser(String uid) async {
@@ -23,30 +18,20 @@ class UserService {
       return null;
     }
 
-    return AppUser.fromMap(
-      snapshot.id,
-      snapshot.data()!,
-    );
+    return AppUser.fromMap(snapshot.id, snapshot.data()!);
   }
 
   Stream<AppUser?> watchUser(String uid) {
-    return _users.doc(uid).snapshots().map(
-      (snapshot) {
-        if (!snapshot.exists) {
-          return null;
-        }
+    return _users.doc(uid).snapshots().map((snapshot) {
+      if (!snapshot.exists) {
+        return null;
+      }
 
-        return AppUser.fromMap(
-          snapshot.id,
-          snapshot.data()!,
-        );
-      },
-    );
+      return AppUser.fromMap(snapshot.id, snapshot.data()!);
+    });
   }
 
-  Future<List<AppUser>> searchUsers(
-    String query,
-  ) async {
+  Future<List<AppUser>> searchUsers(String query) async {
     final value = query.trim();
 
     if (value.isEmpty) {
@@ -61,12 +46,7 @@ class UserService {
         .get();
 
     return snapshot.docs
-        .map(
-          (doc) => AppUser.fromMap(
-            doc.id,
-            doc.data(),
-          ),
-        )
+        .map((doc) => AppUser.fromMap(doc.id, doc.data()))
         .toList();
   }
 }

@@ -5,17 +5,11 @@ class InventoryComparison {
 
   final List<CatalogItem> needs;
 
-  const InventoryComparison({
-    required this.canOffer,
-    required this.needs,
-  });
+  const InventoryComparison({required this.canOffer, required this.needs});
 
   int get possibleTrades {
-    return canOffer.length < needs.length
-        ? canOffer.length
-        : needs.length;
+    return canOffer.length < needs.length ? canOffer.length : needs.length;
   }
 
-  bool get hasPossibleTrade =>
-      possibleTrades > 0;
+  bool get hasPossibleTrade => possibleTrades > 0;
 }

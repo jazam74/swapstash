@@ -11,6 +11,5 @@ class CollectionStats {
 
   int missing(int totalItems) => totalItems - owned;
 
-  double progress(int totalItems) =>
-      totalItems == 0 ? 0 : owned / totalItems;
+  double progress(int totalItems) => totalItems == 0 ? 0 : owned / totalItems;
 }

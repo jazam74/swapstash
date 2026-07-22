@@ -329,6 +329,7 @@ class ChatService {
 
     await batch.commit();
   }
+
   Future<Conversation?> getConversation({
     required String conversationId,
   }) async {

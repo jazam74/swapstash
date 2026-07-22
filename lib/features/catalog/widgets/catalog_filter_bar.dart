@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum InventoryFilter {
-  all,
-  owned,
- missing,
-  duplicates,
-}
+enum InventoryFilter { all, owned, missing, duplicates }
 
 class CatalogFilterBar extends StatelessWidget {
   final InventoryFilter selectedFilter;
@@ -21,12 +16,7 @@ class CatalogFilterBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.fromLTRB(
-        12,
-        12,
-        12,
-        4,
-      ),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
       child: Row(
         children: [
           FilterChip(

@@ -9,18 +9,11 @@ class FirestoreService {
   CollectionReference<Map<String, dynamic>> get _users =>
       _db.collection('users');
 
-  Future<void> createUserProfile(
-    UserProfile user,
-  ) async {
-    await _users.doc(user.uid).set(
-          user.toMap(),
-          SetOptions(merge: true),
-        );
+  Future<void> createUserProfile(UserProfile user) async {
+    await _users.doc(user.uid).set(user.toMap(), SetOptions(merge: true));
   }
 
-  Future<UserProfile?> getUserProfile(
-    String uid,
-  ) async {
+  Future<UserProfile?> getUserProfile(String uid) async {
     final document = await _users.doc(uid).get();
 
     if (!document.exists) {
@@ -33,29 +26,19 @@ class FirestoreService {
       return null;
     }
 
-    return UserProfile.fromMap({
-      ...data,
-      'uid': document.id,
-    });
+    return UserProfile.fromMap({...data, 'uid': document.id});
   }
 
-  Stream<UserProfile?> watchUserProfile(
-    String uid,
-  ) {
-    return _users.doc(uid).snapshots().map(
-      (document) {
-        final data = document.data();
+  Stream<UserProfile?> watchUserProfile(String uid) {
+    return _users.doc(uid).snapshots().map((document) {
+      final data = document.data();
 
-        if (!document.exists || data == null) {
-          return null;
-        }
+      if (!document.exists || data == null) {
+        return null;
+      }
 
-        return UserProfile.fromMap({
-          ...data,
-          'uid': document.id,
-        });
-      },
-    );
+      return UserProfile.fromMap({...data, 'uid': document.id});
+    });
   }
 
   Stream<UserProfile?> watchCurrentUserProfile() {
@@ -68,18 +51,11 @@ class FirestoreService {
     return watchUserProfile(user.uid);
   }
 
-  Future<void> updateUserProfile(
-    UserProfile user,
-  ) async {
-    await _users.doc(user.uid).set(
-          user.toMap(),
-          SetOptions(merge: true),
-        );
+  Future<void> updateUserProfile(UserProfile user) async {
+    await _users.doc(user.uid).set(user.toMap(), SetOptions(merge: true));
   }
 
-  Future<void> updateCurrentUserProfile(
-    UserProfile profile,
-  ) async {
+  Future<void> updateCurrentUserProfile(UserProfile profile) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
@@ -87,25 +63,20 @@ class FirestoreService {
     }
 
     if (profile.uid != user.uid) {
-      throw Exception(
-        'Cannot update another user profile.',
-      );
+      throw Exception('Cannot update another user profile.');
     }
 
     await updateUserProfile(profile);
   }
 
-  Future<List<UserProfile>> searchUsers(
-    String query,
-  ) async {
+  Future<List<UserProfile>> searchUsers(String query) async {
     final value = query.trim();
 
     if (value.isEmpty) {
       return [];
     }
 
-    final currentUserId =
-        FirebaseAuth.instance.currentUser?.uid;
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     final snapshot = await _users
         .orderBy('displayName')
@@ -116,18 +87,11 @@ class FirestoreService {
 
     return snapshot.docs
         .where((doc) => doc.id != currentUserId)
-        .map(
-          (doc) => UserProfile.fromMap({
-            ...doc.data(),
-            'uid': doc.id,
-          }),
-        )
+        .map((doc) => UserProfile.fromMap({...doc.data(), 'uid': doc.id}))
         .toList();
   }
 
-  Future<void> addCollectionToUser(
-    UserCollection collection,
-  ) async {
+  Future<void> addCollectionToUser(UserCollection collection) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
@@ -141,9 +105,7 @@ class FirestoreService {
         .set(collection.toMap());
   }
 
-  Future<void> saveNotificationToken(
-    String token,
-  ) async {
+  Future<void> saveNotificationToken(String token) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
@@ -156,21 +118,13 @@ class FirestoreService {
       return;
     }
 
-    await _users.doc(user.uid).set(
-      {
-        'notificationTokens': FieldValue.arrayUnion([
-          normalizedToken,
-        ]),
-        'notificationTokensUpdatedAt':
-            FieldValue.serverTimestamp(),
-      },
-      SetOptions(merge: true),
-    );
+    await _users.doc(user.uid).set({
+      'notificationTokens': FieldValue.arrayUnion([normalizedToken]),
+      'notificationTokensUpdatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
   }
 
-  Future<void> removeNotificationToken(
-    String token,
-  ) async {
+  Future<void> removeNotificationToken(String token) async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
@@ -184,11 +138,8 @@ class FirestoreService {
     }
 
     await _users.doc(user.uid).update({
-      'notificationTokens': FieldValue.arrayRemove([
-        normalizedToken,
-      ]),
-      'notificationTokensUpdatedAt':
-          FieldValue.serverTimestamp(),
+      'notificationTokens': FieldValue.arrayRemove([normalizedToken]),
+      'notificationTokensUpdatedAt': FieldValue.serverTimestamp(),
     });
   }
 }

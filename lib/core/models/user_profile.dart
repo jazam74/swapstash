@@ -32,9 +32,7 @@ class UserProfile {
     this.isPublic = true,
   });
 
-  factory UserProfile.fromMap(
-    Map<String, dynamic> map,
-  ) {
+  factory UserProfile.fromMap(Map<String, dynamic> map) {
     final createdAtValue = map['createdAt'];
 
     return UserProfile(
@@ -46,11 +44,8 @@ class UserProfile {
       allowInternationalTrades:
           map['allowInternationalTrades'] as bool? ?? false,
       rating: (map['rating'] as num?)?.toDouble() ?? 0,
-      completedTrades:
-          (map['completedTrades'] as num?)?.toInt() ?? 0,
-      createdAt: createdAtValue is Timestamp
-          ? createdAtValue
-          : Timestamp.now(),
+      completedTrades: (map['completedTrades'] as num?)?.toInt() ?? 0,
+      createdAt: createdAtValue is Timestamp ? createdAtValue : Timestamp.now(),
       city: map['city'] as String? ?? '',
       bio: map['bio'] as String? ?? '',
       photoUrl: map['photoUrl'] as String? ?? '',
@@ -98,11 +93,9 @@ class UserProfile {
       country: country ?? this.country,
       language: language ?? this.language,
       allowInternationalTrades:
-          allowInternationalTrades ??
-              this.allowInternationalTrades,
+          allowInternationalTrades ?? this.allowInternationalTrades,
       rating: rating ?? this.rating,
-      completedTrades:
-          completedTrades ?? this.completedTrades,
+      completedTrades: completedTrades ?? this.completedTrades,
       createdAt: createdAt ?? this.createdAt,
       city: city ?? this.city,
       bio: bio ?? this.bio,

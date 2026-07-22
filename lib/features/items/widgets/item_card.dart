@@ -54,17 +54,14 @@ class _ItemCardState extends State<ItemCard> {
   Future<void> _pickAndUploadImage() async {
     if (_isUploadingImage) return;
 
-    debugPrint(
-      'Odpiram galerijo za predmet #${widget.item.number}',
-    );
+    debugPrint('Odpiram galerijo za predmet #${widget.item.number}');
 
     setState(() {
       _isUploadingImage = true;
     });
 
     try {
-      final imageUrl =
-          await _imageService.pickAndUploadItemImage(
+      final imageUrl = await _imageService.pickAndUploadItemImage(
         collectionId: widget.collectionId,
         itemNumber: widget.item.number,
       );
@@ -79,11 +76,9 @@ class _ItemCardState extends State<ItemCard> {
         _imageUrlFuture = Future.value(imageUrl);
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Slika uspešno naložena.'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Slika uspešno naložena.')));
     } catch (error, stackTrace) {
       debugPrint('NAPAKA: $error');
       debugPrintStack(stackTrace: stackTrace);
@@ -91,11 +86,7 @@ class _ItemCardState extends State<ItemCard> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Napaka pri nalaganju slike:\n$error',
-          ),
-        ),
+        SnackBar(content: Text('Napaka pri nalaganju slike:\n$error')),
       );
     } finally {
       if (mounted) {
@@ -173,14 +164,14 @@ class _ItemCardState extends State<ItemCard> {
                           return Image.network(
                             imageUrl,
                             fit: BoxFit.cover,
-                            errorBuilder:
-                                (context, error, stackTrace) => Center(
-                              child: Icon(
-                                Icons.broken_image_outlined,
-                                size: 48,
-                                color: foregroundColor,
-                              ),
-                            ),
+                            errorBuilder: (context, error, stackTrace) =>
+                                Center(
+                                  child: Icon(
+                                    Icons.broken_image_outlined,
+                                    size: 48,
+                                    color: foregroundColor,
+                                  ),
+                                ),
                           );
                         },
                       ),
@@ -196,17 +187,14 @@ class _ItemCardState extends State<ItemCard> {
                       shape: const CircleBorder(),
                       child: InkWell(
                         customBorder: const CircleBorder(),
-                        onTap: _isUploadingImage
-                            ? null
-                            : _pickAndUploadImage,
+                        onTap: _isUploadingImage ? null : _pickAndUploadImage,
                         child: Padding(
                           padding: const EdgeInsets.all(12),
                           child: _isUploadingImage
                               ? const SizedBox(
                                   width: 22,
                                   height: 22,
-                                  child:
-                                      CircularProgressIndicator(
+                                  child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                   ),
                                 )
@@ -224,10 +212,7 @@ class _ItemCardState extends State<ItemCard> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(
-                  statusIcon,
-                  color: foregroundColor,
-                ),
+                Icon(statusIcon, color: foregroundColor),
                 const SizedBox(width: 6),
                 Text(
                   '#${item.number}',
@@ -252,12 +237,10 @@ class _ItemCardState extends State<ItemCard> {
             ),
             const SizedBox(height: 6),
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton.filledTonal(
-                  onPressed: item.isMissing ||
-                          widget.isSaving
+                  onPressed: item.isMissing || widget.isSaving
                       ? null
                       : widget.onDecrease,
                   icon: const Icon(Icons.remove),
@@ -269,26 +252,20 @@ class _ItemCardState extends State<ItemCard> {
                         ? const SizedBox(
                             width: 18,
                             height: 18,
-                            child:
-                                CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
+                            child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : Text(
                             '${item.quantity}',
                             style: TextStyle(
                               fontSize: 21,
-                              fontWeight:
-                                  FontWeight.bold,
+                              fontWeight: FontWeight.bold,
                               color: foregroundColor,
                             ),
                           ),
                   ),
                 ),
                 IconButton.filled(
-                  onPressed: widget.isSaving
-                      ? null
-                      : widget.onIncrease,
+                  onPressed: widget.isSaving ? null : widget.onIncrease,
                   icon: const Icon(Icons.add),
                 ),
               ],

@@ -4,12 +4,7 @@ import 'package:swapstash/core/services/item_service.dart';
 import 'package:swapstash/features/items/widgets/item_card.dart';
 import 'package:swapstash/features/items/widgets/item_statistics.dart';
 
-enum ItemFilter {
-  all,
-  owned,
-  missing,
-  duplicates,
-}
+enum ItemFilter { all, owned, missing, duplicates }
 
 class ItemsPage extends StatefulWidget {
   final String collectionId;
@@ -29,8 +24,7 @@ class ItemsPage extends StatefulWidget {
 
 class _ItemsPageState extends State<ItemsPage> {
   final ItemService _itemService = ItemService();
-  final TextEditingController _searchController =
-      TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   final Map<int, Item> _localItems = {};
   final Set<int> _savingItems = {};
@@ -56,9 +50,7 @@ class _ItemsPageState extends State<ItemsPage> {
         collectionId: widget.collectionId,
       );
     } catch (error) {
-      debugPrint(
-        'Statistike zbirke ni bilo mogoče preračunati: $error',
-      );
+      debugPrint('Statistike zbirke ni bilo mogoče preračunati: $error');
     }
   }
 
@@ -76,9 +68,7 @@ class _ItemsPageState extends State<ItemsPage> {
       return;
     }
 
-    final updatedItem = item.copyWith(
-      quantity: newQuantity,
-    );
+    final updatedItem = item.copyWith(quantity: newQuantity);
 
     setState(() {
       _localItems[item.number] = updatedItem;
@@ -99,11 +89,7 @@ class _ItemsPageState extends State<ItemsPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Količine ni bilo mogoče shraniti: $error',
-          ),
-        ),
+        SnackBar(content: Text('Količine ni bilo mogoče shraniti: $error')),
       );
     } finally {
       if (mounted) {
@@ -114,35 +100,26 @@ class _ItemsPageState extends State<ItemsPage> {
     }
   }
 
-  List<Item> _createCompleteItemList(
-    List<Item> storedItems,
-  ) {
+  List<Item> _createCompleteItemList(List<Item> storedItems) {
     final storedItemsByNumber = {
       for (final item in storedItems)
-        if (item.number >= 1 &&
-            item.number <= widget.totalItems)
+        if (item.number >= 1 && item.number <= widget.totalItems)
           item.number: item,
     };
 
-    return List.generate(
-      widget.totalItems,
-      (index) {
-        final itemNumber = index + 1;
+    return List.generate(widget.totalItems, (index) {
+      final itemNumber = index + 1;
 
-        return _localItems[itemNumber] ??
-            storedItemsByNumber[itemNumber] ??
-            Item(
-              number: itemNumber,
-              quantity: 0,
-            );
-      },
-    );
+      return _localItems[itemNumber] ??
+          storedItemsByNumber[itemNumber] ??
+          Item(number: itemNumber, quantity: 0);
+    });
   }
 
   List<Item> _filterItems(List<Item> items) {
     return items.where((item) {
-      final matchesSearch = _search.isEmpty ||
-          item.number.toString().contains(_search);
+      final matchesSearch =
+          _search.isEmpty || item.number.toString().contains(_search);
 
       if (!matchesSearch) {
         return false;
@@ -167,12 +144,7 @@ class _ItemsPageState extends State<ItemsPage> {
   Widget _buildFilterBar() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.fromLTRB(
-        12,
-        4,
-        12,
-        4,
-      ),
+      padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
       child: Row(
         children: [
           ChoiceChip(
@@ -238,18 +210,13 @@ class _ItemsPageState extends State<ItemsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.collectionName),
-      ),
+      appBar: AppBar(title: Text(widget.collectionName)),
       body: StreamBuilder<List<Item>>(
         stream: _itemService.watchItems(widget.collectionId),
         builder: (context, snapshot) {
-          if (snapshot.connectionState ==
-                  ConnectionState.waiting &&
+          if (snapshot.connectionState == ConnectionState.waiting &&
               !snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -265,32 +232,23 @@ class _ItemsPageState extends State<ItemsPage> {
             );
           }
 
-          final items = _createCompleteItemList(
-            snapshot.data ?? [],
-          );
+          final items = _createCompleteItemList(snapshot.data ?? []);
 
           final visibleItems = _filterItems(items);
 
-          final ownedCount =
-              items.where((item) => item.isOwned).length;
+          final ownedCount = items.where((item) => item.isOwned).length;
 
           final duplicateCount = items.fold<int>(
             0,
             (sum, item) => sum + item.duplicateCount,
           );
 
-          final missingCount =
-              items.where((item) => item.isMissing).length;
+          final missingCount = items.where((item) => item.isMissing).length;
 
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  12,
-                  12,
-                  12,
-                  4,
-                ),
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
                 child: TextField(
                   controller: _searchController,
                   keyboardType: TextInputType.number,
@@ -342,32 +300,25 @@ class _ItemsPageState extends State<ItemsPage> {
                         padding: const EdgeInsets.all(8),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                          childAspectRatio: 0.85,
-                        ),
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              childAspectRatio: 0.85,
+                            ),
                         itemCount: visibleItems.length,
                         itemBuilder: (context, index) {
                           final item = visibleItems[index];
-                          final isSaving =
-                              _savingItems.contains(item.number);
+                          final isSaving = _savingItems.contains(item.number);
 
                           return ItemCard(
                             collectionId: widget.collectionId,
                             item: item,
                             isSaving: isSaving,
                             onIncrease: () {
-                              _changeQuantity(
-                                item: item,
-                                change: 1,
-                              );
+                              _changeQuantity(item: item, change: 1);
                             },
                             onDecrease: () {
-                              _changeQuantity(
-                                item: item,
-                                change: -1,
-                              );
+                              _changeQuantity(item: item, change: -1);
                             },
                           );
                         },

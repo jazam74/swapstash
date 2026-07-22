@@ -19,10 +19,7 @@ class ItemImageService {
     return user.uid;
   }
 
-  String _cacheKey({
-    required String collectionId,
-    required int itemNumber,
-  }) {
+  String _cacheKey({required String collectionId, required int itemNumber}) {
     return '$collectionId/$itemNumber';
   }
 
@@ -35,9 +32,7 @@ class ItemImageService {
     }
 
     if (itemNumber <= 0) {
-      throw ArgumentError(
-        'Številka predmeta mora biti večja od 0.',
-      );
+      throw ArgumentError('Številka predmeta mora biti večja od 0.');
     }
   }
 
@@ -45,10 +40,7 @@ class ItemImageService {
     required String collectionId,
     required int itemNumber,
   }) {
-    _validateArguments(
-      collectionId: collectionId,
-      itemNumber: itemNumber,
-    );
+    _validateArguments(collectionId: collectionId, itemNumber: itemNumber);
 
     return _storage.ref().child(
       'users/$_userId/'
@@ -93,10 +85,7 @@ class ItemImageService {
     required String collectionId,
     required int itemNumber,
   }) async {
-    _validateArguments(
-      collectionId: collectionId,
-      itemNumber: itemNumber,
-    );
+    _validateArguments(collectionId: collectionId, itemNumber: itemNumber);
 
     final pickedImage = await _imagePicker.pickImage(
       source: ImageSource.gallery,
@@ -129,13 +118,9 @@ class ItemImageService {
       },
     );
 
-    final uploadTask = await reference.putData(
-      imageBytes,
-      metadata,
-    );
+    final uploadTask = await reference.putData(imageBytes, metadata);
 
-    final downloadUrl =
-        await uploadTask.ref.getDownloadURL();
+    final downloadUrl = await uploadTask.ref.getDownloadURL();
 
     final cacheKey = _cacheKey(
       collectionId: collectionId,
@@ -161,22 +146,13 @@ class ItemImageService {
         rethrow;
       }
     } finally {
-      clearCache(
-        collectionId: collectionId,
-        itemNumber: itemNumber,
-      );
+      clearCache(collectionId: collectionId, itemNumber: itemNumber);
     }
   }
 
-  void clearCache({
-    required String collectionId,
-    required int itemNumber,
-  }) {
+  void clearCache({required String collectionId, required int itemNumber}) {
     _urlCache.remove(
-      _cacheKey(
-        collectionId: collectionId,
-        itemNumber: itemNumber,
-      ),
+      _cacheKey(collectionId: collectionId, itemNumber: itemNumber),
     );
   }
 }

@@ -9,10 +9,7 @@ class AppUser {
     required this.displayName,
   });
 
-  factory AppUser.fromMap(
-    String uid,
-    Map<String, dynamic> map,
-  ) {
+  factory AppUser.fromMap(String uid, Map<String, dynamic> map) {
     return AppUser(
       uid: uid,
       email: map['email'] as String? ?? '',
@@ -21,17 +18,10 @@ class AppUser {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'email': email,
-      'displayName': displayName,
-    };
+    return {'email': email, 'displayName': displayName};
   }
 
-  AppUser copyWith({
-    String? uid,
-    String? email,
-    String? displayName,
-  }) {
+  AppUser copyWith({String? uid, String? email, String? displayName}) {
     return AppUser(
       uid: uid ?? this.uid,
       email: email ?? this.email,

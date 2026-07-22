@@ -9,22 +9,14 @@ class UserCollection {
     required this.createdAt,
   });
 
-  factory UserCollection.fromMap(
-    Map<String, dynamic> map,
-  ) {
+  factory UserCollection.fromMap(Map<String, dynamic> map) {
     return UserCollection(
-      catalogCollectionId:
-          map['catalogCollectionId'] as String? ?? '',
-      createdAt:
-          map['createdAt'] as Timestamp? ??
-              Timestamp.now(),
+      catalogCollectionId: map['catalogCollectionId'] as String? ?? '',
+      createdAt: map['createdAt'] as Timestamp? ?? Timestamp.now(),
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'catalogCollectionId': catalogCollectionId,
-      'createdAt': createdAt,
-    };
+    return {'catalogCollectionId': catalogCollectionId, 'createdAt': createdAt};
   }
 }

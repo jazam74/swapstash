@@ -30,9 +30,7 @@ class CollectionMember {
     required this.lastUpdated,
   });
 
-  factory CollectionMember.fromMap(
-    Map<String, dynamic> map,
-  ) {
+  factory CollectionMember.fromMap(Map<String, dynamic> map) {
     return CollectionMember(
       uid: map['uid'] ?? '',
       displayName: map['displayName'] ?? '',
@@ -40,12 +38,10 @@ class CollectionMember {
       country: map['country'] ?? '',
       city: map['city'] ?? '',
       isPublic: map['isPublic'] ?? true,
-      allowInternationalTrades:
-          map['allowInternationalTrades'] ?? false,
+      allowInternationalTrades: map['allowInternationalTrades'] ?? false,
       ownedCount: map['ownedCount'] ?? 0,
       duplicateCount: map['duplicateCount'] ?? 0,
-      lastUpdated:
-          map['lastUpdated'] ?? Timestamp.now(),
+      lastUpdated: map['lastUpdated'] ?? Timestamp.now(),
     );
   }
 
@@ -57,8 +53,7 @@ class CollectionMember {
       'country': country,
       'city': city,
       'isPublic': isPublic,
-      'allowInternationalTrades':
-          allowInternationalTrades,
+      'allowInternationalTrades': allowInternationalTrades,
       'ownedCount': ownedCount,
       'duplicateCount': duplicateCount,
       'lastUpdated': lastUpdated,

@@ -10,49 +10,32 @@ class CatalogItemService {
     final id = collectionId.trim();
 
     if (id.isEmpty) {
-      throw ArgumentError(
-        'ID kataloške zbirke ne sme biti prazen.',
-      );
+      throw ArgumentError('ID kataloške zbirke ne sme biti prazen.');
     }
 
-    return _db
-        .collection('catalogCollections')
-        .doc(id)
-        .collection('items');
+    return _db.collection('catalogCollections').doc(id).collection('items');
   }
 
-  Stream<List<CatalogItem>> watchItems(
-    String collectionId,
-  ) {
+  Stream<List<CatalogItem>> watchItems(String collectionId) {
     return _itemsReference(collectionId)
         .orderBy('number')
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
               .map(
-                (document) => CatalogItem.fromMap(
-                  document.id,
-                  document.data(),
-                ),
+                (document) => CatalogItem.fromMap(document.id, document.data()),
               )
               .toList(),
         );
   }
 
-  Future<List<CatalogItem>> getItems(
-    String collectionId,
-  ) async {
+  Future<List<CatalogItem>> getItems(String collectionId) async {
     final snapshot = await _itemsReference(
       collectionId,
     ).orderBy('number').get();
 
     return snapshot.docs
-        .map(
-          (document) => CatalogItem.fromMap(
-            document.id,
-            document.data(),
-          ),
-        )
+        .map((document) => CatalogItem.fromMap(document.id, document.data()))
         .toList();
   }
 
@@ -66,9 +49,7 @@ class CatalogItemService {
       return null;
     }
 
-    final document = await _itemsReference(
-      collectionId,
-    ).doc(id).get();
+    final document = await _itemsReference(collectionId).doc(id).get();
 
     final data = document.data();
 
@@ -76,9 +57,6 @@ class CatalogItemService {
       return null;
     }
 
-    return CatalogItem.fromMap(
-      document.id,
-      data,
-    );
+    return CatalogItem.fromMap(document.id, data);
   }
 }
