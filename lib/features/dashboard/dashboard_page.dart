@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/features/catalog/catalog_collections_page.dart';
 import 'package:swapstash/features/collections/my_collections_v2_page.dart';
+import 'package:swapstash/features/dashboard/models/dashboard_action.dart';
 import 'package:swapstash/features/dashboard/models/dashboard_data.dart';
 import 'package:swapstash/features/dashboard/services/dashboard_service.dart';
 import 'package:swapstash/features/dashboard/widgets/dashboard_actions_card.dart';
@@ -10,6 +11,7 @@ import 'package:swapstash/features/dashboard/widgets/dashboard_recent_collection
 import 'package:swapstash/features/dashboard/widgets/dashboard_statistics_grid.dart';
 import 'package:swapstash/features/dashboard/widgets/dashboard_welcome_card.dart';
 import 'package:swapstash/features/favorites/favorites_page.dart';
+import 'package:swapstash/features/trades/trades_page.dart';
 import 'package:swapstash/shared/widgets/app_empty_state.dart';
 import 'package:swapstash/shared/widgets/app_loading_card.dart';
 import 'package:swapstash/shared/widgets/app_section.dart';
@@ -21,6 +23,32 @@ class DashboardPage extends StatelessWidget {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const MyCollectionsV2Page()));
+  }
+
+  void _openTrade(BuildContext context, DashboardAction action) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => TradesPage(
+          initialTabIndex: action.tradeTabIndex ?? 0,
+          highlightedTradeId: action.tradeId,
+        ),
+      ),
+    );
+  }
+
+  List<DashboardAction> _attachActionNavigation(
+    BuildContext context,
+    List<DashboardAction> actions,
+  ) {
+    return actions
+        .map((action) {
+          if (action.tradeId == null || action.tradeId!.isEmpty) {
+            return action;
+          }
+
+          return action.copyWith(onTap: () => _openTrade(context, action));
+        })
+        .toList(growable: false);
   }
 
   @override
@@ -75,6 +103,7 @@ class DashboardPage extends StatelessWidget {
           }
 
           final data = snapshot.data ?? DashboardData.empty();
+          final actions = _attachActionNavigation(context, data.actions);
 
           return RefreshIndicator(
             onRefresh: () async {
@@ -86,7 +115,7 @@ class DashboardPage extends StatelessWidget {
               children: [
                 const DashboardWelcomeCard(),
                 const SizedBox(height: AppSpacing.md),
-                DashboardActionsCard(actions: data.actions),
+                DashboardActionsCard(actions: actions),
                 const SizedBox(height: AppSpacing.lg),
                 AppSection(
                   icon: Icons.collections_bookmark_outlined,

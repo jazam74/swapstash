@@ -2,35 +2,70 @@ import 'dart:async';
 
 import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/collection_statistics.dart';
+import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/core/models/user_collection.dart';
 import 'package:swapstash/core/services/catalog_service.dart';
 import 'package:swapstash/core/services/collection_statistics_service.dart';
+import 'package:swapstash/core/services/trade_service.dart';
 import 'package:swapstash/core/services/user_collection_service.dart';
 import 'package:swapstash/features/dashboard/models/dashboard_data.dart';
+import 'package:swapstash/features/dashboard/services/dashboard_trade_action_mapper.dart';
 
 class DashboardService {
   final UserCollectionService _userCollectionService;
   final CatalogService _catalogService;
   final CollectionStatisticsService _collectionStatisticsService;
+  final TradeService _tradeService;
 
   DashboardService({
     UserCollectionService? userCollectionService,
     CatalogService? catalogService,
     CollectionStatisticsService? collectionStatisticsService,
+    TradeService? tradeService,
   }) : _userCollectionService =
            userCollectionService ?? UserCollectionService(),
        _catalogService = catalogService ?? CatalogService(),
        _collectionStatisticsService =
-           collectionStatisticsService ?? CollectionStatisticsService();
+           collectionStatisticsService ?? CollectionStatisticsService(),
+       _tradeService = tradeService ?? TradeService();
 
   Stream<DashboardData> watchDashboard() {
     late final StreamController<DashboardData> controller;
 
     StreamSubscription<List<UserCollection>>? collectionsSubscription;
+    StreamSubscription<List<Trade>>? incomingTradesSubscription;
+    StreamSubscription<List<Trade>>? outgoingTradesSubscription;
+
     final statisticsSubscriptions =
         <StreamSubscription<CollectionStatistics>>[];
 
+    List<CollectionStatistics> latestStatistics = const [];
+    List<Trade> latestIncomingTrades = const [];
+    List<Trade> latestOutgoingTrades = const [];
+
+    var collectionsReady = false;
+    var incomingTradesReady = false;
+    var outgoingTradesReady = false;
     var generation = 0;
+
+    void emitDashboardWhenReady() {
+      if (controller.isClosed ||
+          !collectionsReady ||
+          !incomingTradesReady ||
+          !outgoingTradesReady) {
+        return;
+      }
+
+      final actions = DashboardTradeActionMapper.build(
+        incomingTrades: latestIncomingTrades,
+        outgoingTrades: latestOutgoingTrades,
+        currentUserId: _tradeService.currentUserId,
+      );
+
+      controller.add(
+        DashboardData.fromStatistics(latestStatistics, actions: actions),
+      );
+    }
 
     Future<void> cancelStatisticsSubscriptions() async {
       final subscriptions = List<StreamSubscription<CollectionStatistics>>.from(
@@ -47,6 +82,9 @@ class DashboardService {
     Future<void> handleCollections(List<UserCollection> userCollections) async {
       final currentGeneration = ++generation;
 
+      collectionsReady = false;
+      latestStatistics = const [];
+
       await cancelStatisticsSubscriptions();
 
       if (controller.isClosed || currentGeneration != generation) {
@@ -54,7 +92,8 @@ class DashboardService {
       }
 
       if (userCollections.isEmpty) {
-        controller.add(DashboardData.empty());
+        collectionsReady = true;
+        emitDashboardWhenReady();
         return;
       }
 
@@ -76,25 +115,27 @@ class DashboardService {
             .toList();
 
         if (catalogCollections.isEmpty) {
-          controller.add(DashboardData.empty());
+          collectionsReady = true;
+          emitDashboardWhenReady();
           return;
         }
 
         final statisticsById = <String, CollectionStatistics>{};
 
-        void emitWhenReady() {
+        void emitStatisticsWhenReady() {
           if (controller.isClosed ||
               currentGeneration != generation ||
               statisticsById.length != catalogCollections.length) {
             return;
           }
 
-          final orderedStatistics = [
+          latestStatistics = [
             for (final collection in catalogCollections)
               statisticsById[collection.id]!,
           ];
 
-          controller.add(DashboardData.fromStatistics(orderedStatistics));
+          collectionsReady = true;
+          emitDashboardWhenReady();
         }
 
         for (final collection in catalogCollections) {
@@ -107,7 +148,7 @@ class DashboardService {
                   }
 
                   statisticsById[collection.id] = statistics;
-                  emitWhenReady();
+                  emitStatisticsWhenReady();
                 },
                 onError: (Object error, StackTrace stackTrace) {
                   if (!controller.isClosed && currentGeneration == generation) {
@@ -125,24 +166,46 @@ class DashboardService {
       }
     }
 
+    void addStreamError(Object error, StackTrace stackTrace) {
+      if (!controller.isClosed) {
+        controller.addError(error, stackTrace);
+      }
+    }
+
     controller = StreamController<DashboardData>(
       onListen: () {
-        collectionsSubscription = _userCollectionService
-            .watchCollections()
-            .listen(
-              (collections) {
+        try {
+          collectionsSubscription = _userCollectionService
+              .watchCollections()
+              .listen((collections) {
                 unawaited(handleCollections(collections));
-              },
-              onError: (Object error, StackTrace stackTrace) {
-                if (!controller.isClosed) {
-                  controller.addError(error, stackTrace);
-                }
-              },
-            );
+              }, onError: addStreamError);
+
+          incomingTradesSubscription = _tradeService
+              .watchIncomingTrades()
+              .listen((trades) {
+                latestIncomingTrades = trades;
+                incomingTradesReady = true;
+                emitDashboardWhenReady();
+              }, onError: addStreamError);
+
+          outgoingTradesSubscription = _tradeService
+              .watchOutgoingTrades()
+              .listen((trades) {
+                latestOutgoingTrades = trades;
+                outgoingTradesReady = true;
+                emitDashboardWhenReady();
+              }, onError: addStreamError);
+        } catch (error, stackTrace) {
+          controller.addError(error, stackTrace);
+        }
       },
       onCancel: () async {
         generation++;
+
         await collectionsSubscription?.cancel();
+        await incomingTradesSubscription?.cancel();
+        await outgoingTradesSubscription?.cancel();
         await cancelStatisticsSubscriptions();
       },
     );

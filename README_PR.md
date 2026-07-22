@@ -1,39 +1,38 @@
-# PR-007.2 – Dashboard V2
+# PR-008.1 – Odpri povezano menjavo
 
 ## Namen
-Dashboard preklopi s starega `CollectionService` in modela `Collection`
-na V2 podatke:
+Klik na opravilo na Dashboardu ne odpre več vedno zavihka **Prejete**.
 
-- `UserCollectionService`
-- `CatalogService`
-- `CollectionStatisticsService`
-- `CollectionStatistics`
-- skupni `CollectionCard`
+## Novo vedenje
+- opravilo za prejeto menjavo odpre **Prejete**
+- opravilo za poslano menjavo odpre **Poslane**
+- zaključena menjava lahko odpre **Zaključene**
+- povezana menjava se premakne na vrh seznama
+- povezana menjava je poudarjena z okvirjem in oznako **Menjava iz opravila**
 
-## Kaj se spremeni
-- Dashboard prikazuje enake podatke kot stran **Moje zbirke**
-- `19 / 0` se zamenja s pravim razmerjem, npr. `19 / 728`
-- pravilno se izračunajo zbrane kartice, viški in manjkajoče
-- najboljša in zadnje zbirke uporabljajo skupni `CollectionCard`
-- klik na zbirko ali statistiko **Zbirke** odpre `MyCollectionsV2Page`
-- odstranjen je začasni gumb **Moje zbirke V2** iz AppBara
+## Tehnična izvedba
+`DashboardAction` zdaj hrani:
+- `tradeId`
+- `tradeTabIndex`
 
-## Firestore
-Struktura podatkov se ne spremeni.
+`TradesPage` zdaj sprejema:
+- `initialTabIndex`
+- `highlightedTradeId`
+
+Logika same menjave in Firestore struktura se ne spreminjata.
 
 ## Test
 ```powershell
-dart format lib\features\dashboard
+dart format lib\features\dashboard lib\features\trades\trades_page.dart
 flutter analyze
 ```
 
 Ročno preveri:
-- Dashboard pokaže `19 / 728` in ne več `19 / 0`
-- Pregled pokaže enake številke kot stran Moje zbirke
-- klik na najboljšo zbirko odpre Moje zbirke
-- klik na kartico pod Tvoje zbirke odpre Moje zbirke
-- klik na statistiko Zbirke odpre Moje zbirke
-- sprememba količine kartice sproti osveži oba zaslona
+1. Na računu pošiljatelja klikni **Potrdi predajo kartic**.
+2. Odpreti se mora zavihek **Poslane**.
+3. Prava menjava mora biti prva in označena.
+4. Na računu prejemnika klikni **Odgovori na ponudbo**.
+5. Odpreti se mora zavihek **Prejete** z označeno pravo menjavo.
 
 ## Commit
-`refactor(dashboard): migrate dashboard to v2 collection data`
+`feat(dashboard): open linked trade from task`

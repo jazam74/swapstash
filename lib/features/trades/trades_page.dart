@@ -15,14 +15,28 @@ import 'package:swapstash/features/trades/widgets/trade_summary_card.dart';
 import 'package:swapstash/features/trades/widgets/trade_items_card.dart';
 
 class TradesPage extends StatelessWidget {
-  const TradesPage({super.key});
+  final int initialTabIndex;
+  final String? highlightedTradeId;
+
+  const TradesPage({
+    super.key,
+    this.initialTabIndex = 0,
+    this.highlightedTradeId,
+  });
 
   @override
   Widget build(BuildContext context) {
     final tradeService = TradeService();
 
+    final selectedTabIndex = initialTabIndex < 0
+        ? 0
+        : initialTabIndex > 2
+        ? 2
+        : initialTabIndex;
+
     return DefaultTabController(
       length: 3,
+      initialIndex: selectedTabIndex,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Menjave'),
@@ -42,6 +56,7 @@ class TradesPage extends StatelessWidget {
               currentUserId: tradeService.currentUserId,
               direction: _TradeDirection.incoming,
               emptyMessage: 'Ni prejetih menjav.',
+              highlightedTradeId: highlightedTradeId,
             ),
             _TradesStreamView(
               stream: tradeService.watchOutgoingTrades(),
@@ -49,10 +64,12 @@ class TradesPage extends StatelessWidget {
               currentUserId: tradeService.currentUserId,
               direction: _TradeDirection.outgoing,
               emptyMessage: 'Ni poslanih menjav.',
+              highlightedTradeId: highlightedTradeId,
             ),
             _CompletedTradesView(
               tradeService: tradeService,
               currentUserId: tradeService.currentUserId,
+              highlightedTradeId: highlightedTradeId,
             ),
           ],
         ),
@@ -79,6 +96,7 @@ class _TradesStreamView extends StatelessWidget {
   final String currentUserId;
   final _TradeDirection direction;
   final String emptyMessage;
+  final String? highlightedTradeId;
 
   const _TradesStreamView({
     required this.stream,
@@ -86,6 +104,7 @@ class _TradesStreamView extends StatelessWidget {
     required this.currentUserId,
     required this.direction,
     required this.emptyMessage,
+    this.highlightedTradeId,
   });
 
   @override
@@ -105,6 +124,8 @@ class _TradesStreamView extends StatelessWidget {
         final trades = (snapshot.data ?? [])
             .where((trade) => trade.status != TradeStatus.completed)
             .toList();
+
+        _moveTradeToTop(trades: trades, highlightedTradeId: highlightedTradeId);
 
         if (trades.isEmpty) {
           return _EmptyTrades(
@@ -129,6 +150,7 @@ class _TradesStreamView extends StatelessWidget {
               tradeService: tradeService,
               currentUserId: currentUserId,
               direction: direction,
+              isHighlighted: trades[index].id == highlightedTradeId,
             );
           },
         );
@@ -140,10 +162,12 @@ class _TradesStreamView extends StatelessWidget {
 class _CompletedTradesView extends StatelessWidget {
   final TradeService tradeService;
   final String currentUserId;
+  final String? highlightedTradeId;
 
   const _CompletedTradesView({
     required this.tradeService,
     required this.currentUserId,
+    this.highlightedTradeId,
   });
 
   @override
@@ -176,6 +200,11 @@ class _CompletedTradesView extends StatelessWidget {
             final trades = completed.values.toList()
               ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
+            _moveTradeToTop(
+              trades: trades,
+              highlightedTradeId: highlightedTradeId,
+            );
+
             if (trades.isEmpty) {
               return const _EmptyTrades(
                 icon: Icons.check_circle_outline,
@@ -201,6 +230,7 @@ class _CompletedTradesView extends StatelessWidget {
                   direction: trade.receiverId == currentUserId
                       ? _TradeDirection.incoming
                       : _TradeDirection.outgoing,
+                  isHighlighted: trade.id == highlightedTradeId,
                 );
               },
             );
@@ -216,12 +246,14 @@ class _TradeCard extends StatefulWidget {
   final TradeService tradeService;
   final String currentUserId;
   final _TradeDirection direction;
+  final bool isHighlighted;
 
   const _TradeCard({
     required this.trade,
     required this.tradeService,
     required this.currentUserId,
     required this.direction,
+    this.isHighlighted = false,
   });
 
   @override
@@ -281,15 +313,47 @@ class _TradeCardState extends State<_TradeCard> {
         ? trade.offeredItems
         : trade.requestedItems;
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
       clipBehavior: Clip.antiAlias,
+      elevation: widget.isHighlighted ? 3 : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.card),
+        side: widget.isHighlighted
+            ? BorderSide(color: colorScheme.primary, width: 2)
+            : BorderSide.none,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (widget.isHighlighted)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
+              ),
+              color: colorScheme.primary.withValues(alpha: 0.10),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.link_rounded,
+                    size: 18,
+                    color: colorScheme.primary,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    'Menjava iz opravila',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           TradeHeader(
             status: TradeStatusDisplayService.build(
               trade: trade,
@@ -492,6 +556,26 @@ class _TradeCardState extends State<_TradeCard> {
     if (userId.length <= 10) return userId;
     return '${userId.substring(0, 10)}…';
   }
+}
+
+void _moveTradeToTop({
+  required List<Trade> trades,
+  required String? highlightedTradeId,
+}) {
+  final id = highlightedTradeId?.trim();
+
+  if (id == null || id.isEmpty) {
+    return;
+  }
+
+  final index = trades.indexWhere((trade) => trade.id == id);
+
+  if (index <= 0) {
+    return;
+  }
+
+  final selectedTrade = trades.removeAt(index);
+  trades.insert(0, selectedTrade);
 }
 
 class _EmptyTrades extends StatelessWidget {
