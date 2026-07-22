@@ -38,7 +38,7 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
     try {
       final conversation = await _chatService.getOrCreateConversation(
         collectionId: 'direct_messages',
-        collectionName: 'Splošni pogovor',
+        collectionName: '',
         otherUserId: profile.uid,
         otherUserName: profile.displayName,
         otherUserPhotoUrl: profile.photoUrl,

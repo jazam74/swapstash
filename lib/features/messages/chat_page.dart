@@ -72,6 +72,8 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     final currentUserId = _currentUserId;
     final otherUserName = widget.conversation.otherUserName(currentUserId);
+    final isDirectConversation =
+        widget.conversation.collectionId.trim() == 'direct_messages';
 
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +94,8 @@ class _ChatPageState extends State<ChatPage> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  if (widget.conversation.collectionName.trim().isNotEmpty)
+                  if (!isDirectConversation &&
+                      widget.conversation.collectionName.trim().isNotEmpty)
                     Text(
                       widget.conversation.collectionName,
                       maxLines: 1,
@@ -127,7 +130,9 @@ class _ChatPageState extends State<ChatPage> {
                 if (messages.isEmpty) {
                   return _EmptyChatView(
                     otherUserName: otherUserName,
-                    collectionName: widget.conversation.collectionName,
+                    collectionName: isDirectConversation
+                        ? ''
+                        : widget.conversation.collectionName,
                   );
                 }
 

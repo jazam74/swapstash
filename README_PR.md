@@ -1,83 +1,56 @@
-# PR-009.1 – Javni profil zbiratelja
+# PR-009.1B – Popravek `flutter analyze`
 
-## Namen
+## Vzrok
 
-Uporabnik lahko odpre profil drugega zbiratelja iz:
+`dashboard_page.dart` še vedno odpira:
 
-- strani **Zbiratelji**
-- glave uporabnika na strani **Primerjava menjave**
-
-## Javni profil prikazuje
-
-- fotografijo in prikazno ime
-- kraj in državo pri javnem profilu
-- povprečno oceno in število ocen
-- število zaključenih menjav
-- dovoljenje za mednarodne menjave
-- opis uporabnika
-- zadnje komentarje po zaključenih menjavah
-- gumb **Pošlji sporočilo**
-
-## Zaseben profil
-
-Pri `isPublic == false` ostanejo vidni:
-
-- ime in fotografija
-- povprečna ocena
-- število zaključenih menjav
-- možnost pošiljanja sporočila
-
-Skriti so:
-
-- lokacija
-- opis
-- komentarji ocen
-
-## Pogovor
-
-Gumb **Pošlji sporočilo** ustvari oziroma odpre splošni neposredni pogovor:
-
-```text
-collectionId: direct_messages
-collectionName: Splošni pogovor
+```dart
+MessagesPage(initialConversationId: conversationId)
 ```
 
-To uporablja obstoječi model pogovorov in ne zahteva spremembe Firestore
-strukture.
+PR-009.1A pa je datoteko `messages_page.dart` izdelal iz starejše različice,
+ki konstruktorja `initialConversationId` ni več vsebovala. S tem se je izgubila
+tudi funkcija, ki iz opravila na domači strani odpre točno določen pogovor.
 
-## Spremenjene datoteke
+## Popravek
 
-- `lib/features/users/users_page.dart`
-- `lib/features/users/public_user_profile_page.dart`
-- `lib/features/users/widgets/user_rating_summary.dart`
-- `lib/features/users/widgets/user_rating_list.dart`
-- `lib/features/trades/trade_detail_page.dart`
-- `lib/core/services/trade_rating_service.dart`
+- vrnjen je neobvezni parameter `initialConversationId`
+- po prvem prejetem seznamu pogovorov se samodejno odpre zahtevani pogovor
+- pogovor se odpre samo enkrat in se po vrnitvi ne odpira ponovno
+- če pogovor prispe v poznejšem Firestore posnetku, ga stran še vedno počaka
+- vse štiri uporabe zastarelega `withOpacity` so zamenjane z `withValues`
 
-## Firestore
+Popravek ohrani spremembo iz PR-009.1A, zato se pri neposrednih pogovorih
+oznaka `Splošni pogovor` še vedno ne prikazuje.
 
-Obstoječa pravila iz PR-009.0A že dovoljujejo prijavljenim uporabnikom branje
-ocen. Nova struktura ni potrebna.
+## Datoteka
+
+- `lib/features/messages/messages_page.dart`
 
 ## Preverjanje
 
 ```powershell
-dart format lib\features\users lib\features\trades\trade_detail_page.dart lib\core\services\trade_rating_service.dart
+dart format lib\features\messages\messages_page.dart
 flutter analyze
+```
+
+Pričakovani rezultat:
+
+```text
+No issues found!
 ```
 
 ## Ročni test
 
-1. Odpri **Zbiratelji** in poišči uporabnika.
-2. Klik na rezultat mora odpreti njegov javni profil.
-3. Preveri povprečno oceno, zaključene menjave in komentarje.
-4. Klikni **Pošlji sporočilo** in preveri, da se odpre pravi pogovor.
-5. Odpri **Poišči menjavo → Primerjava menjave**.
-6. Klik na ime oziroma fotografijo zbiratelja mora odpreti isti javni profil.
-7. Pri zasebnem profilu morajo biti lokacija, opis in komentarji skriti.
+1. Odpri neposredni pogovor iz javnega profila.
+2. Preveri, da oznaka `Splošni pogovor` ni prikazana.
+3. Ustvari neprebrano sporočilo z drugim računom.
+4. Na domači strani klikni opravilo za neprebrani pogovor.
+5. Odpreti se mora točno ta pogovor.
+6. Po vrnitvi na seznam se pogovor ne sme samodejno odpreti še enkrat.
 
 ## Commit
 
 ```text
-feat(users): add public collector profiles
+fix(messages): restore conversation deep link
 ```

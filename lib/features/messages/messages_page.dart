@@ -20,9 +20,20 @@ class _MessagesPageState extends State<MessagesPage> {
   final FocusNode _searchFocusNode = FocusNode();
 
   String _searchQuery = '';
-  bool _initialConversationHandled = false;
+  String? _handledInitialConversationId;
+  bool _openingInitialConversation = false;
 
   String? get _currentUserId => _auth.currentUser?.uid;
+
+  @override
+  void didUpdateWidget(covariant MessagesPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.initialConversationId != widget.initialConversationId) {
+      _handledInitialConversationId = null;
+      _openingInitialConversation = false;
+    }
+  }
 
   @override
   void dispose() {
@@ -41,46 +52,46 @@ class _MessagesPageState extends State<MessagesPage> {
     );
   }
 
-  void _openInitialConversationIfNeeded(List<Conversation> conversations) {
-    if (_initialConversationHandled) {
+  void _scheduleInitialConversationOpen(List<Conversation> conversations) {
+    final conversationId = widget.initialConversationId?.trim() ?? '';
+
+    if (conversationId.isEmpty ||
+        _openingInitialConversation ||
+        _handledInitialConversationId == conversationId) {
       return;
     }
 
-    final initialConversationId = widget.initialConversationId?.trim() ?? '';
-
-    if (initialConversationId.isEmpty) {
-      _initialConversationHandled = true;
-      return;
-    }
-
-    Conversation? matchingConversation;
+    Conversation? targetConversation;
 
     for (final conversation in conversations) {
-      if (conversation.id == initialConversationId) {
-        matchingConversation = conversation;
+      if (conversation.id == conversationId) {
+        targetConversation = conversation;
         break;
       }
     }
 
-    _initialConversationHandled = true;
+    // The requested conversation may arrive in a later stream snapshot.
+    if (targetConversation == null) {
+      return;
+    }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    _openingInitialConversation = true;
+    _handledInitialConversationId = conversationId;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) {
         return;
       }
 
-      final conversation = matchingConversation;
-
-      if (conversation == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Povezanega pogovora ni bilo mogoče najti.'),
-          ),
-        );
-        return;
+      try {
+        await _openConversation(targetConversation!);
+      } finally {
+        if (mounted) {
+          setState(() {
+            _openingInitialConversation = false;
+          });
+        }
       }
-
-      _openConversation(conversation);
     });
   }
 
@@ -152,7 +163,7 @@ class _MessagesPageState extends State<MessagesPage> {
 
                 final conversations = snapshot.data ?? const <Conversation>[];
 
-                _openInitialConversationIfNeeded(conversations);
+                _scheduleInitialConversationOpen(conversations);
 
                 final filteredConversations = _filterConversations(
                   conversations,
@@ -320,7 +331,9 @@ class _ConversationCard extends StatelessWidget {
     final isUnread = unreadCount > 0;
     final isCurrentUserLastSender = conversation.lastSenderId == currentUserId;
     final lastMessage = conversation.lastMessage.trim();
-    final collectionName = conversation.collectionName.trim();
+    final collectionName = conversation.collectionId.trim() == 'direct_messages'
+        ? ''
+        : conversation.collectionName.trim();
 
     final messagePreview = lastMessage.isEmpty
         ? 'Pogovor še nima sporočil.'
