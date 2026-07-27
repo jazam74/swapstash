@@ -4,6 +4,7 @@ import 'package:swapstash/core/theme/app_colors.dart';
 import 'package:swapstash/core/theme/app_radius.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/core/theme/app_text_styles.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class TradeProgressCard extends StatelessWidget {
   final Trade trade;
@@ -17,6 +18,7 @@ class TradeProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final isSender = trade.senderId == currentUserId;
 
     final myHandedOver = isSender ? trade.senderShipped : trade.receiverShipped;
@@ -29,28 +31,28 @@ class TradeProgressCard extends StatelessWidget {
         : trade.senderReceived;
 
     final steps = <_ProgressStep>[
-      const _ProgressStep(
-        label: 'Menjava dogovorjena',
+      _ProgressStep(
+        label: localizations.tradeProgressAgreed,
         icon: Icons.handshake_outlined,
         done: true,
       ),
       _ProgressStep(
-        label: 'Predal sem kartice',
+        label: localizations.tradeProgressIHandedOver,
         icon: Icons.how_to_reg_outlined,
         done: myHandedOver,
       ),
       _ProgressStep(
-        label: 'Druga stran je predala kartice',
+        label: localizations.tradeProgressOtherHandedOver,
         icon: Icons.swap_horiz,
         done: otherHandedOver,
       ),
       _ProgressStep(
-        label: 'Prejel sem kartice',
+        label: localizations.tradeProgressIReceived,
         icon: Icons.inventory_2_outlined,
         done: myReceived,
       ),
       _ProgressStep(
-        label: 'Druga stran je prejela kartice',
+        label: localizations.tradeProgressOtherReceived,
         icon: Icons.done_all,
         done: otherReceived,
       ),
@@ -67,7 +69,7 @@ class TradeProgressCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Potek menjave', style: AppTextStyles.subtitle),
+          Text(localizations.tradeProgressTitle, style: AppTextStyles.subtitle),
           const SizedBox(height: AppSpacing.sm),
           for (var index = 0; index < steps.length; index++) ...[
             _ProgressRow(step: steps[index]),

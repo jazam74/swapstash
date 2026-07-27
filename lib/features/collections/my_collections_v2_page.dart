@@ -1,7 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/collection_statistics.dart';
 import 'package:swapstash/core/models/user_collection.dart';
+import 'package:swapstash/core/localization/catalog_category_localizer.dart';
 import 'package:swapstash/core/services/catalog_service.dart';
 import 'package:swapstash/core/services/collection_statistics_service.dart';
 import 'package:swapstash/core/services/user_collection_service.dart';
@@ -10,6 +13,7 @@ import 'package:swapstash/features/catalog/catalog_items_page.dart';
 import 'package:swapstash/features/collections/models/collection_card_data.dart';
 import 'package:swapstash/features/collections/widgets/collection_card.dart';
 import 'package:swapstash/features/collections/widgets/collection_popup_menu.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class MyCollectionsV2Page extends StatefulWidget {
   const MyCollectionsV2Page({super.key});
@@ -20,9 +24,7 @@ class MyCollectionsV2Page extends StatefulWidget {
 
 class _MyCollectionsV2PageState extends State<MyCollectionsV2Page> {
   final UserCollectionService _userCollectionService = UserCollectionService();
-
   final CatalogService _catalogService = CatalogService();
-
   final CollectionStatisticsService _collectionStatisticsService =
       CollectionStatisticsService();
 
@@ -44,27 +46,28 @@ class _MyCollectionsV2PageState extends State<MyCollectionsV2Page> {
   }
 
   Future<void> _removeCollection(CatalogCollection collection) async {
+    final localizations = AppLocalizations.of(context)!;
+
     final shouldRemove = await showDialog<bool>(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Odstrani zbirko'),
+          title: Text(localizations.myCollectionsRemoveTitle),
           content: Text(
-            'Ali želiš zbirko "${collection.name}" '
-            'odstraniti iz svojih zbirk?',
+            localizations.myCollectionsRemoveQuestion(collection.name),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false);
+                Navigator.of(dialogContext).pop(false);
               },
-              child: const Text('Prekliči'),
+              child: Text(localizations.cancel),
             ),
             FilledButton(
               onPressed: () {
-                Navigator.of(context).pop(true);
+                Navigator.of(dialogContext).pop(true);
               },
-              child: const Text('Odstrani'),
+              child: Text(localizations.myCollectionsRemoveButton),
             ),
           ],
         );
@@ -77,31 +80,156 @@ class _MyCollectionsV2PageState extends State<MyCollectionsV2Page> {
 
     try {
       await _userCollectionService.removeCollection(collection.id);
-
       _catalogCollectionFutures.remove(collection.id);
 
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${collection.name} je bila odstranjena.')),
+        SnackBar(
+          content: Text(localizations.myCollectionsRemoved(collection.name)),
+        ),
       );
     } catch (error) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Zbirke ni bilo mogoče odstraniti: $error')),
+        SnackBar(
+          content: Text(
+            localizations.myCollectionsRemoveError(error.toString()),
+          ),
+        ),
       );
     }
   }
 
+  Widget _buildCollectionEntry({
+    required UserCollection userCollection,
+    required AppLocalizations localizations,
+  }) {
+    return FutureBuilder<CatalogCollection?>(
+      future: _loadCatalogCollection(userCollection.catalogCollectionId),
+      builder: (context, catalogSnapshot) {
+        if (catalogSnapshot.connectionState == ConnectionState.waiting &&
+            !catalogSnapshot.hasData) {
+          return const Card(
+            margin: EdgeInsets.zero,
+            child: SizedBox(
+              height: 110,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        }
+
+        if (catalogSnapshot.hasError) {
+          return Card(
+            margin: EdgeInsets.zero,
+            child: ListTile(
+              leading: const Icon(Icons.error_outline),
+              title: Text(localizations.myCollectionsCatalogLoadError),
+              subtitle: Text('${catalogSnapshot.error}'),
+            ),
+          );
+        }
+
+        final collection = catalogSnapshot.data;
+
+        if (collection == null) {
+          return Card(
+            margin: EdgeInsets.zero,
+            child: ListTile(
+              leading: const Icon(Icons.warning_amber_outlined),
+              title: Text(localizations.myCollectionsCatalogMissing),
+              subtitle: Text(userCollection.catalogCollectionId),
+            ),
+          );
+        }
+
+        return StreamBuilder<CollectionStatistics>(
+          stream: _collectionStatisticsService.watchStatistics(
+            collection: collection,
+          ),
+          builder: (context, statisticsSnapshot) {
+            if (statisticsSnapshot.connectionState ==
+                    ConnectionState.waiting &&
+                !statisticsSnapshot.hasData) {
+              return const Card(
+                margin: EdgeInsets.zero,
+                child: SizedBox(
+                  height: 160,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              );
+            }
+
+            if (statisticsSnapshot.hasError) {
+              return Card(
+                margin: EdgeInsets.zero,
+                child: ListTile(
+                  leading: const Icon(Icons.error_outline),
+                  title: Text(
+                    localizations.myCollectionsStatisticsLoadError,
+                  ),
+                  subtitle: Text('${statisticsSnapshot.error}'),
+                ),
+              );
+            }
+
+            final statistics = statisticsSnapshot.data;
+
+            if (statistics == null) {
+              return Card(
+                margin: EdgeInsets.zero,
+                child: ListTile(
+                  leading: const Icon(Icons.warning_amber_outlined),
+                  title: Text(
+                    localizations.myCollectionsStatisticsUnavailable,
+                  ),
+                ),
+              );
+            }
+
+            return CollectionCard(
+              data: CollectionCardData(
+                title: statistics.name,
+                subtitle:
+                    '${statistics.publisher} • '
+                    '${localizedCatalogCategory(localizations, statistics.category)} • '
+                    '${statistics.year}',
+                ownedCount: statistics.ownedCount,
+                totalCount: statistics.totalItems,
+                duplicateCount: statistics.duplicateCount,
+                missingCount: statistics.missingCount,
+              ),
+              showMenu: true,
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => CatalogItemsPage(collection: collection),
+                  ),
+                );
+              },
+              onMenuSelected: (action) {
+                if (action == CollectionMenuAction.remove) {
+                  _removeCollection(collection);
+                }
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Moje zbirke'),
+        title: Text(localizations.myCollectionsTitle),
         actions: [
           IconButton(
-            tooltip: 'Dodaj zbirko iz kataloga',
+            tooltip: localizations.myCollectionsAddFromCatalog,
             onPressed: _openCatalog,
             icon: const Icon(Icons.add),
           ),
@@ -120,8 +248,9 @@ class _MyCollectionsV2PageState extends State<MyCollectionsV2Page> {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Tvojih zbirk ni bilo mogoče naložiti:\n'
-                  '${snapshot.error}',
+                  localizations.myCollectionsLoadError(
+                    snapshot.error.toString(),
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -134,128 +263,49 @@ class _MyCollectionsV2PageState extends State<MyCollectionsV2Page> {
             return _EmptyCollectionsView(onAddCollection: _openCatalog);
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
-            itemCount: userCollections.length,
-            itemBuilder: (context, index) {
-              final userCollection = userCollections[index];
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              const maxContentWidth = 1280.0;
+              const horizontalPadding = 16.0;
+              const cardGap = 16.0;
 
-              return FutureBuilder<CatalogCollection?>(
-                future: _loadCatalogCollection(
-                  userCollection.catalogCollectionId,
+              final availableWidth =
+                  constraints.maxWidth - (horizontalPadding * 2);
+              final contentWidth = math.min(
+                availableWidth > 0 ? availableWidth : 0.0,
+                maxContentWidth,
+              );
+              final useTwoColumns = contentWidth >= 960;
+              final cardWidth = useTwoColumns
+                  ? (contentWidth - cardGap) / 2
+                  : contentWidth;
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(
+                  horizontalPadding,
+                  16,
+                  horizontalPadding,
+                  96,
                 ),
-                builder: (context, catalogSnapshot) {
-                  if (catalogSnapshot.connectionState ==
-                          ConnectionState.waiting &&
-                      !catalogSnapshot.hasData) {
-                    return const Card(
-                      margin: EdgeInsets.only(bottom: 12),
-                      child: SizedBox(
-                        height: 110,
-                        child: Center(child: CircularProgressIndicator()),
-                      ),
-                    );
-                  }
-
-                  if (catalogSnapshot.hasError) {
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        leading: const Icon(Icons.error_outline),
-                        title: const Text('Zbirke ni bilo mogoče naložiti.'),
-                        subtitle: Text('${catalogSnapshot.error}'),
-                      ),
-                    );
-                  }
-
-                  final collection = catalogSnapshot.data;
-
-                  if (collection == null) {
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        leading: const Icon(Icons.warning_amber_outlined),
-                        title: const Text('Kataloška zbirka ne obstaja.'),
-                        subtitle: Text(userCollection.catalogCollectionId),
-                      ),
-                    );
-                  }
-
-                  return StreamBuilder<CollectionStatistics>(
-                    stream: _collectionStatisticsService.watchStatistics(
-                      collection: collection,
-                    ),
-                    builder: (context, statisticsSnapshot) {
-                      if (statisticsSnapshot.connectionState ==
-                              ConnectionState.waiting &&
-                          !statisticsSnapshot.hasData) {
-                        return const Card(
-                          margin: EdgeInsets.only(bottom: 12),
-                          child: SizedBox(
-                            height: 160,
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                        );
-                      }
-
-                      if (statisticsSnapshot.hasError) {
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          child: ListTile(
-                            leading: const Icon(Icons.error_outline),
-                            title: const Text(
-                              'Statistike zbirke ni bilo mogoče naložiti.',
+                child: Center(
+                  child: SizedBox(
+                    width: contentWidth,
+                    child: Wrap(
+                      spacing: cardGap,
+                      runSpacing: cardGap,
+                      children: [
+                        for (final userCollection in userCollections)
+                          SizedBox(
+                            width: cardWidth,
+                            child: _buildCollectionEntry(
+                              userCollection: userCollection,
+                              localizations: localizations,
                             ),
-                            subtitle: Text('${statisticsSnapshot.error}'),
                           ),
-                        );
-                      }
-
-                      final statistics = statisticsSnapshot.data;
-
-                      if (statistics == null) {
-                        return const Card(
-                          margin: EdgeInsets.only(bottom: 12),
-                          child: ListTile(
-                            leading: Icon(Icons.warning_amber_outlined),
-                            title: Text('Statistika zbirke ni na voljo.'),
-                          ),
-                        );
-                      }
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: CollectionCard(
-                          data: CollectionCardData(
-                            title: statistics.name,
-                            subtitle:
-                                '${statistics.publisher} • '
-                                '${statistics.category} • '
-                                '${statistics.year}',
-                            ownedCount: statistics.ownedCount,
-                            totalCount: statistics.totalItems,
-                            duplicateCount: statistics.duplicateCount,
-                            missingCount: statistics.missingCount,
-                          ),
-                          showMenu: true,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    CatalogItemsPage(collection: collection),
-                              ),
-                            );
-                          },
-                          onMenuSelected: (action) {
-                            if (action == CollectionMenuAction.remove) {
-                              _removeCollection(collection);
-                            }
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
+                      ],
+                    ),
+                  ),
+                ),
               );
             },
           );
@@ -265,7 +315,7 @@ class _MyCollectionsV2PageState extends State<MyCollectionsV2Page> {
         heroTag: 'my_collections_v2_fab',
         onPressed: _openCatalog,
         icon: const Icon(Icons.add),
-        label: const Text('Dodaj zbirko'),
+        label: Text(localizations.myCollectionsAddButton),
       ),
     );
   }
@@ -278,6 +328,8 @@ class _EmptyCollectionsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -287,20 +339,20 @@ class _EmptyCollectionsView extends StatelessWidget {
             const Icon(Icons.collections_bookmark_outlined, size: 64),
             const SizedBox(height: 16),
             Text(
-              'Še nimaš dodanih zbirk.',
+              localizations.myCollectionsEmptyTitle,
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Izberi zbirko iz centralnega kataloga.',
+            Text(
+              localizations.myCollectionsEmptyDescription,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: onAddCollection,
               icon: const Icon(Icons.add),
-              label: const Text('Odpri katalog'),
+              label: Text(localizations.myCollectionsOpenCatalog),
             ),
           ],
         ),

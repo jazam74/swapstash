@@ -91,12 +91,10 @@ class Conversation {
     final userId = otherUserId(currentUserId);
 
     if (userId.isEmpty) {
-      return 'Neznan uporabnik';
+      return '';
     }
 
-    final name = participantNames[userId]?.trim() ?? '';
-
-    return name.isEmpty ? 'Neznan uporabnik' : name;
+    return participantNames[userId]?.trim() ?? '';
   }
 
   String otherUserPhotoUrl(String currentUserId) {

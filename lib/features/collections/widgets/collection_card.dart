@@ -7,6 +7,7 @@ import 'package:swapstash/features/collections/models/collection_card_data.dart'
 import 'package:swapstash/features/collections/widgets/collection_popup_menu.dart';
 import 'package:swapstash/features/collections/widgets/collection_progress.dart';
 import 'package:swapstash/features/collections/widgets/collection_stats_row.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 import 'package:swapstash/shared/widgets/app_card.dart';
 
 class CollectionCard extends StatelessWidget {
@@ -31,6 +32,8 @@ class CollectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return AppCard(
       onTap: onTap,
       child: Column(
@@ -51,7 +54,7 @@ class CollectionCard extends StatelessWidget {
                   children: [
                     Text(
                       data.title.trim().isEmpty
-                          ? 'Neimenovana zbirka'
+                          ? localizations.myCollectionsUnnamedCollection
                           : data.title,
                       maxLines: compact ? 1 : 2,
                       overflow: TextOverflow.ellipsis,

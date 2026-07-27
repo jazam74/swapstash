@@ -1,21 +1,56 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:swapstash/core/models/trade_rating_summary.dart';
 import 'package:swapstash/core/models/user_profile.dart';
+import 'package:swapstash/core/services/auth_service.dart';
 import 'package:swapstash/core/services/firestore_service.dart';
-import 'package:swapstash/core/services/trade_rating_service.dart';
+import 'package:swapstash/features/profile/account_security_page.dart';
 import 'package:swapstash/features/profile/edit_profile_page.dart';
+import 'package:swapstash/features/settings/settings_page.dart';
+import 'package:swapstash/features/users/widgets/completed_trades_value.dart';
+import 'package:swapstash/features/users/widgets/user_rating_list.dart';
+import 'package:swapstash/features/users/widgets/user_rating_summary.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
+
+  Future<void> _confirmSignOut(
+    BuildContext context,
+    AppLocalizations localizations,
+  ) async {
+    final shouldSignOut = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(localizations.signOutConfirmationTitle),
+          content: Text(localizations.signOutConfirmationMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(localizations.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(localizations.signOut),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldSignOut == true) {
+      await AuthService().signOut();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final authUser = FirebaseAuth.instance.currentUser;
     final firestoreService = FirestoreService();
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profil')),
+      appBar: AppBar(title: Text(localizations.profile)),
       body: StreamBuilder<UserProfile?>(
         stream: firestoreService.watchCurrentUserProfile(),
         builder: (context, snapshot) {
@@ -29,7 +64,7 @@ class ProfilePage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Profila ni bilo mogoče naložiti:\n'
+                  '${localizations.profileLoadError}\n'
                   '${snapshot.error}',
                   textAlign: TextAlign.center,
                 ),
@@ -40,11 +75,11 @@ class ProfilePage extends StatelessWidget {
           final profile = snapshot.data;
 
           if (profile == null) {
-            return const Center(child: Text('Profil ne obstaja.'));
+            return Center(child: Text(localizations.profileMissing));
           }
 
           final displayName = profile.displayName.trim().isEmpty
-              ? 'Neimenovan uporabnik'
+              ? localizations.unnamedUser
               : profile.displayName.trim();
 
           final locationParts = [
@@ -54,137 +89,251 @@ class ProfilePage extends StatelessWidget {
 
           final location = locationParts.join(', ');
 
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              CircleAvatar(
-                radius: 46,
-                backgroundImage: profile.photoUrl.trim().isEmpty
-                    ? null
-                    : NetworkImage(profile.photoUrl),
-                child: profile.photoUrl.trim().isEmpty
-                    ? const Icon(Icons.person, size: 46)
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: Text(
-                  displayName,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              const maxContentWidth = 1000.0;
+
+              final horizontalPadding = constraints.maxWidth >= 900
+                  ? 24.0
+                  : 16.0;
+              final availableWidth =
+                  constraints.maxWidth - (horizontalPadding * 2);
+              final contentWidth = availableWidth > maxContentWidth
+                  ? maxContentWidth
+                  : availableWidth;
+              final useDesktopLayout = contentWidth >= 820;
+
+              final profileHeader = Column(
+                children: [
+                  CircleAvatar(
+                    radius: 46,
+                    backgroundImage: profile.photoUrl.trim().isEmpty
+                        ? null
+                        : NetworkImage(profile.photoUrl),
+                    child: profile.photoUrl.trim().isEmpty
+                        ? const Icon(Icons.person, size: 46)
+                        : null,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Center(
-                child: Text(
-                  profile.email.isNotEmpty
-                      ? profile.email
-                      : authUser?.email ?? 'Neznan uporabnik',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              if (location.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.location_on_outlined, size: 18),
-                      const SizedBox(width: 4),
-                      Text(location),
-                    ],
+                  const SizedBox(height: 16),
+                  Text(
+                    displayName,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ],
-              if (profile.bio.trim().isNotEmpty) ...[
-                const SizedBox(height: 20),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      profile.bio.trim(),
-                      textAlign: TextAlign.center,
+                  const SizedBox(height: 4),
+                  Text(
+                    profile.email.isNotEmpty
+                        ? profile.email
+                        : authUser?.email ?? localizations.unknownUser,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  if (location.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.location_on_outlined, size: 18),
+                        const SizedBox(width: 4),
+                        Flexible(child: Text(location)),
+                      ],
+                    ),
+                  ],
+                ],
+              );
+
+              final profileDetails = Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (profile.bio.trim().isNotEmpty) ...[
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          profile.bio.trim(),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          _ProfileStatRow(
+                            icon: Icons.star_outline,
+                            label: localizations.rating,
+                            value: UserRatingSummary(
+                              userId: profile.uid,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const Divider(),
+                          _ProfileStatRow(
+                            icon: Icons.handshake_outlined,
+                            label: localizations.completedTrades,
+                            value: CompletedTradesValue(
+                              userId: profile.uid,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const Divider(),
+                          _ProfileStatRow(
+                            icon: profile.isPublic
+                                ? Icons.public
+                                : Icons.lock_outline,
+                            label: localizations.profileVisibility,
+                            value: Text(
+                              profile.isPublic
+                                  ? localizations.publicProfile
+                                  : localizations.privateProfile,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const Divider(),
+                          _ProfileStatRow(
+                            icon: Icons.language,
+                            label: localizations.internationalTrades,
+                            value: Text(
+                              profile.allowInternationalTrades
+                                  ? localizations.allowed
+                                  : localizations.notAllowed,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-              const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      _ProfileRatingRow(userId: profile.uid),
-                      const Divider(),
-                      _ProfileStatRow(
-                        icon: Icons.handshake_outlined,
-                        label: 'Zaključene menjave',
-                        value: profile.completedTrades.toString(),
-                      ),
-                      const Divider(),
-                      _ProfileStatRow(
-                        icon: profile.isPublic
-                            ? Icons.public
-                            : Icons.lock_outline,
-                        label: 'Vidnost profila',
-                        value: profile.isPublic ? 'Javen' : 'Zaseben',
-                      ),
-                      const Divider(),
-                      _ProfileStatRow(
-                        icon: Icons.language,
-                        label: 'Mednarodne menjave',
-                        value: profile.allowInternationalTrades
-                            ? 'Dovoljene'
-                            : 'Niso dovoljene',
-                      ),
-                    ],
+                  const SizedBox(height: 16),
+                  UserRatingList(userId: profile.uid, limit: 5),
+                ],
+              );
+
+              final profileActions = Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Card(
+                    margin: EdgeInsets.zero,
+                    child: ListTile(
+                      leading: const Icon(Icons.edit_outlined),
+                      title: Text(localizations.editProfile),
+                      subtitle: Text(localizations.editProfileSubtitle),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const EditProfilePage(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.edit_outlined),
-                  title: const Text('Uredi profil'),
-                  subtitle: const Text('Ime, mesto, opis in zasebnost'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const EditProfilePage(),
+                  const SizedBox(height: 10),
+                  Card(
+                    margin: EdgeInsets.zero,
+                    child: ListTile(
+                      leading: const Icon(Icons.settings_outlined),
+                      title: Text(localizations.settings),
+                      subtitle: Text(localizations.applicationSettings),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const SettingsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Card(
+                    margin: EdgeInsets.zero,
+                    child: ListTile(
+                      leading: Icon(
+                        authUser?.emailVerified == true
+                            ? Icons.security_outlined
+                            : Icons.mark_email_unread_outlined,
                       ),
-                    );
-                  },
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.settings_outlined),
-                  title: const Text('Nastavitve'),
-                  subtitle: const Text('Nastavitve aplikacije'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Nastavitve bodo dodane pozneje.'),
+                      title: Text(localizations.accountSecurityTitle),
+                      subtitle: Text(
+                        authUser?.emailVerified == true
+                            ? localizations.accountSecuritySubtitle
+                            : localizations.emailVerificationReminder,
                       ),
-                    );
-                  },
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const AccountSecurityPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Card(
+                    margin: EdgeInsets.zero,
+                    child: ListTile(
+                      leading: const Icon(Icons.logout),
+                      title: Text(localizations.signOut),
+                      onTap: () =>
+                          _confirmSignOut(context, localizations),
+                    ),
+                  ),
+                ],
+              );
+
+              return ListView(
+                padding: EdgeInsets.fromLTRB(
+                  horizontalPadding,
+                  20,
+                  horizontalPadding,
+                  32,
                 ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text('Odjava'),
-                  onTap: () async {
-                    await FirebaseAuth.instance.signOut();
-                  },
-                ),
-              ),
-            ],
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: SizedBox(
+                      width: contentWidth,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          profileHeader,
+                          const SizedBox(height: 24),
+                          if (useDesktopLayout)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(flex: 6, child: profileDetails),
+                                const SizedBox(width: 20),
+                                Expanded(flex: 5, child: profileActions),
+                              ],
+                            )
+                          else ...[
+                            profileDetails,
+                            const SizedBox(height: 16),
+                            profileActions,
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),
@@ -192,46 +341,10 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class _ProfileRatingRow extends StatelessWidget {
-  final String userId;
-
-  const _ProfileRatingRow({required this.userId});
-
-  @override
-  Widget build(BuildContext context) {
-    final ratingService = TradeRatingService();
-
-    return StreamBuilder<TradeRatingSummary>(
-      stream: ratingService.watchRatingSummary(userId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const _ProfileStatRow(
-            icon: Icons.star_outline_rounded,
-            label: 'Ocena',
-            value: 'Ni na voljo',
-          );
-        }
-
-        final summary = snapshot.data ?? const TradeRatingSummary.empty();
-
-        return _ProfileStatRow(
-          icon: Icons.star_rounded,
-          label: 'Ocena',
-          value:
-              snapshot.connectionState == ConnectionState.waiting &&
-                  !snapshot.hasData
-              ? 'Nalagam ...'
-              : summary.displayValue,
-        );
-      },
-    );
-  }
-}
-
 class _ProfileStatRow extends StatelessWidget {
   final IconData icon;
   final String label;
-  final String value;
+  final Widget value;
 
   const _ProfileStatRow({
     required this.icon,
@@ -246,7 +359,7 @@ class _ProfileStatRow extends StatelessWidget {
         Icon(icon),
         const SizedBox(width: 12),
         Expanded(child: Text(label)),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+        value,
       ],
     );
   }

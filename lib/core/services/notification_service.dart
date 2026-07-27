@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,6 +11,7 @@ import 'package:swapstash/core/navigation/app_navigator.dart';
 import 'package:swapstash/core/services/chat_service.dart';
 import 'package:swapstash/core/services/firestore_service.dart';
 import 'package:swapstash/features/messages/chat_page.dart';
+import 'package:swapstash/features/trades/trades_page.dart';
 import 'package:swapstash/firebase_options.dart';
 
 @pragma('vm:entry-point')
@@ -24,16 +26,22 @@ class NotificationService {
 
   static final NotificationService instance = NotificationService._();
 
-  static const String _channelId = 'swapstash_messages';
-  static const String _channelName = 'SwapStash messages';
-  static const String _channelDescription =
+  static const String _messageChannelId = 'swapstash_messages';
+  static const String _messageChannelName = 'SwapStash messages';
+  static const String _messageChannelDescription =
       'Notifications for new SwapStash chat messages.';
+
+  static const String _tradeChannelId = 'swapstash_trades';
+  static const String _tradeChannelName = 'SwapStash trades';
+  static const String _tradeChannelDescription =
+      'Notifications about SwapStash trade activity.';
 
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirestoreService _firestoreService = FirestoreService();
   final ChatService _chatService = ChatService();
 
@@ -44,12 +52,13 @@ class NotificationService {
 
   bool _initialized = false;
   bool _appReady = false;
-  bool _openingConversation = false;
+  bool _openingDestination = false;
 
+  String _languageCode = 'en';
   Map<String, dynamic>? _pendingInteractionData;
 
-  String? _lastOpenedConversationId;
-  DateTime? _lastConversationOpenTime;
+  String? _lastOpenedInteractionKey;
+  DateTime? _lastInteractionOpenTime;
 
   Future<void> initialize() async {
     if (_initialized) {
@@ -61,7 +70,7 @@ class NotificationService {
     await _initializeLocalNotifications();
     await _requestNotificationPermission();
     await _configureForegroundPresentation();
-    await _createAndroidNotificationChannel();
+    await _createAndroidNotificationChannels();
 
     _listenForAuthenticationChanges();
     _listenForTokenRefresh();
@@ -69,6 +78,7 @@ class NotificationService {
     _listenForNotificationClicks();
 
     await _saveCurrentToken();
+    await _saveCurrentLanguage();
     await _readInitialNotificationInteraction();
   }
 
@@ -76,6 +86,27 @@ class NotificationService {
   void onAppReady() {
     _appReady = true;
     unawaited(_processPendingInteraction());
+  }
+
+  Future<void> updateLanguageCode(String languageCode) async {
+    final normalizedLanguageCode = _normalizeLanguageCode(languageCode);
+    _languageCode = normalizedLanguageCode;
+
+    await _saveCurrentLanguage();
+  }
+
+  String _normalizeLanguageCode(String languageCode) {
+    final normalized = languageCode.trim().toLowerCase();
+
+    switch (normalized) {
+      case 'sl':
+      case 'de':
+      case 'hr':
+      case 'en':
+        return normalized;
+      default:
+        return 'en';
+    }
   }
 
   Future<void> _initializeLocalNotifications() async {
@@ -152,11 +183,18 @@ class NotificationService {
     );
   }
 
-  Future<void> _createAndroidNotificationChannel() async {
-    const channel = AndroidNotificationChannel(
-      _channelId,
-      _channelName,
-      description: _channelDescription,
+  Future<void> _createAndroidNotificationChannels() async {
+    const messageChannel = AndroidNotificationChannel(
+      _messageChannelId,
+      _messageChannelName,
+      description: _messageChannelDescription,
+      importance: Importance.high,
+    );
+
+    const tradeChannel = AndroidNotificationChannel(
+      _tradeChannelId,
+      _tradeChannelName,
+      description: _tradeChannelDescription,
       importance: Importance.high,
     );
 
@@ -165,7 +203,8 @@ class NotificationService {
           AndroidFlutterLocalNotificationsPlugin
         >();
 
-    await androidPlugin?.createNotificationChannel(channel);
+    await androidPlugin?.createNotificationChannel(messageChannel);
+    await androidPlugin?.createNotificationChannel(tradeChannel);
   }
 
   void _listenForAuthenticationChanges() {
@@ -176,6 +215,7 @@ class NotificationService {
         }
 
         await _saveCurrentToken();
+        await _saveCurrentLanguage();
         await _processPendingInteraction();
       },
       onError: (Object error, StackTrace stackTrace) {
@@ -191,6 +231,7 @@ class NotificationService {
     _tokenRefreshSubscription = _messaging.onTokenRefresh.listen(
       (token) async {
         await _firestoreService.saveNotificationToken(token);
+        await _saveCurrentLanguage();
       },
       onError: (Object error, StackTrace stackTrace) {
         debugPrint('FCM token refresh failed: $error');
@@ -246,6 +287,24 @@ class NotificationService {
     }
   }
 
+  Future<void> _saveCurrentLanguage() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return;
+    }
+
+    try {
+      await _firestore.collection('users').doc(user.uid).set({
+        'notificationLanguage': _languageCode,
+        'notificationLanguageUpdatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    } catch (error, stackTrace) {
+      debugPrint('Could not save notification language: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    }
+  }
+
   Future<void> removeCurrentDeviceToken() async {
     try {
       final token = await _messaging.getToken();
@@ -271,13 +330,19 @@ class NotificationService {
       return;
     }
 
-    const androidDetails = AndroidNotificationDetails(
-      _channelId,
-      _channelName,
-      channelDescription: _channelDescription,
+    final isTrade = message.data['type']?.toString() == 'trade';
+
+    final androidDetails = AndroidNotificationDetails(
+      isTrade ? _tradeChannelId : _messageChannelId,
+      isTrade ? _tradeChannelName : _messageChannelName,
+      channelDescription: isTrade
+          ? _tradeChannelDescription
+          : _messageChannelDescription,
       importance: Importance.high,
       priority: Priority.high,
-      category: AndroidNotificationCategory.message,
+      category: isTrade
+          ? AndroidNotificationCategory.status
+          : AndroidNotificationCategory.message,
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -286,7 +351,7 @@ class NotificationService {
       presentSound: true,
     );
 
-    const notificationDetails = NotificationDetails(
+    final notificationDetails = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
@@ -346,7 +411,7 @@ class NotificationService {
   }
 
   Future<void> _processPendingInteraction() async {
-    if (!_appReady || _openingConversation) {
+    if (!_appReady || _openingDestination) {
       return;
     }
 
@@ -368,21 +433,41 @@ class NotificationService {
       return;
     }
 
+    final type = data['type']?.toString().trim().toLowerCase() ?? '';
+
+    if (type == 'trade' || data.containsKey('tradeId')) {
+      await _openTradeNotification(navigator: navigator, data: data);
+      return;
+    }
+
+    await _openMessageNotification(
+      navigator: navigator,
+      currentUser: currentUser,
+      data: data,
+    );
+  }
+
+  Future<void> _openMessageNotification({
+    required NavigatorState navigator,
+    required User currentUser,
+    required Map<String, dynamic> data,
+  }) async {
     final conversationId = data['conversationId']?.toString().trim() ?? '';
 
     if (conversationId.isEmpty) {
       debugPrint('Notification does not contain a valid conversationId: $data');
-
       _pendingInteractionData = null;
       return;
     }
 
-    if (_isDuplicateInteraction(conversationId)) {
+    final interactionKey = 'message:$conversationId';
+
+    if (_isDuplicateInteraction(interactionKey)) {
       _pendingInteractionData = null;
       return;
     }
 
-    _openingConversation = true;
+    _openingDestination = true;
 
     try {
       final conversation = await _chatService.getConversation(
@@ -393,7 +478,6 @@ class NotificationService {
         debugPrint(
           'Conversation from notification was not found: $conversationId',
         );
-
         _pendingInteractionData = null;
         return;
       }
@@ -403,14 +487,12 @@ class NotificationService {
           'Current user does not have access to conversation '
           '$conversationId.',
         );
-
         _pendingInteractionData = null;
         return;
       }
 
       _pendingInteractionData = null;
-      _lastOpenedConversationId = conversationId;
-      _lastConversationOpenTime = DateTime.now();
+      _rememberInteraction(interactionKey);
 
       await navigator.push(
         MaterialPageRoute<void>(
@@ -419,23 +501,82 @@ class NotificationService {
       );
     } catch (error, stackTrace) {
       debugPrint('Could not open conversation from notification: $error');
-
       debugPrintStack(stackTrace: stackTrace);
     } finally {
-      _openingConversation = false;
-
-      if (_pendingInteractionData != null) {
-        unawaited(_processPendingInteraction());
-      }
+      _openingDestination = false;
+      _processNextPendingInteraction();
     }
   }
 
-  bool _isDuplicateInteraction(String conversationId) {
-    if (_lastOpenedConversationId != conversationId) {
+  Future<void> _openTradeNotification({
+    required NavigatorState navigator,
+    required Map<String, dynamic> data,
+  }) async {
+    final tradeId = data['tradeId']?.toString().trim() ?? '';
+
+    if (tradeId.isEmpty) {
+      debugPrint('Notification does not contain a valid tradeId: $data');
+      _pendingInteractionData = null;
+      return;
+    }
+
+    final interactionKey = 'trade:$tradeId';
+
+    if (_isDuplicateInteraction(interactionKey)) {
+      _pendingInteractionData = null;
+      return;
+    }
+
+    final rawTabIndex = int.tryParse(data['tabIndex']?.toString() ?? '');
+
+    final tabIndex = rawTabIndex == null
+        ? 0
+        : rawTabIndex < 0
+        ? 0
+        : rawTabIndex > 3
+        ? 3
+        : rawTabIndex;
+
+    _openingDestination = true;
+
+    try {
+      _pendingInteractionData = null;
+      _rememberInteraction(interactionKey);
+
+      await navigator.push(
+        MaterialPageRoute<void>(
+          builder: (context) => TradesPage(
+            initialTabIndex: tabIndex,
+            highlightedTradeId: tradeId,
+          ),
+        ),
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Could not open trade from notification: $error');
+      debugPrintStack(stackTrace: stackTrace);
+    } finally {
+      _openingDestination = false;
+      _processNextPendingInteraction();
+    }
+  }
+
+  void _processNextPendingInteraction() {
+    if (_pendingInteractionData != null) {
+      unawaited(_processPendingInteraction());
+    }
+  }
+
+  void _rememberInteraction(String interactionKey) {
+    _lastOpenedInteractionKey = interactionKey;
+    _lastInteractionOpenTime = DateTime.now();
+  }
+
+  bool _isDuplicateInteraction(String interactionKey) {
+    if (_lastOpenedInteractionKey != interactionKey) {
       return false;
     }
 
-    final previousOpenTime = _lastConversationOpenTime;
+    final previousOpenTime = _lastInteractionOpenTime;
 
     if (previousOpenTime == null) {
       return false;
@@ -459,6 +600,6 @@ class NotificationService {
     _pendingInteractionData = null;
     _initialized = false;
     _appReady = false;
-    _openingConversation = false;
+    _openingDestination = false;
   }
 }

@@ -1,0 +1,16 @@
+{
+  "brand": "SwapStash",
+  "androidPackage": "net.swapstash.app",
+  "selectedIcon": "blue card coin stamp exchange icon",
+  "launcherIcon": "_swapstash_blue_icon_payload/assets/app_icon/swapstash_launcher_icon.png",
+  "playStoreIcon": "swapstash_play_store_icon_512_blue.png",
+  "launcherSize": [
+    1024,
+    1024
+  ],
+  "playStoreSize": [
+    512,
+    512
+  ],
+  "backupOutsideProject": true
+}

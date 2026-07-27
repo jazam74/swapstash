@@ -8,6 +8,7 @@ class TradeRating {
   final int stars;
   final String comment;
   final Timestamp createdAt;
+  final Timestamp? updatedAt;
 
   const TradeRating({
     required this.id,
@@ -17,9 +18,13 @@ class TradeRating {
     required this.stars,
     required this.comment,
     required this.createdAt,
+    this.updatedAt,
   });
 
   factory TradeRating.fromMap(String id, Map<String, dynamic> map) {
+    final createdAtValue = map['createdAt'];
+    final updatedAtValue = map['updatedAt'];
+
     return TradeRating(
       id: id,
       tradeId: map['tradeId']?.toString() ?? '',
@@ -27,7 +32,8 @@ class TradeRating {
       reviewedUserId: map['reviewedUserId']?.toString() ?? '',
       stars: (map['stars'] as num?)?.toInt() ?? 0,
       comment: map['comment']?.toString() ?? '',
-      createdAt: map['createdAt'] as Timestamp? ?? Timestamp.now(),
+      createdAt: createdAtValue is Timestamp ? createdAtValue : Timestamp.now(),
+      updatedAt: updatedAtValue is Timestamp ? updatedAtValue : null,
     );
   }
 
@@ -39,6 +45,7 @@ class TradeRating {
       'stars': stars,
       'comment': comment,
       'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }

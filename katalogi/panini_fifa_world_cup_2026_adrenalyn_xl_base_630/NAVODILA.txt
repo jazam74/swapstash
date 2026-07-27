@@ -1,0 +1,19 @@
+PANINI FIFA WORLD CUP 2026 ADRENALYN XL — BASE COLLECTION
+
+Vsebina:
+- 630 uradno oštevilčenih kart osnovne zbirke (001–630)
+- brez Limited Edition, Nordic/Scandinavian, Update, Dream Box, XXL in paralel
+- pripravljeno za SwapStash uvoznik
+
+Priporočena ciljna zbirka:
+ID: panini-fifa-world-cup-2026-adrenalyn-xl-base
+Ime: Panini FIFA World Cup 2026 Adrenalyn XL – Base Collection
+Založnik: Panini
+Leto: 2026
+Skupaj: 630
+
+Stolpci:
+number, name, imageUrl, rarity, attr_country, attr_series,
+attr_matchup, attr_set, attr_year
+
+Slike trenutno niso vključene; imageUrl je prazen.

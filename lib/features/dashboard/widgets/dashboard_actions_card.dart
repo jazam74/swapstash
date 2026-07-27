@@ -4,6 +4,7 @@ import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/core/theme/app_text_styles.dart';
 import 'package:swapstash/features/dashboard/models/dashboard_action.dart';
 import 'package:swapstash/features/dashboard/widgets/dashboard_action_tile.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 import 'package:swapstash/shared/widgets/app_card.dart';
 
 class DashboardActionsCard extends StatelessWidget {
@@ -13,6 +14,7 @@ class DashboardActionsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final visibleActions = actions.take(5).toList();
 
     return AppCard(
@@ -24,7 +26,10 @@ class DashboardActionsCard extends StatelessWidget {
               const Icon(Icons.task_alt_rounded, color: AppColors.primary),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: Text('Danes te čaka', style: AppTextStyles.title),
+                child: Text(
+                  localizations.dashboardTodayTasks,
+                  style: AppTextStyles.title,
+                ),
               ),
             ],
           ),
@@ -52,6 +57,8 @@ class _NoActionsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -69,10 +76,13 @@ class _NoActionsView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Vse je urejeno', style: AppTextStyles.subtitle),
+              Text(
+                localizations.dashboardAllDone,
+                style: AppTextStyles.subtitle,
+              ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Trenutno nimaš odprtih opravil.',
+                localizations.dashboardNoOpenTasks,
                 style: AppTextStyles.bodySecondary,
               ),
             ],

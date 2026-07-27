@@ -1,0 +1,13 @@
+{
+  "oldAndroidPackage": "com.example.swapstash",
+  "newAndroidPackage": "net.swapstash.app",
+  "firebaseProjectId": "swapstash-49199",
+  "newFirebaseAndroidAppId": "1:216798493473:android:62ff8893c397ae3d24dc60",
+  "filesInstalled": [
+    "android/app/build.gradle.kts",
+    "android/app/google-services.json",
+    "lib/firebase_options.dart",
+    "android/app/src/main/kotlin/net/swapstash/app/MainActivity.kt"
+  ],
+  "fileRemoved": "android/app/src/main/kotlin/com/example/swapstash/MainActivity.kt"
+}

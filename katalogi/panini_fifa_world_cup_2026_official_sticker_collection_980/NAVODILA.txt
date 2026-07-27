@@ -1,0 +1,36 @@
+PANINI FIFA WORLD CUP 2026 – OFFICIAL STICKER COLLECTION
+
+Vsebina:
+- 980 nalepk glavne zbirke
+- 48 reprezentanc × 20 nalepk
+- 20 uvodnih oziroma zgodovinskih nalepk: 00 in FWC 1–19
+- brez slik (imageUrl je prazen)
+- brez Extra Stickers, Coca-Cola nalepk, Update Seta, Host City Posters in paralel
+- pripravljeno za SwapStash uvoznik
+
+Priporočena ciljna zbirka:
+ID: panini-fifa-world-cup-2026-official-sticker-collection
+Ime: Panini FIFA World Cup 2026 – Official Sticker Collection
+Založnik: Panini
+Kategorija: Stickers
+Leto: 2026
+Skupaj: 980
+
+Stolpci:
+number, name, imageUrl, rarity, attr_country, attr_team_code,
+attr_group, attr_type, attr_set, attr_year
+
+Številčenje:
+- 00
+- FWC 1–19
+- reprezentance: npr. MEX 1–20, CAN 1–20, ARG 1–20
+
+Viri za preverjanje:
+- Uradni opis zbirke in struktura 980 nalepk:
+  https://www.paninigroup.com/en/we/wc26pack-contents
+- Kontrolni seznam Standard/United Edition:
+  https://www.ufsc.nl/wp-content/uploads/2026/06/Panini-WORLD-CUP-2026-Standard-Edition.pdf
+
+Opomba:
+Imena in številčenje so pripravljeni za glavno zbirko 980 nalepk.
+Regionalne dodatke in poznejši Update Set je smiselno voditi kot ločene zbirke.

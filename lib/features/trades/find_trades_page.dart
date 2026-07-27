@@ -3,6 +3,7 @@ import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/trade_candidate.dart';
 import 'package:swapstash/core/services/trade_finder_service.dart';
 import 'package:swapstash/features/trades/trade_detail_page.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class FindTradesPage extends StatefulWidget {
   final CatalogCollection collection;
@@ -46,8 +47,10 @@ class _FindTradesPageState extends State<FindTradesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Najdi menjave')),
+      appBar: AppBar(title: Text(localizations.tradeFindTrades)),
       body: FutureBuilder<List<TradeCandidate>>(
         future: _future,
         builder: (context, snapshot) {
@@ -72,22 +75,22 @@ class _FindTradesPageState extends State<FindTradesPage> {
               onRefresh: _refreshTrades,
               child: ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                children: const [
-                  SizedBox(height: 180),
-                  Icon(Icons.handshake_outlined, size: 64),
-                  SizedBox(height: 16),
+                children: [
+                  const SizedBox(height: 180),
+                  const Icon(Icons.handshake_outlined, size: 64),
+                  const SizedBox(height: 16),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Text(
-                      'Trenutno ni najdenih možnih menjav.',
+                      localizations.tradeNoMatchesFound,
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Text(
-                      'Preveri, ali imaš označene viške in ali drugi uporabniki uporabljajo isto zbirko.',
+                      localizations.tradeNoMatchesHint,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -132,6 +135,7 @@ class _TradeCandidateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final member = candidate.member;
     final displayName = member.displayName.trim();
     final initial = displayName.isEmpty
@@ -185,7 +189,7 @@ class _TradeCandidateCard extends StatelessWidget {
                   children: [
                     Text(
                       displayName.isEmpty
-                          ? 'Neimenovan uporabnik'
+                          ? localizations.unnamedUser
                           : displayName,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
@@ -203,16 +207,21 @@ class _TradeCandidateCard extends StatelessWidget {
                       children: [
                         _InfoChip(
                           icon: Icons.handshake_outlined,
-                          label: '${candidate.possibleTrades} menjav',
+                          label: localizations.tradePossibleTradesCount(
+                            candidate.possibleTrades,
+                          ),
                         ),
                         _InfoChip(
                           icon: Icons.upload_rounded,
-                          label:
-                              '${candidate.comparison.canOffer.length} ponudiš',
+                          label: localizations.tradeYouOfferCount(
+                            candidate.comparison.canOffer.length,
+                          ),
                         ),
                         _InfoChip(
                           icon: Icons.download_rounded,
-                          label: '${candidate.comparison.needs.length} dobiš',
+                          label: localizations.tradeYouReceiveCount(
+                            candidate.comparison.needs.length,
+                          ),
                         ),
                       ],
                     ),
@@ -263,6 +272,8 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -271,10 +282,7 @@ class _ErrorView extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, size: 56),
             const SizedBox(height: 16),
-            const Text(
-              'Menjav ni bilo mogoče naložiti.',
-              textAlign: TextAlign.center,
-            ),
+            Text(localizations.tradeLoadError, textAlign: TextAlign.center),
             const SizedBox(height: 8),
             Text(
               '$error',
@@ -285,7 +293,7 @@ class _ErrorView extends StatelessWidget {
             FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: const Text('Poskusi znova'),
+              label: Text(localizations.tryAgain),
             ),
           ],
         ),

@@ -4,6 +4,7 @@ import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/core/theme/app_text_styles.dart';
 import 'package:swapstash/features/trades/models/trade_display_status.dart';
 import 'package:swapstash/features/trades/widgets/trade_status_badge.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class TradeHeader extends StatelessWidget {
   final TradeDisplayStatus status;
@@ -63,7 +64,9 @@ class TradeHeader extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            '${status.completedSteps} od 4 korakov',
+            AppLocalizations.of(
+              context,
+            )!.tradeCompletedSteps(status.completedSteps, 4),
             style: AppTextStyles.caption,
           ),
         ],

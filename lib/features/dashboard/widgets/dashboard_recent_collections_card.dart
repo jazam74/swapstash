@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:swapstash/core/localization/catalog_category_localizer.dart';
 import 'package:swapstash/core/models/collection_statistics.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/features/collections/models/collection_card_data.dart';
 import 'package:swapstash/features/collections/widgets/collection_card.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class DashboardRecentCollectionsCard extends StatelessWidget {
   final List<CollectionStatistics> collections;
@@ -16,6 +18,8 @@ class DashboardRecentCollectionsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         for (var index = 0; index < collections.length; index++) ...[
@@ -24,7 +28,7 @@ class DashboardRecentCollectionsCard extends StatelessWidget {
               title: collections[index].name,
               subtitle:
                   '${collections[index].publisher} • '
-                  '${collections[index].category} • '
+                  '${localizedCatalogCategory(localizations, collections[index].category)} • '
                   '${collections[index].year}',
               ownedCount: collections[index].ownedCount,
               totalCount: collections[index].totalItems,

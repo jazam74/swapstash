@@ -1,0 +1,1499 @@
+{
+  "@@locale": "de",
+  "appName": "SwapStash",
+  "home": "Startseite",
+  "collections": "Sammlungen",
+  "trades": "Tausch",
+  "messages": "Nachrichten",
+  "profile": "Profil",
+  "welcomeUser": "Willkommen, Uroš!",
+  "welcomeDescription": "Verwalte deine Sammlungen und finde die besten Tauschmöglichkeiten.",
+  "newMatches": "Neue Treffer",
+  "activeCollections": "Aktive Sammlungen",
+  "addCollection": "Sammlung hinzufügen",
+  "sameCountry": "Gleiches Land",
+  "international": "International",
+  "reviewTrade": "Tausch prüfen",
+  "noMessages": "Keine Nachrichten",
+  "noMessagesDescription": "Deine Unterhaltungen zu Tauschvorgängen werden hier angezeigt.",
+  "language": "Sprache",
+  "internationalTrades": "Internationale Tauschvorgänge",
+  "allowed": "Erlaubt",
+  "successfulTrades": "Erfolgreiche Tauschvorgänge",
+  "chooseLanguage": "Sprache auswählen",
+  "chooseLanguageDescription": "Wähle die Sprache aus, die du in SwapStash verwenden möchtest. Du kannst sie später in den Einstellungen ändern.",
+  "automaticLanguage": "Automatisch – Gerätesprache",
+  "automaticLanguageDescription": "Verwendet automatisch eine unterstützte Gerätesprache.",
+  "englishFallbackDescription": "Wenn die Gerätesprache nicht unterstützt wird, wird Englisch verwendet.",
+  "continueButton": "Weiter",
+  "saving": "Wird gespeichert…",
+  "settings": "Einstellungen",
+  "applicationSettings": "App-Einstellungen",
+  "languageSettingsDescription": "Wähle die Sprache der App. Die Änderung wird sofort übernommen und für zukünftige Starts gespeichert.",
+  "languageChanged": "Die Sprache wurde geändert.",
+  "profileLoadError": "Das Profil konnte nicht geladen werden:",
+  "profileMissing": "Das Profil ist nicht vorhanden.",
+  "unnamedUser": "Unbenannter Benutzer",
+  "unknownUser": "Unbekannter Benutzer",
+  "rating": "Bewertung",
+  "completedTrades": "Abgeschlossene Tauschvorgänge",
+  "profileVisibility": "Profilsichtbarkeit",
+  "publicProfile": "Öffentlich",
+  "privateProfile": "Privat",
+  "notAllowed": "Nicht erlaubt",
+  "editProfile": "Profil bearbeiten",
+  "editProfileSubtitle": "Name, Ort, Beschreibung und Privatsphäre",
+  "signOut": "Abmelden",
+  "dashboardCatalogTooltip": "Sammlungskatalog",
+  "dashboardFavoritesTooltip": "Meine Favoriten",
+  "dashboardLoadError": "Das Dashboard konnte nicht geladen werden",
+  "dashboardMyCollections": "Meine Sammlungen",
+  "dashboardShowAll": "Alle anzeigen",
+  "dashboardOverview": "Übersicht",
+  "dashboardYourCollections": "Deine Sammlungen",
+  "dashboardWelcomeTitle": "Willkommen!",
+  "dashboardWelcomeSubtitle": "Übersicht über deine Sammlungen und Aktivitäten.",
+  "dashboardTodayTasks": "Das steht heute an",
+  "dashboardAllDone": "Alles ist erledigt",
+  "dashboardNoOpenTasks": "Du hast derzeit keine offenen Aufgaben.",
+  "dashboardNoCollectionsTitle": "Du hast noch keine Sammlung",
+  "dashboardNoCollectionsDescription": "Öffne den Tab Sammlungen und füge deine erste Sammlung hinzu.",
+  "dashboardCollected": "Gesammelt",
+  "dashboardDuplicates": "Doppelte",
+  "dashboardMissing": "Fehlend",
+  "dashboardCollectionOpenError": "Die Sammlung konnte nicht geöffnet werden.",
+  "dashboardCollectionNotFound": "Die Sammlung konnte nicht gefunden werden.",
+  "dashboardCollectionOpenErrorDetails": "Die Sammlung konnte nicht geöffnet werden: {error}",
+  "dashboardUnreadMessages": "{count, plural, =1{1 ungelesene Nachricht} other{{count} ungelesene Nachrichten}}",
+  "dashboardOpenConversation": "Öffne die Unterhaltung und lies die neuen Nachrichten.",
+  "dashboardRespondToCounterOffer": "Auf das Gegenangebot antworten",
+  "dashboardRespondToOffer": "Auf das Angebot antworten",
+  "dashboardConfirmHandover": "Kartenübergabe bestätigen",
+  "dashboardConfirmReceipt": "Kartenerhalt bestätigen",
+  "dashboardOpenTrade": "Tausch öffnen",
+  "dashboardOpenTradeAndContinue": "Öffne den Tausch und setze den Vorgang fort.",
+  "dashboardTradeWithUser": "Tausch mit Benutzer {userId}",
+  "@dashboardCollectionOpenErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@dashboardUnreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardTradeWithUser": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogAddToFavorites": "Zu Favoriten hinzufügen",
+  "catalogAddedToFavorites": "Der Artikel wurde zu den Favoriten hinzugefügt.",
+  "catalogAdditionalFilterCount": "{count, plural, one{{count} zusätzlicher Filter} other{{count} zusätzliche Filter}}",
+  "catalogAdditionalFilters": "Zusätzliche Filter",
+  "catalogAdditionalFiltersCount": "Zusätzliche Filter ({count})",
+  "catalogAll": "Alle",
+  "catalogAllRarities": "Alle Seltenheiten",
+  "catalogApply": "Anwenden",
+  "catalogAttributeBrand": "Marke",
+  "catalogAttributeCharacter": "Figur",
+  "catalogAttributeCountry": "Land",
+  "catalogAttributeDenomination": "Nennwert",
+  "catalogAttributeFranchise": "Franchise",
+  "catalogAttributeManufacturer": "Hersteller",
+  "catalogAttributeMaterial": "Material",
+  "catalogAttributeSeries": "Serie",
+  "catalogAttributeSet": "Set",
+  "catalogAttributeTeam": "Team",
+  "catalogAttributeTheme": "Thema",
+  "catalogAttributeType": "Typ",
+  "catalogAttributeYear": "Jahr",
+  "catalogCancel": "Abbrechen",
+  "catalogCategory": "Kategorie",
+  "catalogChooseCsvOrXlsx": "CSV oder XLSX auswählen",
+  "catalogClear": "Löschen",
+  "catalogClose": "Schließen",
+  "catalogCollectionAddError": "Die Sammlung konnte nicht hinzugefügt werden: {error}",
+  "catalogCollectionAdded": "„{name}“ wurde zu deinen Sammlungen hinzugefügt.",
+  "catalogCollectionComplete": "Die Sammlung ist vollständig. Es fehlen keine Artikel.",
+  "catalogCollectionCreateError": "Die Sammlung konnte nicht erstellt werden: {error}",
+  "catalogCollectionCreatePermissionDenied": "Firestore hat das Erstellen der Sammlung abgelehnt. Der angemeldete Benutzer benötigt Administratorrechte.",
+  "catalogCollectionCreatedForImport": "„{name}“ wurde erstellt und für den Import ausgewählt.",
+  "catalogCollectionId": "Sammlungs-ID",
+  "catalogCollectionIdExists": "Eine Sammlung mit der ID „{id}“ ist bereits vorhanden.",
+  "catalogCollectionIdHelp": "Kleinbuchstaben, Zahlen und Bindestriche. Später nicht mehr ändern.",
+  "catalogCollectionIdInvalid": "Verwende nur Kleinbuchstaben, Zahlen und Bindestriche.",
+  "catalogCollectionName": "Name der Sammlung",
+  "catalogCollectionProgress": "📊 Sammlungsfortschritt",
+  "catalogCollectionsLoadErrorDetails": "Sammlungen konnten nicht geladen werden:\n{error}",
+  "catalogCollectionsTitle": "Sammlungskatalog",
+  "catalogColumnCount": "{count, plural, one{{count} Spalte} other{{count} Spalten}}",
+  "catalogConfirmImport": "Import bestätigen",
+  "catalogCreate": "Erstellen",
+  "catalogCreateNewCollection": "Neue Sammlung erstellen",
+  "catalogCreatingCollection": "Sammlung wird erstellt ...",
+  "catalogDecreaseQuantity": "Menge verringern",
+  "catalogDisableQuickEntry": "Schnelleingabe deaktivieren",
+  "catalogDuplicates": "Doppelte",
+  "catalogEnableQuickEntry": "Schnelleingabe aktivieren",
+  "catalogEnterCollectionId": "Gib die Sammlungs-ID ein.",
+  "catalogEnterCollectionName": "Gib den Namen der Sammlung ein.",
+  "catalogFavoriteChangeError": "Der Favoritenstatus konnte nicht geändert werden: {error}",
+  "catalogFileErrors": "Dateifehler",
+  "catalogFilterByRarity": "Nach Seltenheit filtern",
+  "catalogFindTrades": "Tauschmöglichkeiten finden",
+  "catalogFirstRows": "Erste {count}",
+  "catalogImageNotAdded": "Noch kein Bild hinzugefügt",
+  "catalogImportAction": "Importieren",
+  "catalogImportColumnHelp": "Erforderlich sind die Spalten number und name. Die Spalten rarity und imageUrl sind optional. Alle weiteren Spalten werden automatisch als zusätzliche Eigenschaften importiert.",
+  "catalogImportCompleted": "Import abgeschlossen",
+  "catalogImportConfirmRows": "In „{collectionName}“ werden {count, plural, one{{count} gültige Zeile} other{{count} gültige Zeilen}} verarbeitet.",
+  "catalogImportCreated": "Erstellt: {count}",
+  "catalogImportCsvAndExcel": "CSV und Excel",
+  "catalogImportCsvReadError": "Die CSV-Datei konnte nicht gelesen werden: {error}",
+  "catalogImportDescription": "Artikel aus einer CSV- oder XLSX-Datei importieren.",
+  "catalogImportDuplicateNumber": "Doppelte Nummer in derselben Datei.",
+  "catalogImportExcelNoData": "Die Excel-Datei enthält keine Daten.",
+  "catalogImportExistingSkipped": "Vorhandene Artikel werden übersprungen.",
+  "catalogImportExistingUpdated": "Vorhandene Artikel mit derselben Nummer werden aktualisiert.",
+  "catalogImportFailed": "Import fehlgeschlagen: {error}",
+  "catalogImportFileNoData": "Die Datei enthält keine Daten.",
+  "catalogImportFileOpenError": "Die Datei konnte nicht geöffnet werden: {error}",
+  "catalogImportFileTooLarge": "Die Datei ist größer als die erlaubten 20 MB.",
+  "catalogImportFileTooltip": "CSV oder XLSX importieren",
+  "catalogImportItems": "{count, plural, one{{count} Artikel importieren} other{{count} Artikel importieren}}",
+  "catalogImportMissingName": "Der Name fehlt.",
+  "catalogImportMissingNameColumn": "Die erforderliche Spalte „name“ fehlt.",
+  "catalogImportMissingNumber": "Die Nummer fehlt.",
+  "catalogImportMissingNumberColumn": "Die erforderliche Spalte „number“ fehlt.",
+  "catalogImportNoItemsBelowHeader": "Unter der Kopfzeile befinden sich keine Artikel.",
+  "catalogImportPermissionDenied": "Firestore hat den Import abgelehnt. Für den Import in den zentralen Katalog muss der angemeldete Benutzer Administrator sein.",
+  "catalogImportSkipHelp": "Artikel mit einer bereits vorhandenen Nummer werden nicht geändert.",
+  "catalogImportSkipped": "Übersprungen: {count}",
+  "catalogImportSupportedFilesOnly": "Es werden nur CSV- und XLSX-Dateien unterstützt.",
+  "catalogImportTitle": "Katalogimport",
+  "catalogImportUpdateHelp": "Artikel mit einer bereits vorhandenen Nummer werden aktualisiert.",
+  "catalogImportUpdated": "Aktualisiert: {count}",
+  "catalogImportXlsxReadError": "Die XLSX-Datei konnte nicht gelesen werden: {error}",
+  "catalogImporting": "Import wird ausgeführt ...",
+  "catalogIncreaseQuantity": "Menge erhöhen",
+  "catalogInvalidNumber": "Ungültige Zahl.",
+  "catalogInvalidRows": "{count} ungültig",
+  "catalogInvalidYear": "Ungültiges Jahr.",
+  "catalogInventoryLoadErrorDetails": "Inventar konnte nicht geladen werden:\n{error}",
+  "catalogItemCount": "Anzahl der Artikel",
+  "catalogItemDefaultName": "Artikel {number}",
+  "catalogItemMarkedMissing": "Der Artikel wurde als fehlend markiert.",
+  "catalogItemMissing": "Artikel fehlt",
+  "catalogItemOwned": "Du besitzt diesen Artikel",
+  "catalogItemStatusLoadErrorDetails": "Der Artikelstatus konnte nicht geladen werden:\n{error}",
+  "catalogItemsCount": "{count, plural, one{{count} Artikel} other{{count} Artikel}}",
+  "catalogItemsLoadErrorDetails": "Artikel konnten nicht geladen werden:\n{error}",
+  "catalogLoadErrorDetails": "Der Katalog konnte nicht geladen werden:\n{error}",
+  "catalogMissing": "Fehlend",
+  "catalogMissingPlural": "Fehlend",
+  "catalogNewCollection": "Neue Sammlung",
+  "catalogNoCollectionsFound": "Keine Sammlungen gefunden.",
+  "catalogNoDuplicates": "Du hast noch keine doppelten Artikel.",
+  "catalogNoFilterResults": "Für die ausgewählten Filter wurden keine passenden Artikel gefunden.",
+  "catalogNoItems": "Diese Sammlung enthält noch keine Artikel.",
+  "catalogNoOwnedItems": "Du besitzt noch keine Artikel.",
+  "catalogNoSearchResults": "Für den Suchbegriff und die ausgewählten Filter wurden keine Ergebnisse gefunden.",
+  "catalogNotOwned": "Nicht vorhanden",
+  "catalogOk": "OK",
+  "catalogOpeningFile": "Datei wird geöffnet ...",
+  "catalogOther": "Andere",
+  "catalogOwned": "Vorhanden",
+  "catalogOwnedSurplusCount": "{count, plural, =0{Du hast keine doppelten Artikel.} one{Du hast {count} doppelten Artikel.} other{Du hast {count} doppelte Artikel.}}",
+  "catalogPiecesCount": "{count, plural, one{{count} Stück} other{{count} Stück}}",
+  "catalogPreview": "Vorschau",
+  "catalogPublisher": "Herausgeber",
+  "catalogQuantity": "Menge",
+  "catalogQuantitySaveError": "Die Menge konnte nicht gespeichert werden: {error}",
+  "catalogQuantityUpdated": "Die Menge wurde auf {quantity} aktualisiert.",
+  "catalogRarity": "Seltenheit",
+  "catalogRarityAll": "Seltenheit: alle",
+  "catalogRarityCommon": "Häufig",
+  "catalogRarityLimitedEdition": "Limitierte Auflage",
+  "catalogRarityRare": "Selten",
+  "catalogRaritySelected": "Seltenheit: {value}",
+  "catalogRarityUltraRare": "Ultraselten",
+  "catalogRarityValue": "Seltenheit: {value}",
+  "catalogRemoveFromFavorites": "Aus Favoriten entfernen",
+  "catalogRemovedFromFavorites": "Der Artikel wurde aus den Favoriten entfernt.",
+  "catalogResultsCount": "{count, plural, one{{count} Ergebnis} other{{count} Ergebnisse}}",
+  "catalogSearchHint": "Nach Nummer oder Name suchen ...",
+  "catalogSelectTargetCollectionFirst": "Wähle zuerst die Zielsammlung aus.",
+  "catalogSelectValidFileFirst": "Wähle zuerst eine gültige Datei aus.",
+  "catalogSelectedCollectionMissing": "Die ausgewählte Sammlung ist nicht mehr vorhanden.",
+  "catalogSheetName": "Tabellenblatt: {name}",
+  "catalogSkip": "Überspringen",
+  "catalogSortItems": "Artikel sortieren",
+  "catalogSortNameAscending": "Name: A–Z",
+  "catalogSortNameDescending": "Name: Z–A",
+  "catalogSortNumberAscending": "Nummer: aufsteigend",
+  "catalogSortNumberDescending": "Nummer: absteigend",
+  "catalogSortRarityAscending": "Seltenheit: A–Z",
+  "catalogSortRarityDescending": "Seltenheit: Z–A",
+  "catalogSurplusCount": "{count, plural, one{+{count} doppelt} other{+{count} doppelt}}",
+  "catalogTargetCollection": "Zielsammlung",
+  "catalogTotalPieces": "Stück insgesamt",
+  "catalogUnnamedItem": "Unbenannter Artikel",
+  "catalogUpdate": "Aktualisieren",
+  "catalogValidRows": "{count} gültig",
+  "catalogYear": "Jahr",
+  "@catalogAdditionalFilterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogAdditionalFiltersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogCollectionAddError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionCreateError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionCreatedForImport": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionIdExists": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionsLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogColumnCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogFavoriteChangeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogFirstRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportConfirmRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "collectionName": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportCreated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportCsvReadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportFileOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportUpdated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportXlsxReadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogInvalidRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogInventoryLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemDefaultName": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemStatusLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogItemsLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogOwnedSurplusCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogPiecesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogQuantitySaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogQuantityUpdated": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogRaritySelected": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogRarityValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogSheetName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogSurplusCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogValidRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cancel": "Abbrechen",
+  "clearSearch": "Suche löschen",
+  "noResults": "Keine Ergebnisse",
+  "now": "Jetzt",
+  "sending": "Wird gesendet...",
+  "tryAgain": "Erneut versuchen",
+  "yesterday": "Gestern",
+  "weekdayMondayShort": "Mo",
+  "weekdayTuesdayShort": "Di",
+  "weekdayWednesdayShort": "Mi",
+  "weekdayThursdayShort": "Do",
+  "weekdayFridayShort": "Fr",
+  "weekdaySaturdayShort": "Sa",
+  "weekdaySundayShort": "So",
+  "messageSendError": "Die Nachricht konnte nicht gesendet werden:\n{error}",
+  "@messageSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesSearchHint": "Nach Benutzer, Sammlung oder Nachricht suchen",
+  "messagesConversationEmptyPreview": "Diese Unterhaltung enthält noch keine Nachrichten.",
+  "messagesYouPreview": "Du: {message}",
+  "@messagesYouPreview": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesEmptyTitle": "Du hast noch keine Unterhaltungen",
+  "messagesEmptyDescription": "Du kannst eine Unterhaltung mit einem Benutzer beginnen, mit dem du tauschen möchtest.",
+  "messagesTryAnotherSearch": "Versuche einen anderen Suchbegriff.",
+  "messagesNoConversationsForQuery": "Für „{query}“ wurden keine Unterhaltungen gefunden.",
+  "@messagesNoConversationsForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesLoadError": "Unterhaltungen konnten nicht geladen werden",
+  "messagesSignInRequired": "Du musst dich anmelden, um Nachrichten anzusehen.",
+  "messagesGenericUser": "diesem Benutzer",
+  "messagesStartConversationWith": "Unterhaltung mit {name} beginnen",
+  "@messagesStartConversationWith": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesConversationAboutCollection": "Diese Unterhaltung bezieht sich auf die Sammlung {collectionName}.",
+  "@messagesConversationAboutCollection": {
+    "placeholders": {
+      "collectionName": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesWriteFirstMessage": "Schreibe die erste Nachricht und vereinbart einen Tausch.",
+  "messagesChatLoadError": "Nachrichten konnten nicht geladen werden.",
+  "messagesWriteMessageHint": "Nachricht schreiben...",
+  "messagesSendMessage": "Nachricht senden",
+  "tradeAccept": "Annehmen",
+  "tradeArchiveEmpty": "Das Archiv ist leer.",
+  "tradeAutomaticProposalDescription": "SwapStash schlägt einen ausgeglichenen Tausch von {offeredCount} gegen {requestedCount} vor.",
+  "@tradeAutomaticProposalDescription": {
+    "placeholders": {
+      "offeredCount": {
+        "type": "int"
+      },
+      "requestedCount": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeAutomaticProposalTitle": "Automatischer Tauschvorschlag",
+  "tradeBackToResults": "Zurück zu den Ergebnissen",
+  "tradeCanOffer": "Du kannst anbieten",
+  "tradeCanReceive": "Du kannst erhalten",
+  "tradeCancelOffer": "Angebot zurückziehen",
+  "tradeCardFromCollection": "Karte aus der Sammlung",
+  "tradeCardsCount": "{count, plural, one{{count} Karte} other{{count} Karten}}",
+  "@tradeCardsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeCardsLoadError": "Karten konnten nicht geladen werden:\n{error}",
+  "@tradeCardsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCollectionMissing": "Dem Tausch ist keine Sammlung zugeordnet.",
+  "tradeCommentHint": "Zum Beispiel: schnelle Einigung und Karten in ausgezeichnetem Zustand.",
+  "tradeComparisonTitle": "Tauschvergleich",
+  "tradeCompletedSteps": "{completed} von {total} Schritten",
+  "@tradeCompletedSteps": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeConfirmHandoverButton": "Ja, Übergabe bestätigen",
+  "tradeConfirmHandoverDescription": "Bestätige erst, wenn du die Karten tatsächlich an die andere Partei übergeben hast. Nach der Bestätigung werden die Karten aus deinem Inventar entfernt. Dieser Schritt kann nicht rückgängig gemacht werden.",
+  "tradeConfirmHandoverTitle": "Kartenübergabe bestätigen",
+  "tradeConfirmReceiptButton": "Ja, Erhalt bestätigen",
+  "tradeConfirmReceiptDescription": "Bestätige erst, wenn du die vereinbarten Karten tatsächlich erhalten hast. Nach der Bestätigung werden sie deinem Inventar hinzugefügt. Dieser Schritt kann nicht rückgängig gemacht werden.",
+  "tradeConfirmReceiptTitle": "Kartenerhalt bestätigen",
+  "tradeConversationOpenError": "Die Unterhaltung konnte nicht geöffnet werden:\n{error}",
+  "@tradeConversationOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCounterOfferDescription": "Ändere das Angebot. Das Verhältnis ist nicht begrenzt; du kannst zum Beispiel einen Vorschlag 3 gegen 3 in 5 gegen 3 ändern.",
+  "tradeCounterOfferItemsUnavailable": "Die ausgewählten Karten sind für das Gegenangebot nicht mehr verfügbar.",
+  "tradeCounterOfferNeedsBothSides": "Ein Gegenangebot muss auf beiden Seiten mindestens einen Gegenstand enthalten.",
+  "tradeCounterOfferSendError": "Das Gegenangebot konnte nicht gesendet werden: {error}",
+  "@tradeCounterOfferSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCounterOfferTitle": "Gegenangebot",
+  "tradeDirectionCounterOffer": "GEGENANGEBOT",
+  "tradeDirectionReceivedOffer": "ERHALTENES ANGEBOT",
+  "tradeDirectionSentOffer": "GESENDETES ANGEBOT",
+  "tradeFilterCancelled": "Zurückgezogen",
+  "tradeFilterCompleted": "Abgeschlossen",
+  "tradeFilterRejected": "Abgelehnt",
+  "tradeFindTrades": "Tauschpartner finden",
+  "tradeFromTask": "Tausch aus Aufgabe",
+  "tradeHandoverConfirmed": "Übergabe bestätigt ✓",
+  "tradeHandoverConfirmedSuccess": "Die Kartenübergabe wurde bestätigt und das Inventar aktualisiert.",
+  "tradeIAmOffering": "Ich biete",
+  "tradeIWant": "Ich möchte",
+  "tradeItemSelectionNextStep": "Die Auswahl der Gegenstände erfolgt im nächsten Schritt.",
+  "tradeItemsNextStep": "Die Gegenstandsliste folgt im nächsten Schritt.",
+  "tradeLoadError": "Tauschvorgänge konnten nicht geladen werden.",
+  "tradeLoadErrorDetails": "Tauschvorgänge konnten nicht geladen werden:\n{error}",
+  "@tradeLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeNewTrade": "Neuer Tausch",
+  "tradeNoAvailableItems": "Keine Gegenstände verfügbar.",
+  "tradeNoCancelledTrades": "Es gibt keine zurückgezogenen Tauschvorgänge.",
+  "tradeNoCards": "Keine Karten.",
+  "tradeNoCompletedTrades": "Es gibt keine abgeschlossenen Tauschvorgänge.",
+  "tradeNoIncomingTrades": "Es gibt keine erhaltenen Tauschvorgänge.",
+  "tradeNoMatchesFound": "Derzeit wurden keine möglichen Tauschvorgänge gefunden.",
+  "tradeNoMatchesHint": "Prüfe, ob du deine doppelten Karten markiert hast und ob andere Benutzer dieselbe Sammlung verwenden.",
+  "tradeNoOutgoingTrades": "Es gibt keine gesendeten Tauschvorgänge.",
+  "tradeNoRejectedTrades": "Es gibt keine abgelehnten Tauschvorgänge.",
+  "tradeNoTradesYet": "Du hast noch keine Tauschvorgänge.",
+  "tradeNoUsersMatch": "Keine Benutzer entsprechen der Suche.",
+  "tradeOfferAcceptedSuccess": "Der Tausch wurde angenommen.",
+  "tradeOfferCancelledSuccess": "Das Angebot wurde zurückgezogen.",
+  "tradeOfferRejectedSuccess": "Das Angebot wurde abgelehnt.",
+  "tradeOpeningConversation": "Unterhaltung wird geöffnet...",
+  "tradeOptionalComment": "Kommentar (optional)",
+  "tradePossibleTradesCount": "{count, plural, one{{count} möglicher Tausch} other{{count} mögliche Tauschvorgänge}}",
+  "@tradePossibleTradesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeProgressAgreed": "Tausch vereinbart",
+  "tradeProgressIHandedOver": "Ich habe die Karten übergeben",
+  "tradeProgressIReceived": "Ich habe die Karten erhalten",
+  "tradeProgressOtherHandedOver": "Die andere Partei hat die Karten übergeben",
+  "tradeProgressOtherReceived": "Die andere Partei hat die Karten erhalten",
+  "tradeProgressTitle": "Tauschverlauf",
+  "tradeProposalSendError": "Der Tauschvorschlag konnte nicht gesendet werden:\n{error}",
+  "@tradeProposalSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeProposalSentSuccessfully": "Der Tauschvorschlag wurde erfolgreich gesendet.",
+  "tradeRateUser": "Benutzer bewerten",
+  "tradeRatingQuestion": "Wie zufrieden bist du mit dem abgeschlossenen Tausch?",
+  "tradeRatingSubmitError": "Die Bewertung konnte nicht gesendet werden: {error}",
+  "@tradeRatingSubmitError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeRatingSubmitted": "Bewertung abgegeben.",
+  "tradeRatingSubmittedSuccessfully": "Die Bewertung wurde erfolgreich abgegeben.",
+  "tradeRatingUnavailable": "Die Bewertung ist derzeit nicht verfügbar. Prüfe, ob die neuen Firestore-Regeln veröffentlicht wurden.",
+  "tradeReceiptConfirmed": "Erhalt bestätigt ✓",
+  "tradeReceiptConfirmedSuccess": "Der Erhalt der Karten wurde bestätigt und das Inventar aktualisiert.",
+  "tradeRecipient": "Empfänger",
+  "tradeReject": "Ablehnen",
+  "tradeRemoveRecipient": "Empfänger entfernen",
+  "tradeSearchUserHint": "Benutzer nach Namen suchen...",
+  "tradeSendCounterOffer": "Gegenangebot senden",
+  "tradeSendMessageToUser": "Nachricht an {name} senden",
+  "@tradeSendMessageToUser": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeSendProposal": "Vorschlag senden",
+  "tradeSendingProposal": "Vorschlag wird gesendet...",
+  "tradeStarsOutOfFive": "{value} von 5",
+  "@tradeStarsOutOfFive": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeSubmitRating": "Bewertung senden",
+  "tradeSubmittingRating": "Bewertung wird gesendet...",
+  "tradeSuggestAutomatically": "Tausch automatisch vorschlagen",
+  "tradeSummaryTitle": "Tauschübersicht",
+  "tradeTabAll": "Alle",
+  "tradeTabArchive": "Archiv",
+  "tradeTabReceived": "Erhalten",
+  "tradeTabSent": "Gesendet",
+  "tradeTheirDuplicates": "Doppelte Karten der anderen Person",
+  "tradeTheirDuplicatesYouNeed": "Doppelte Karten der anderen Person, die dir noch fehlen.",
+  "tradeUserCanOffer": "{name} kann anbieten",
+  "@tradeUserCanOffer": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserHasNoDuplicatesYouNeed": "{name} hat derzeit keine doppelten Karten, die du benötigst.",
+  "@tradeUserHasNoDuplicatesYouNeed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserNeedsNoneOfYourDuplicates": "{name} benötigt derzeit keine deiner doppelten Karten.",
+  "@tradeUserNeedsNoneOfYourDuplicates": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserOffers": "{name} bietet an:",
+  "@tradeUserOffers": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserSearchError": "Benutzer konnten nicht gesucht werden:\n{error}",
+  "@tradeUserSearchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeWantedItemsNextStep": "Die Liste der gewünschten Gegenstände folgt im nächsten Schritt.",
+  "tradeWith": "Tausch mit",
+  "tradeYouCanOffer": "Du kannst anbieten",
+  "tradeYouGive": "Du gibst",
+  "tradeYouOfferColon": "Du bietest an:",
+  "tradeYouOfferCount": "{count} angeboten",
+  "@tradeYouOfferCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeYouReceive": "Du erhältst",
+  "tradeYouReceiveCount": "{count} erhalten",
+  "@tradeYouReceiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeYourDuplicatesTheyNeed": "Deine doppelten Karten, die dieser Benutzer noch nicht hat.",
+  "tradeAllowsInternationalTrades": "Erlaubt internationale Tauschvorgänge",
+  "tradeActionExecutionError": "Die Aktion konnte nicht ausgeführt werden: {error}",
+  "@tradeActionExecutionError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeActionCompletedTitle": "Tausch abgeschlossen",
+  "tradeActionCompletedDescription": "Beide Parteien haben Übergabe und Erhalt der Karten bestätigt. Die Inventare wurden aktualisiert.",
+  "tradeActionRejectedTitle": "Das Angebot wurde abgelehnt",
+  "tradeActionCancelledTitle": "Das Angebot wurde zurückgezogen",
+  "tradeActionNoActionRequired": "Für dieses Angebot ist keine weitere Aktion erforderlich.",
+  "tradeActionYourTurnTitle": "Du bist am Zug",
+  "tradeActionReviewOfferDescription": "Prüfe die Karten und nimm das Angebot an, lehne es ab oder sende ein Gegenangebot.",
+  "tradeActionOtherTurnTitle": "Die andere Partei ist am Zug",
+  "tradeActionWaitingResponseDescription": "Derzeit ist keine Aktion erforderlich. Es wird auf die Antwort des anderen Benutzers gewartet.",
+  "tradeActionNoActionTitle": "Derzeit ist keine Aktion erforderlich",
+  "tradeActionStatusNoResponseDescription": "Der Tauschstatus erfordert keine Reaktion von dir.",
+  "tradeActionNextStepTitle": "Nächster Schritt",
+  "tradeActionConfirmHandoverDescription": "Nachdem du deine Karten tatsächlich an die andere Partei übergeben hast, bestätige die Übergabe. Danach werden sie aus deinem Inventar entfernt.",
+  "tradeActionConfirmReceiptDescription": "Nachdem du die vereinbarten Karten tatsächlich erhalten hast, bestätige den Erhalt. Danach werden sie deinem Inventar hinzugefügt.",
+  "tradeActionWaitingOtherHandoverDescription": "Du hast die Übergabe bereits bestätigt. Es wird darauf gewartet, dass die andere Partei ihre Karten übergibt.",
+  "tradeActionWaitingOtherConfirmationTitle": "Bestätigung der anderen Partei ausstehend",
+  "tradeActionWaitingOtherReceiptDescription": "Du hast den Erhalt bereits bestätigt. Der Tausch wird abgeschlossen, sobald auch die andere Partei den Erhalt bestätigt.",
+  "tradeActionWaitingNextConfirmationDescription": "Es wird auf die nächste Bestätigung der anderen Partei gewartet.",
+  "tradeStatusCompletedTitle": "Tausch abgeschlossen",
+  "tradeStatusCompletedSubtitle": "Beide Benutzer haben Übergabe und Erhalt bestätigt.",
+  "tradeStatusCompletedBadge": "Abgeschlossen",
+  "tradeStatusRejectedTitle": "Angebot abgelehnt",
+  "tradeStatusRejectedSubtitle": "Dieser Tauschvorschlag wurde nicht angenommen.",
+  "tradeStatusRejectedBadge": "Abgelehnt",
+  "tradeStatusCancelledTitle": "Angebot zurückgezogen",
+  "tradeStatusCancelledSubtitle": "Der Absender hat den Tauschvorschlag zurückgezogen.",
+  "tradeStatusCancelledBadge": "Zurückgezogen",
+  "tradeStatusCounterOfferReceivedTitle": "Du hast ein Gegenangebot erhalten",
+  "tradeStatusAwaitingYourResponseTitle": "Das Angebot wartet auf deine Antwort",
+  "tradeStatusReviewOfferSubtitle": "Prüfe die Karten und wähle Annehmen, Ablehnen oder Gegenangebot.",
+  "tradeStatusWaitingForYouBadge": "Wartet auf dich",
+  "tradeStatusCounterOfferSentTitle": "Gegenangebot gesendet",
+  "tradeStatusOfferSentTitle": "Angebot gesendet",
+  "tradeStatusWaitingOtherUserSubtitle": "Es wird auf die Antwort des anderen Benutzers gewartet.",
+  "tradeStatusWaitingResponseBadge": "Antwort ausstehend",
+  "tradeStatusReceivedTitle": "Du hast das Paket erhalten",
+  "tradeStatusReceivedSubtitle": "Die erhaltenen Karten wurden deinem Inventar hinzugefügt. Die Bestätigung der anderen Partei steht noch aus.",
+  "tradeStatusReceivedBadge": "Erhalten",
+  "tradeStatusBothOnWayTitle": "Beide Pakete sind unterwegs",
+  "tradeStatusPackageOnWayTitle": "Ein Paket ist zu dir unterwegs",
+  "tradeStatusBothOnWaySubtitle": "Beide Pakete wurden übergeben. Bestätige den Erhalt, sobald dein Paket angekommen ist.",
+  "tradeStatusOtherSentSubtitle": "Die andere Partei hat das Paket übergeben. Deine Karten sind weiterhin reserviert.",
+  "tradeStatusOnWayBadge": "Unterwegs",
+  "tradeStatusSentTitle": "Du hast das Paket gesendet",
+  "tradeStatusSentSubtitle": "Die übergebenen Karten wurden aus deinem Inventar entfernt. Es wird auf die andere Partei gewartet.",
+  "tradeStatusSentBadge": "Gesendet",
+  "tradeStatusOtherReceivedTitle": "Die andere Partei hat das Paket erhalten",
+  "tradeStatusConfirmWhenReceivedSubtitle": "Bestätige den Erhalt, sobald dein Paket angekommen ist.",
+  "tradeStatusWaitingReceiptBadge": "Erhalt ausstehend",
+  "tradeStatusAgreedTitle": "Tausch vereinbart",
+  "tradeStatusAgreedSubtitle": "Die Karten beider Seiten sind reserviert. Das Inventar ändert sich erst nach Bestätigung der Übergabe oder des Erhalts.",
+  "tradeStatusAgreedBadge": "Vereinbart",
+  "authLoginSubtitle": "Melde dich bei deinem Konto an",
+  "authRegisterSubtitle": "Erstelle ein neues Sammlerkonto",
+  "authDisplayNameLabel": "Anzeigename",
+  "authDisplayNameHint": "Zum Beispiel Alex",
+  "authDisplayNameRequired": "Gib einen Anzeigenamen ein.",
+  "authDisplayNameMinLength": "Der Name muss mindestens 2 Zeichen lang sein.",
+  "authDisplayNameMaxLength": "Der Name darf höchstens 40 Zeichen lang sein.",
+  "authEmailLabel": "E-Mail-Adresse",
+  "authEmailRequired": "Gib deine E-Mail-Adresse ein.",
+  "authEmailInvalid": "Gib eine gültige E-Mail-Adresse ein.",
+  "authPasswordLabel": "Passwort",
+  "authShowPassword": "Passwort anzeigen",
+  "authHidePassword": "Passwort ausblenden",
+  "authPasswordRequired": "Gib dein Passwort ein.",
+  "authPasswordMinLength": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+  "authConfirmPasswordLabel": "Passwort wiederholen",
+  "authConfirmPasswordRequired": "Gib das Passwort erneut ein.",
+  "authPasswordsDoNotMatch": "Die Passwörter stimmen nicht überein.",
+  "authLoginButton": "Anmelden",
+  "authCreateAccountButton": "Konto erstellen",
+  "authNoAccountRegister": "Noch kein Konto? Registrieren",
+  "authHaveAccountLogin": "Du hast bereits ein Konto? Anmelden",
+  "authInvalidData": "Die eingegebenen Daten sind ungültig.",
+  "authUnexpectedError": "Ein unerwarteter Fehler ist aufgetreten: {error}",
+  "authFirebaseInvalidEmail": "Die E-Mail-Adresse ist ungültig.",
+  "authFirebaseEmailAlreadyInUse": "Ein Konto mit dieser E-Mail-Adresse besteht bereits.",
+  "authFirebaseWeakPassword": "Das Passwort ist zu schwach.",
+  "authFirebaseInvalidCredentials": "Die E-Mail-Adresse oder das Passwort ist falsch.",
+  "authFirebaseTooManyRequests": "Zu viele Versuche. Versuche es später erneut.",
+  "authFirebaseNetworkError": "Überprüfe deine Internetverbindung.",
+  "authFirebaseGenericError": "Anmeldung oder Registrierung fehlgeschlagen.",
+  "favoritesTitle": "Meine Favoriten",
+  "favoritesSearchHint": "Favoriten durchsuchen",
+  "favoritesClearSearch": "Löschen",
+  "favoritesRemoved": "Aus den Favoriten entfernt.",
+  "favoritesNamedItemRemoved": "„{name}“ wurde aus den Favoriten entfernt.",
+  "favoritesRemoveError": "Der Favorit konnte nicht entfernt werden: {error}",
+  "favoritesUnnamedItem": "Unbenanntes Element",
+  "favoritesRemoveTooltip": "Aus Favoriten entfernen",
+  "favoritesEmptyTitle": "Du hast noch keine Favoriten",
+  "favoritesEmptyDescription": "Tippe auf der Detailseite eines Elements auf das Herz. Danach erscheint es hier.",
+  "favoritesNoResults": "Keine Ergebnisse.",
+  "favoritesNoResultsForQuery": "Für „{query}“ wurden keine Favoriten gefunden.",
+  "favoritesLoadError": "Die Favoriten konnten nicht geladen werden.",
+  "myCollectionsTitle": "Meine Sammlungen",
+  "myCollectionsAddFromCatalog": "Sammlung aus dem Katalog hinzufügen",
+  "myCollectionsAddButton": "Sammlung hinzufügen",
+  "myCollectionsRemoveTitle": "Sammlung entfernen",
+  "myCollectionsRemoveQuestion": "Möchtest du „{name}“ aus deinen Sammlungen entfernen?",
+  "myCollectionsRemoveButton": "Entfernen",
+  "myCollectionsRemoved": "„{name}“ wurde aus deinen Sammlungen entfernt.",
+  "myCollectionsRemoveError": "Die Sammlung konnte nicht entfernt werden: {error}",
+  "myCollectionsLoadError": "Deine Sammlungen konnten nicht geladen werden:\n{error}",
+  "myCollectionsCatalogLoadError": "Die Sammlung konnte nicht geladen werden.",
+  "myCollectionsCatalogMissing": "Die Katalogsammlung ist nicht vorhanden.",
+  "myCollectionsStatisticsLoadError": "Die Sammlungsstatistik konnte nicht geladen werden.",
+  "myCollectionsStatisticsUnavailable": "Die Sammlungsstatistik ist nicht verfügbar.",
+  "myCollectionsEmptyTitle": "Du hast noch keine Sammlungen hinzugefügt.",
+  "myCollectionsEmptyDescription": "Wähle eine Sammlung aus dem zentralen Katalog.",
+  "myCollectionsOpenCatalog": "Katalog öffnen",
+  "myCollectionsUnnamedCollection": "Unbenannte Sammlung",
+  "myCollectionsMenuTooltip": "Sammlungsoptionen",
+  "myCollectionsEditMenu": "Bearbeiten",
+  "myCollectionsRemoveMenu": "Entfernen",
+  "myCollectionsProgressCount": "Gesammelt: {owned} / {total}",
+  "myCollectionsDuplicateCount": "Doppelte: {count}",
+  "myCollectionsMissingCount": "Fehlend: {count}",
+  "@authUnexpectedError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesNamedItemRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesNoResultsForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoveQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsProgressCount": {
+    "placeholders": {
+      "owned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@myCollectionsDuplicateCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@myCollectionsMissingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectors": "Sammler",
+  "editProfileDisplayName": "Anzeigename",
+  "editProfileCity": "Ort",
+  "editProfileBio": "Beschreibung",
+  "editProfilePublicTitle": "Öffentliches Profil",
+  "editProfilePublicSubtitle": "Andere Benutzer können dich finden.",
+  "editProfileInternationalTitle": "Internationale Tauschvorgänge erlauben",
+  "editProfileInternationalSubtitle": "Du kannst Angebote aus anderen Ländern erhalten.",
+  "editProfileSave": "Speichern",
+  "editProfileSaving": "Wird gespeichert…",
+  "editProfileSaved": "Das Profil wurde erfolgreich gespeichert.",
+  "editProfileSaveError": "Das Profil konnte nicht gespeichert werden: {error}",
+  "editProfileLoadError": "Das Profil konnte nicht geladen werden:\n{error}",
+  "editProfileMissing": "Das Profil ist nicht vorhanden.",
+  "editProfileDisplayNameRequired": "Gib einen Anzeigenamen ein.",
+  "collectorsSearchLabel": "Sammler suchen",
+  "collectorsSearchHint": "Anzeigenamen eingeben",
+  "collectorsSearchError": "Benutzer konnten nicht gesucht werden:\n{error}",
+  "collectorsNoResults": "Keine Sammler gefunden.",
+  "collectorsSearchDescription": "Finde andere Sammler anhand ihres Anzeigenamens.",
+  "collectorsInternationalAllowed": "Internationale Tauschvorgänge erlaubt",
+  "collectorsLocalOnly": "Nur lokale Tauschvorgänge",
+  "collectorProfileTitle": "Sammlerprofil",
+  "collectorProfileMissing": "Das Benutzerprofil ist nicht vorhanden.",
+  "collectorChatOpenError": "Die Unterhaltung konnte nicht geöffnet werden:\n{error}",
+  "collectorOpeningChat": "Unterhaltung wird geöffnet…",
+  "collectorSendMessage": "Nachricht senden",
+  "collectorInternationalTrades": "Internationale Tauschvorgänge",
+  "collectorLocalTrades": "Lokale Tauschvorgänge",
+  "collectorAbout": "Über den Sammler",
+  "collectorPrivateTitle": "Dieses Profil ist privat",
+  "collectorPrivateDescription": "Ort, Beschreibung und Bewertungskommentare werden nicht öffentlich angezeigt.",
+  "collectorProfileLoadError": "Das Profil konnte nicht geladen werden:\n{error}",
+  "ratingUnavailable": "Bewertung nicht verfügbar",
+  "ratingLoading": "Bewertungen werden geladen",
+  "ratingNone": "Keine Bewertungen",
+  "ratingCount": "{count, plural, =1{1 Bewertung} other{{count} Bewertungen}}",
+  "ratingCommentsLoadError": "Bewertungskommentare konnten nicht geladen werden.",
+  "ratingNoPublicComments": "Dieser Sammler hat noch keine öffentlichen Kommentare.",
+  "ratingRecentComments": "Neueste Kommentare",
+  "@editProfileSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@editProfileLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorsSearchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorChatOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorProfileLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@ratingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogCategorySportsCards": "Sportkarten",
+  "collectorsNavigation": "Sammler",
+  "tradeManualStepRecipient": "Empfänger",
+  "tradeManualStepItems": "Karten",
+  "tradeManualStepSummary": "Übersicht",
+  "tradeManualChooseRecipientDescription": "Suche den Sammler, dem du ein Tauschangebot senden möchtest.",
+  "tradeManualChangeRecipient": "Ändern",
+  "tradeManualLoadingOptions": "Gemeinsame Sammlungen und verfügbare Karten werden geprüft…",
+  "tradeManualOptionsError": "Die Tauschkarten konnten nicht geladen werden: {error}",
+  "tradeManualNoCommonCollections": "Keine gemeinsame Sammlung",
+  "tradeManualNoCommonCollectionsDescription": "Für einen manuellen Tausch müssen beide Benutzer mindestens dieselbe Sammlung hinzugefügt haben.",
+  "tradeManualNoAvailableItems": "Derzeit sind keine Karten verfügbar",
+  "tradeManualNeedsBothDirections": "Für ein Angebot muss jeder Benutzer mindestens eine verfügbare doppelte Karte haben.",
+  "tradeManualChooseCollection": "Sammlung",
+  "tradeManualSelectionsRemainAcrossCollections": "Ein Angebot kann nur Karten aus einer Sammlung enthalten. Beim Wechseln der Sammlung wird die Auswahl gelöscht.",
+  "tradeManualNoOfferedItemsInCollection": "Du hast in dieser Sammlung keine verfügbaren doppelten Karten.",
+  "tradeManualNoRequestedItemsInCollection": "Der andere Benutzer hat in dieser Sammlung keine verfügbaren doppelten Karten.",
+  "tradeManualSelectedItems": "Ausgewählt: {count}",
+  "tradeManualAvailableQuantity": "Zum Tauschen verfügbar: {count}",
+  "tradeManualChooseAtLeastOneEach": "Wähle auf jeder Seite des Tauschs mindestens eine Karte aus.",
+  "tradeManualReviewOffer": "Angebot prüfen",
+  "tradeManualSummaryRecipient": "Empfänger",
+  "tradeManualSummaryOffering": "Ich biete",
+  "tradeManualSummaryRequesting": "Ich möchte",
+  "tradeManualSendOffer": "Angebot senden",
+  "tradeManualSendingOffer": "Angebot wird gesendet…",
+  "tradeManualOfferCreated": "Das Tauschangebot wurde gesendet.",
+  "tradeManualOfferError": "Das Angebot konnte nicht gesendet werden: {error}",
+  "tradeManualYourInventoryUnavailable": "Karte #{itemNumber} ist unter deinen doppelten Karten nicht mehr verfügbar.",
+  "tradeManualTheirInventoryUnavailable": "Karte #{itemNumber} ist beim anderen Benutzer nicht mehr verfügbar.",
+  "tradeManualCatalogItemUnavailable": "Karte #{itemNumber} konnte nicht dem Katalog zugeordnet werden.",
+  "tradeManualInvalidOffer": "Das Angebot ist ungültig. Prüfe die ausgewählten Karten und Mengen.",
+  "tradeManualBack": "Zurück",
+  "@tradeManualOptionsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualOfferError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualYourInventoryUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualTheirInventoryUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualCatalogItemUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualSelectedItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@tradeManualAvailableQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "forgotPassword": "Passwort vergessen?",
+  "forgotPasswordTitle": "Passwort zurücksetzen",
+  "forgotPasswordDescription": "Gib die E-Mail-Adresse deines Kontos ein. Wir senden dir einen Link zum Festlegen eines neuen Passworts.",
+  "sendPasswordResetEmail": "Link senden",
+  "sendingEmail": "Wird gesendet…",
+  "passwordResetEmailSentTitle": "E-Mails prüfen",
+  "passwordResetEmailSentDescription": "Wenn ein Konto mit dieser E-Mail-Adresse existiert, erhältst du einen Link zum Zurücksetzen des Passworts.",
+  "backToSignIn": "Zurück zur Anmeldung",
+  "passwordResetError": "Der Link zum Zurücksetzen des Passworts konnte nicht gesendet werden: {error}",
+  "verifyEmailTitle": "E-Mail-Adresse bestätigen",
+  "verifyEmailDescription": "Wir haben eine Bestätigungsnachricht an {email} gesendet. Öffne den Link in der Nachricht und prüfe anschließend den Status.",
+  "checkVerificationStatus": "Status prüfen",
+  "checkingVerification": "Wird geprüft…",
+  "resendVerificationEmail": "Bestätigungs-E-Mail erneut senden",
+  "verificationEmailSent": "Die Bestätigungs-E-Mail wurde gesendet.",
+  "verificationEmailSendError": "Die Bestätigungs-E-Mail konnte nicht gesendet werden: {error}",
+  "emailVerificationConfirmed": "Die E-Mail-Adresse ist bestätigt.",
+  "emailStillNotVerified": "Die E-Mail-Adresse ist noch nicht bestätigt.",
+  "continueWithoutVerification": "Vorerst ohne Bestätigung fortfahren",
+  "emailVerified": "E-Mail bestätigt",
+  "emailNotVerified": "E-Mail nicht bestätigt",
+  "emailVerificationReminder": "Die E-Mail-Adresse ist noch nicht bestätigt",
+  "accountSecurityTitle": "Konto und Sicherheit",
+  "accountSecuritySubtitle": "E-Mail, Passwort und Kontolöschung",
+  "changePasswordTitle": "Passwort ändern",
+  "changePasswordSubtitle": "Neues Anmeldepasswort festlegen",
+  "changePasswordDescription": "Gib aus Sicherheitsgründen zuerst dein aktuelles Passwort ein und wähle anschließend ein neues.",
+  "currentPassword": "Aktuelles Passwort",
+  "currentPasswordRequired": "Gib dein aktuelles Passwort ein.",
+  "newPassword": "Neues Passwort",
+  "newPasswordRequired": "Gib ein neues Passwort ein.",
+  "newPasswordMustDiffer": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
+  "confirmNewPassword": "Neues Passwort wiederholen",
+  "confirmNewPasswordRequired": "Gib das neue Passwort erneut ein.",
+  "changePasswordButton": "Passwort ändern",
+  "changingPassword": "Wird geändert…",
+  "passwordChanged": "Das Passwort wurde erfolgreich geändert.",
+  "passwordChangeError": "Das Passwort konnte nicht geändert werden: {error}",
+  "deleteAccountTitle": "Konto löschen",
+  "deleteAccountSubtitle": "Profil, Sammlungen und Favoriten dauerhaft entfernen",
+  "deleteAccountWarningTitle": "Diese Aktion kann nicht rückgängig gemacht werden",
+  "deleteAccountWarning": "Dein Profil, Inventar, deine Sammlungen, Favoriten und dein Anmeldekonto werden gelöscht.",
+  "deleteAccountHistoryNotice": "Zum Erhalt der Historie anderer Teilnehmer bleiben abgeschlossene Tauschvorgänge, Nachrichten und abgegebene Bewertungen ohne dein öffentliches Profil gespeichert.",
+  "deleteAccountConfirmationWord": "LÖSCHEN",
+  "deleteAccountConfirmationLabel": "Gib zur Bestätigung {word} ein",
+  "deleteAccountConfirmationInvalid": "Gib {word} ein.",
+  "deleteAccountButton": "Konto dauerhaft löschen",
+  "deletingAccount": "Konto wird gelöscht…",
+  "deleteAccountConfirmationTitle": "Dieses Konto löschen?",
+  "deleteAccountConfirmationMessage": "Das Konto und deine persönlichen Profildaten werden dauerhaft entfernt.",
+  "accountDeleteError": "Das Konto konnte nicht gelöscht werden: {error}",
+  "signOutConfirmationTitle": "Abmelden",
+  "signOutConfirmationMessage": "Möchtest du dich von diesem Konto abmelden?",
+  "authFirebaseRequiresRecentLogin": "Melde dich aus Sicherheitsgründen erneut an.",
+  "authFirebaseUserDisabled": "Dieses Benutzerkonto wurde deaktiviert.",
+  "authFirebaseOperationNotAllowed": "Diese Anmeldemethode ist derzeit deaktiviert.",
+  "@passwordResetError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@verifyEmailDescription": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "@verificationEmailSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@passwordChangeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleteAccountConfirmationLabel": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleteAccountConfirmationInvalid": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "@accountDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteActiveTrades": "Das Konto kann nicht gelöscht werden, solange aktive oder nicht abgeschlossene Tauschvorgänge bestehen.",
+  "tradeManualShowAllSurpluses": "Alle Duplikate anzeigen",
+  "tradeManualSuggestedSurplusesDescription": "Zuerst werden nur Duplikate angezeigt, die die Sammlung der anderen Person ergänzen.",
+  "tradeManualAllSurplusesDescription": "Alle verfügbaren Duplikate beider Benutzer werden angezeigt.",
+  "tradeManualNoSuggestedOfferedItemsInCollection": "Du hast keine Duplikate, die die Sammlung dieser Person ergänzen würden.",
+  "tradeManualNoSuggestedRequestedItemsInCollection": "Diese Person hat keine Duplikate, die deine Sammlung ergänzen würden.",
+  "tradeRatingTitle": "Tauschbewertung",
+  "tradeRatingYourRating": "Deine Bewertung",
+  "tradeRatingEdit": "Bewertung bearbeiten",
+  "tradeRatingCommentHint": "Kurzer Kommentar (optional)",
+  "tradeRatingSaveChanges": "Änderungen speichern",
+  "tradeRatingUpdating": "Änderungen werden gespeichert...",
+  "tradeRatingUpdatedSuccessfully": "Die Bewertung wurde erfolgreich aktualisiert.",
+  "tradeRatingSelectStars": "Wähle 1 bis 5 Sterne.",
+  "ratingReviewsTitle": "Erhaltene Bewertungen",
+  "ratingNoReviews": "Dieser Sammler hat noch keine Bewertungen.",
+  "safetySettingsTitle": "Sicherheit und Datenschutz",
+  "safetyMenu": "Sicherheitsoptionen",
+  "safetyBlockUser": "Benutzer blockieren",
+  "safetyBlockUserTitle": "Benutzer blockieren",
+  "safetyBlockUserConfirmation": "Dieser Benutzer kann dir keine Nachrichten oder neuen Tauschangebote senden. Auch du kannst keine Nachrichten oder neuen Angebote senden.",
+  "safetyUserBlocked": "Der Benutzer wurde blockiert.",
+  "safetyUnblockUser": "Entsperren",
+  "safetyUnblockUserTitle": "Benutzer entsperren",
+  "safetyUnblockUserConfirmation": "Nachrichten und neue Tauschangebote mit diesem Benutzer wieder erlauben?",
+  "safetyUserUnblocked": "Der Benutzer wurde entsperrt.",
+  "safetyReportUser": "Benutzer melden",
+  "safetyReportTrade": "Tausch melden",
+  "safetyReportMessage": "Nachricht melden",
+  "safetyReportTitle": "Meldung senden",
+  "safetyReportDescription": "Wähle einen Grund und füge optional Details hinzu. Nur ein Administrator kann die Meldung prüfen.",
+  "safetyReportReason": "Grund",
+  "safetyReportReasonSpam": "Spam oder unerwünschte Inhalte",
+  "safetyReportReasonHarassment": "Belästigung oder Beleidigung",
+  "safetyReportReasonFraud": "Verdacht auf Betrug",
+  "safetyReportReasonInappropriate": "Unangemessene Inhalte",
+  "safetyReportReasonOther": "Sonstiges",
+  "safetyReportDetails": "Details (optional)",
+  "safetyReportDetailsHint": "Beschreibe kurz, was passiert ist.",
+  "safetyReportSubmit": "Meldung senden",
+  "safetyReportSubmitting": "Wird gesendet...",
+  "safetyReportSubmitted": "Die Meldung wurde gesendet.",
+  "safetyReportError": "Die Meldung konnte nicht gesendet werden",
+  "safetyActionError": "Die Aktion konnte nicht ausgeführt werden",
+  "safetyBlockedUsers": "Blockierte Benutzer",
+  "safetyBlockedUsersDescription": "Blockierte Benutzer ansehen und entsperren.",
+  "safetyBlockedUsersLoadError": "Blockierte Benutzer konnten nicht geladen werden.",
+  "safetyNoBlockedUsers": "Du hast keine blockierten Benutzer.",
+  "safetyConversationBlockedByYou": "Du hast diesen Benutzer blockiert. Der Chat bleibt sichtbar, neue Nachrichten können jedoch nicht gesendet werden.",
+  "safetyConversationBlockedByOther": "Das Senden neuer Nachrichten ist in diesem Chat nicht verfügbar.",
+  "safetyProfileBlockedByYou": "Du hast diesen Benutzer blockiert.",
+  "safetyProfileBlockedByOther": "Die Kommunikation mit diesem Benutzer ist nicht verfügbar.",
+  "safetyAdminReports": "Meldungen prüfen",
+  "safetyAdminReportsDescription": "Administrative Prüfung gemeldeter Benutzer und Inhalte.",
+  "safetyReportsLoadError": "Meldungen konnten nicht geladen werden.",
+  "safetyNoReports": "Für den ausgewählten Filter gibt es keine Meldungen.",
+  "safetyReportTypeUser": "Benutzer",
+  "safetyReportTypeMessage": "Nachricht",
+  "safetyReportTypeTrade": "Tausch",
+  "safetyReportStatusOpen": "Offen",
+  "safetyReportStatusReviewing": "In Prüfung",
+  "safetyReportStatusResolved": "Gelöst",
+  "safetyReportStatusDismissed": "Abgewiesen",
+  "safetyReportStatusUpdated": "Der Status der Meldung wurde aktualisiert.",
+  "safetyReporterId": "Meldender Benutzer",
+  "safetyReportedUserId": "Gemeldeter Benutzer",
+  "safetyTargetId": "Gemeldeter Inhalt",
+  "safetyConversationId": "Unterhaltung",
+  "tradeDeliverySectionTitle": "Übergabe und Versand",
+  "tradeDeliverySectionDescription": "Wähle eine Übergabeart und teile die erforderlichen privaten Daten mit deinem Tauschpartner.",
+  "tradeDeliveryYourDetails": "Deine Angaben",
+  "tradeDeliveryPartnerDetails": "Angaben des Partners",
+  "tradeDeliveryYourDetailsMissing": "Du hast noch keine Übergabe- oder Versanddaten hinzugefügt.",
+  "tradeDeliveryPartnerDetailsMissing": "Dein Partner hat noch keine Übergabe- oder Versanddaten hinzugefügt.",
+  "tradeDeliveryAdd": "Hinzufügen",
+  "tradeDeliveryEdit": "Bearbeiten",
+  "tradeDeliveryFormTitle": "Übergabedaten",
+  "tradeDeliveryChooseMethod": "Übergabeart",
+  "tradeDeliveryByMail": "Per Post",
+  "tradeDeliveryInPerson": "Persönliche Übergabe",
+  "tradeDeliveryFullName": "Vor- und Nachname",
+  "tradeDeliveryAddressLine1": "Adresse",
+  "tradeDeliveryAddressLine2": "Zusätzliche Adresszeile (optional)",
+  "tradeDeliveryPostalCode": "Postleitzahl",
+  "tradeDeliveryCity": "Ort",
+  "tradeDeliveryCountry": "Land",
+  "tradeDeliveryPhone": "Telefonnummer (optional)",
+  "tradeDeliveryMeetingDetails": "Details zur persönlichen Übergabe",
+  "tradeDeliveryMeetingDetailsHint": "Schlage Ort, Zeit oder Art der Vereinbarung vor.",
+  "tradeDeliveryCarrier": "Versanddienst (optional)",
+  "tradeDeliveryCarrierHint": "Zum Beispiel Post, GLS oder DPD",
+  "tradeDeliveryTrackingNumber": "Sendungsnummer (optional)",
+  "tradeDeliveryNotes": "Hinweis (optional)",
+  "tradeDeliveryNotesHint": "Füge wichtige Hinweise für deinen Partner hinzu.",
+  "tradeDeliveryPrivateTitle": "Private Angaben",
+  "tradeDeliveryPrivateDescription": "Diese Angaben sind nicht öffentlich. Nur der andere Teilnehmer des angenommenen Tauschs kann sie sehen.",
+  "tradeDeliveryPrivateShortDescription": "Diese Angaben sind nur für die beiden Teilnehmer dieses angenommenen oder abgeschlossenen Tauschs sichtbar.",
+  "tradeDeliveryRequiredField": "Dieses Feld ist erforderlich.",
+  "tradeDeliverySave": "Angaben speichern",
+  "tradeDeliverySaving": "Wird gespeichert...",
+  "tradeDeliverySaved": "Die Übergabedaten wurden gespeichert.",
+  "tradeDeliverySaveError": "Die Angaben konnten nicht gespeichert werden: {error}",
+  "@tradeDeliverySaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeDeliveryLoadError": "Die Übergabedaten konnten nicht geladen werden.",
+  "tradeDeliveryAddress": "Versandadresse",
+  "tradeDeliveryTrackingMissing": "Es wurde noch keine Sendungsnummer hinzugefügt.",
+  "tradeDeliveryCopyAddress": "Adresse kopieren",
+  "tradeDeliveryCopyPhone": "Telefonnummer kopieren",
+  "tradeDeliveryCopyTracking": "Sendungsnummer kopieren",
+  "tradeDeliveryCopied": "Die Angabe wurde kopiert.",
+  "continueLabel": "Weiter",
+  "done": "Fertig",
+  "betaOnboardingTitle": "App-Einführung",
+  "betaOnboardingSkip": "Überspringen",
+  "betaOnboardingStart": "Jetzt starten",
+  "betaOnboardingCollectionsTitle": "Sammlungen an einem Ort",
+  "betaOnboardingCollectionsDescription": "Markiere vorhandene, fehlende und doppelte Karten. Die Übersicht deiner Sammlung wird laufend aktualisiert.",
+  "betaOnboardingTradesTitle": "Sinnvolle Tausche finden",
+  "betaOnboardingTradesDescription": "SwapStash vergleicht doppelte und fehlende Karten und schlägt Sammler vor, mit denen ein beiderseitig nützlicher Tausch möglich sein kann.",
+  "betaOnboardingCompleteTradeTitle": "Vereinbaren, übergeben und bewerten",
+  "betaOnboardingCompleteTradeDescription": "Sende ein Angebot, chatte, teile Übergabe- oder Versanddaten privat und bewerte den Partner nach Abschluss des Tauschs.",
+  "betaOnboardingSafetyTitle": "Sicherheit und Kontrolle",
+  "betaOnboardingSafetyDescription": "Blockiere Benutzer, melde unangemessene Inhalte und bestimme, welche Daten öffentlich oder nur für den Tauschpartner sichtbar sind.",
+  "betaOnboardingShowAgain": "Einführung erneut anzeigen",
+  "betaOnboardingShowAgainDescription": "Sieh dir die wichtigsten Funktionen der App noch einmal an.",
+  "legalAcceptanceTitle": "Bedingungen und Datenschutz",
+  "legalAcceptanceHeading": "Bevor du fortfährst",
+  "legalAcceptanceDescription": "Lies bitte die grundlegenden Nutzungsregeln und Informationen zur Verarbeitung personenbezogener Daten.",
+  "legalAgeConfirmation": "Ich bestätige, dass ich mindestens 13 Jahre alt bin. Wenn ich in Slowenien unter 15 Jahre alt bin, habe ich die Erlaubnis eines Elternteils oder Erziehungsberechtigten.",
+  "legalDocumentsConfirmation": "Ich habe die Nutzungsbedingungen und die Datenschutzerklärung gelesen und akzeptiere sie.",
+  "legalAcceptAndContinue": "Akzeptieren und weiter",
+  "legalAcceptanceSaving": "Zustimmung wird gespeichert...",
+  "legalBetaNoticeTitle": "Geschlossene Beta-Version",
+  "legalBetaNoticeDescription": "Die App wird noch getestet. Funktionen können sich ändern und gelegentliche Fehler oder Unterbrechungen sind möglich.",
+  "legalTermsTitle": "Nutzungsbedingungen",
+  "legalPrivacyTitle": "Datenschutzerklärung",
+  "legalEffectiveDate": "Gültig ab: 24. Juli 2026",
+  "legalContactFooter": "Verantwortlicher: SwapStash · Kontakt: uros2004@gmail.com",
+  "legalTermsIntro": "Diese Bedingungen regeln die Nutzung der SwapStash-App. Mit der Nutzung stimmst du ihnen zu.",
+  "legalTermsEligibilityTitle": "1. Alter und Benutzerkonto",
+  "legalTermsEligibilityBody": "Die App darf von Personen ab 13 Jahren genutzt werden. Wenn das anwendbare Recht ein höheres Alter für eine eigenständige Einwilligung verlangt, muss ein minderjähriger Benutzer die Erlaubnis eines Elternteils oder Erziehungsberechtigten einholen. In Slowenien benötigen Benutzer unter 15 Jahren eine solche Erlaubnis. Benutzer müssen richtige Angaben machen, Zugangsdaten schützen und sind für Aktivitäten ihres Kontos verantwortlich.",
+  "legalTermsServiceTitle": "2. Zweck des Dienstes und Beta-Version",
+  "legalTermsServiceBody": "SwapStash ermöglicht Sammlungsverwaltung, Suche nach möglichen Tauschen, Angebote, Nachrichten, Übergabeabsprachen und Bewertungen abgeschlossener Tausche. SwapStash ist weder Verkäufer, Käufer, Vermittler, Versanddienst noch Partei einer Vereinbarung zwischen Benutzern. Während der Beta können Funktionen geändert oder vorübergehend nicht verfügbar sein.",
+  "legalTermsConductTitle": "3. Zulässige Nutzung",
+  "legalTermsConductBody": "Belästigung, Drohungen, Hassrede, Spam, Täuschung, Betrug, Identitätsmissbrauch, rechtswidrige Inhalte, Eingriffe in die App und nicht genehmigte automatisierte Nutzung sind verboten. Daten anderer Personen dürfen nicht ohne geeignete Rechtsgrundlage veröffentlicht werden.",
+  "legalTermsTradesTitle": "4. Tausche und Versand",
+  "legalTermsTradesBody": "Benutzer prüfen selbst Zustand, Echtheit und Wert der Gegenstände und vereinbaren Übergabe, Kosten und Sendungsverfolgung. SwapStash garantiert nicht die Erfüllung durch die andere Partei und ersetzt keine verlorenen, beschädigten oder strittigen Sendungen. Für persönliche Übergaben sollte ein sicherer öffentlicher Ort gewählt werden; Minderjährige sollten einen Erwachsenen einbeziehen.",
+  "legalTermsContentTitle": "5. Nachrichten und Benutzerinhalte",
+  "legalTermsContentBody": "Benutzer bleiben für eingegebene oder gesendete Inhalte verantwortlich. Aus Sicherheitsgründen, bei Meldungen, zur Missbrauchsbekämpfung oder zur Erfüllung gesetzlicher Pflichten kann SwapStash den Zugang einschränken, Inhalte entfernen oder Informationen an zuständige Behörden weitergeben, soweit dies notwendig und rechtmäßig ist.",
+  "legalTermsSuspensionTitle": "6. Blockierung und Maßnahmen",
+  "legalTermsSuspensionBody": "Benutzer können andere Benutzer blockieren oder melden. SwapStash kann ein Konto einschränken oder schließen, wenn ein begründeter Verdacht auf einen Verstoß, Missbrauch, ein Sicherheitsrisiko oder rechtswidriges Verhalten besteht. Soweit möglich, wird der Benutzer über den Grund informiert.",
+  "legalTermsLiabilityTitle": "7. Verfügbarkeit und Haftung",
+  "legalTermsLiabilityBody": "Der Dienst wird „wie besehen“ bereitgestellt. SwapStash bemüht sich um einen sicheren und zuverlässigen Betrieb, garantiert jedoch keine ununterbrochene Verfügbarkeit, vollständige Richtigkeit oder den Erfolg eines Tauschs. Haftungsbeschränkungen gelten nur im gesetzlich zulässigen Umfang und schließen keine zwingenden Rechte aus.",
+  "legalTermsChangesTitle": "8. Änderungen, Recht und Kontakt",
+  "legalTermsChangesBody": "Die Bedingungen können wegen neuer Funktionen, Sicherheitsanforderungen oder Rechtsänderungen aktualisiert werden. Bei wesentlichen Änderungen fordert die App eine erneute Zustimmung. Es gilt slowenisches Recht unter Wahrung zwingender Rechte nach dem Recht des Landes des Benutzers. Fragen an uros2004@gmail.com.",
+  "legalPrivacyIntro": "Diese Erklärung erläutert, welche personenbezogenen Daten SwapStash verarbeitet, warum sie verwendet werden und welche Rechte Benutzer haben.",
+  "legalPrivacyControllerTitle": "1. Verantwortlicher und Kontakt",
+  "legalPrivacyControllerBody": "Verantwortlicher für personenbezogene Daten ist SwapStash. Datenschutzfragen, Anträge oder Widersprüche können an uros2004@gmail.com gesendet werden.",
+  "legalPrivacyDataTitle": "2. Verarbeitete Daten",
+  "legalPrivacyDataBody": "Wir verarbeiten Konto- und Anmeldedaten, E-Mail-Adresse, Anzeigename, Land, Ort, Sprache, Profilfoto und Beschreibung; Sammlungs-, Karten- und Duplikatdaten; Angebote, Tauschstatus, Bewertungen, Nachrichten und Meldungen; freiwillig eingegebene Übergabe- oder Versanddaten; Push-Token sowie grundlegende technische und sicherheitsbezogene Daten.",
+  "legalPrivacyPurposeTitle": "3. Zwecke und Rechtsgrundlagen",
+  "legalPrivacyPurposeBody": "Daten werden zur Kontoverwaltung, Bereitstellung von Sammlungs- und Tauschfunktionen, Kommunikation, Benachrichtigungen, Missbrauchsabwehr, Bearbeitung von Meldungen, Sicherheit, Support und Erfüllung gesetzlicher Pflichten verwendet. Rechtsgrundlagen sind Vertragserfüllung, Einwilligung, berechtigte Sicherheits- und Verbesserungsinteressen sowie gesetzliche Pflichten.",
+  "legalPrivacyVisibilityTitle": "4. Sichtbarkeit und Weitergabe an andere Benutzer",
+  "legalPrivacyVisibilityBody": "Ein öffentliches Profil kann Name, Foto, Standort, Beschreibung, Bewertungen und Tauschstatistiken zeigen. Nachrichten sind für Gesprächsteilnehmer sichtbar. Adresse, Telefonnummer, Angaben zur persönlichen Übergabe und Sendungsverfolgung sind nur für Teilnehmer eines angenommenen oder abgeschlossenen Tauschs sichtbar. Meldungen sind im zulässigen Umfang für den Meldenden und für Administratoren sichtbar.",
+  "legalPrivacyRetentionTitle": "5. Speicherung und Löschung",
+  "legalPrivacyRetentionBody": "Daten werden so lange gespeichert, wie dies für Kontonutzung, Sicherheit, Streitbeilegung und gesetzliche Pflichten erforderlich ist. Benutzer können die Kontolöschung verlangen. Bestimmte Datensätze können begrenzt aufbewahrt werden, wenn dies zur Missbrauchsverhinderung, Rechtsdurchsetzung oder aufgrund gesetzlicher Pflichten nötig ist. Die lokale Zustimmung wird auf dem Gerät gespeichert.",
+  "legalPrivacyProcessorsTitle": "6. Dienstleister und Übermittlungen",
+  "legalPrivacyProcessorsBody": "Für Hosting, Anmeldung, Datenbank, Fotospeicherung und Push-Benachrichtigungen nutzen wir Firebase beziehungsweise Google Cloud und weitere technische Anbieter. Sie verarbeiten Daten nach Weisung und vertraglichen Pflichten. Bei Verarbeitung außerhalb des Europäischen Wirtschaftsraums werden geeignete Garantien wie Angemessenheitsbeschlüsse oder Standardvertragsklauseln verwendet.",
+  "legalPrivacyRightsTitle": "7. Rechte der Benutzer",
+  "legalPrivacyRightsBody": "Je nach Umständen kannst du Auskunft, Berichtigung, Löschung, Einschränkung oder Datenübertragbarkeit verlangen oder der Verarbeitung widersprechen. Eine Einwilligung kann für die Zukunft widerrufen werden. Anfragen an uros2004@gmail.com. Eine Beschwerde beim slowenischen Informationsbeauftragten oder der zuständigen Aufsichtsbehörde ist ebenfalls möglich.",
+  "legalPrivacyChildrenTitle": "8. Kinder und Jugendliche",
+  "legalPrivacyChildrenBody": "SwapStash richtet sich nicht an Kinder unter 13 Jahren. Benutzer im Alter von 13 oder 14 Jahren benötigen in Slowenien die Erlaubnis eines Elternteils oder Erziehungsberechtigten. Eltern oder Erziehungsberechtigte können Einsicht oder Löschung der Daten Minderjähriger verlangen. Minderjährige sollten ihre Wohnadresse nicht öffentlich teilen und persönliche Übergaben mit einem Erwachsenen durchführen.",
+  "legalPrivacySecurityTitle": "9. Sicherheit und Änderungen",
+  "legalPrivacySecurityBody": "Wir verwenden technische und organisatorische Maßnahmen wie Zugriffskontrollen, private Untersammlungen, Datenbankregeln, Blockierungen, Meldungen und sichere Anmeldung. Kein System ist vollständig sicher. Wesentliche Änderungen werden in der App angezeigt und können eine erneute Zustimmung erfordern.",
+  "aboutAppTitle": "Über die App",
+  "aboutAppDescription": "SwapStash hilft Sammlern, Sammlungen zu verwalten, passende Partner zu finden und Tausche sicherer abzuschließen.",
+  "aboutVersion": "App-Version",
+  "aboutVersionLoading": "Version wird geladen...",
+  "aboutOperator": "Verantwortlicher",
+  "aboutContact": "Kontakt und Support",
+  "aboutLegalSection": "Rechtliche Informationen",
+  "aboutSendFeedback": "Feedback senden",
+  "aboutFeedbackEmailSubject": "SwapStash Beta – Feedback",
+  "aboutFeedbackOpenError": "Die E-Mail-App konnte nicht geöffnet werden.",
+  "aboutBetaFooter": "Geschlossene Beta-Version · Daten und Funktionen können sich vor der öffentlichen Veröffentlichung ändern.",
+  "settingsAboutAndLegalTitle": "Über die App und Rechtliches",
+  "settingsAboutAppSubtitle": "Version, Kontakt, Feedback und Dokumente"
+}

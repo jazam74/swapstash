@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/theme/app_colors.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/core/theme/app_text_styles.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class CollectionStatsRow extends StatelessWidget {
   final int duplicateCount;
@@ -15,13 +16,14 @@ class CollectionStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Row(
       children: [
         Expanded(
           child: _CollectionStat(
             icon: Icons.swap_horiz,
-            label: 'Viški',
-            value: duplicateCount,
+            text: localizations.myCollectionsDuplicateCount(duplicateCount),
             color: AppColors.warning,
           ),
         ),
@@ -29,8 +31,7 @@ class CollectionStatsRow extends StatelessWidget {
         Expanded(
           child: _CollectionStat(
             icon: Icons.remove_circle_outline,
-            label: 'Manjka',
-            value: missingCount,
+            text: localizations.myCollectionsMissingCount(missingCount),
             color: AppColors.error,
           ),
         ),
@@ -41,14 +42,12 @@ class CollectionStatsRow extends StatelessWidget {
 
 class _CollectionStat extends StatelessWidget {
   final IconData icon;
-  final String label;
-  final int value;
+  final String text;
   final Color color;
 
   const _CollectionStat({
     required this.icon,
-    required this.label,
-    required this.value,
+    required this.text,
     required this.color,
   });
 
@@ -60,7 +59,7 @@ class _CollectionStat extends StatelessWidget {
         const SizedBox(width: AppSpacing.xs),
         Expanded(
           child: Text(
-            '$value $label',
+            text,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.caption.copyWith(

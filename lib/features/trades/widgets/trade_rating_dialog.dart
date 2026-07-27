@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/services/trade_rating_service.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class TradeRatingDialogResult {
   final int stars;
@@ -35,14 +36,16 @@ class _TradeRatingDialogState extends State<TradeRatingDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return AlertDialog(
-      title: const Text('Oceni uporabnika'),
+      title: Text(localizations.tradeRateUser),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Kako si zadovoljen z opravljeno menjavo?',
+            Text(
+              localizations.tradeRatingQuestion,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -51,7 +54,7 @@ class _TradeRatingDialogState extends State<TradeRatingDialog> {
               children: [
                 for (var value = 1; value <= 5; value++)
                   IconButton(
-                    tooltip: '$value od 5',
+                    tooltip: localizations.tradeStarsOutOfFive(value),
                     onPressed: () {
                       setState(() {
                         _stars = value;
@@ -74,10 +77,10 @@ class _TradeRatingDialogState extends State<TradeRatingDialog> {
               maxLength: TradeRatingService.maximumCommentLength,
               maxLines: 4,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Komentar (neobvezno)',
-                hintText: 'Npr. hiter dogovor in odlično ohranjene kartice.',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: localizations.tradeOptionalComment,
+                hintText: localizations.tradeCommentHint,
+                border: const OutlineInputBorder(),
               ),
             ),
           ],
@@ -88,7 +91,7 @@ class _TradeRatingDialogState extends State<TradeRatingDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Prekliči'),
+          child: Text(localizations.cancel),
         ),
         FilledButton.icon(
           onPressed: () {
@@ -100,7 +103,7 @@ class _TradeRatingDialogState extends State<TradeRatingDialog> {
             );
           },
           icon: const Icon(Icons.star_rounded),
-          label: const Text('Oddaj oceno'),
+          label: Text(localizations.tradeSubmitRating),
         ),
       ],
     );

@@ -1,0 +1,25 @@
+SWAPSTASH – POPRAVEK ŽIVLJENJSKEGA CIKLA PRIJAVNEGA OKNA
+
+Odpravljena je Flutter assertion napaka:
+
+'_dependents.isEmpty': is not true
+
+Vzrok:
+TextEditingController se je odstranil, medtem ko je bil dialog med
+izhodno animacijo še vedno v drevesu gradnikov.
+
+ZIP razširi v:
+C:\Users\urosm\Documents\swapstash
+
+Nato zaženi:
+
+dart format lib/features/safety/report_dialog.dart
+flutter analyze
+
+Aplikacijo nato popolnoma ustavi in ponovno zaženi.
+Hot reload ni dovolj.
+
+Ponovno preveri:
+- prijavo menjave,
+- prijavo uporabnika,
+- dolg pritisk in prijavo sporočila.

@@ -1,0 +1,35 @@
+SWAPSTASH – PREGLED PREOSTALE VEČJEZIČNOSTI
+
+PREVEDENO V TEM PAKETU
+- spodnja navigacija, vključno z zavihkom Zbiratelji
+- urejanje profila
+- iskanje zbirateljev
+- javni profil zbiratelja
+- ocene in javni komentarji
+- rezervno ime neznanega sogovornika
+- dinamični opisi statusov in dejanj menjav
+
+NAMERNO NI PREVEDENO
+- imena jezikov v izbirniku (Slovenščina, English, Deutsch, Hrvatski),
+  ker so prikazana v lastnem jeziku
+- CSV glavi »ime« in »slika«, ker sta podprta uvozna aliasa
+- predlagana kategorija »Športne kartice«, ker gre za podatek zbirke,
+  ne za besedilo uporabniškega vmesnika
+- tehnična razvojna stran dev/seed_test_catalog_page.dart
+- neuporabljeni stari zasloni features/navigation/main_screen.dart in
+  features/items, ki niso dosegljivi iz trenutne aplikacije
+- notranja validacijska sporočila v servisih; običajni uporabniški zasloni
+  jih že prikazujejo z lokaliziranim uvodom ali varnim sporočilom
+
+NAMESTITEV
+ZIP razširi v:
+C:\Users\urosm\Documents\swapstash
+
+Nato zaženi:
+flutter gen-l10n
+dart format lib/features/home lib/features/profile lib/features/users lib/features/messages lib/features/dashboard lib/features/trades lib/core/models/conversation.dart
+flutter analyze
+
+Aplikacijo popolnoma ponovno zaženi:
+q
+flutter run

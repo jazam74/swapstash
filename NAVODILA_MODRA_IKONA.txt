@@ -1,0 +1,52 @@
+SWAPSTASH – MODRA KONČNA IKONA
+
+Izbrana ikona prikazuje:
+- zbirateljsko karto,
+- zbirateljski kovanec,
+- znamko,
+- dve beli puščici za menjavo.
+
+NAMESTITEV
+
+1. ZIP razširi neposredno v:
+
+C:\Users\urosm\Documents\swapstash
+
+2. V PowerShellu zaženi:
+
+Set-ExecutionPolicy -Scope Process Bypass
+.\NAMESTI_MODRO_KONCNO_IKONO.ps1
+
+Skript bo:
+- shranil varnostno kopijo izven projekta;
+- zamenjal prejšnjo zeleno ikono;
+- ustvaril Android launcher ikone;
+- izvedel flutter clean, pub get in analyze.
+
+PREVERJANJE
+
+flutter run -d emulator-5554
+
+Če emulator še vedno prikazuje staro ikono:
+
+$adb = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe"
+& $adb -s emulator-5554 uninstall net.swapstash.app
+flutter run -d emulator-5554
+
+NOVI AAB
+
+Po potrditvi ikone:
+
+.\ZGRADI_RELEASE_AAB.ps1
+
+Novi podpisani AAB bo tukaj:
+
+build\app\outputs\bundle\release\app-release.aab
+
+GOOGLE PLAY
+
+Za Store Listing uporabi:
+
+swapstash_play_store_icon_512_blue.png
+
+Opombo stare skripte, da je treba urediti končno ikono, lahko prezreš.

@@ -1,0 +1,631 @@
+﻿number,name,imageUrl,rarity,attr_country,attr_series,attr_matchup,attr_set,attr_year
+001,Lionel Messi,,RARE,Argentina,Golden Baller,,Base Collection,2026
+002,Vinícius Júnior,,RARE,Brazil,Golden Baller,,Base Collection,2026
+003,Mohamed Salah,,RARE,Egypt,Golden Baller,,Base Collection,2026
+004,Harry Kane,,RARE,England,Golden Baller,,Base Collection,2026
+005,Kylian Mbappé,,RARE,France,Golden Baller,,Base Collection,2026
+006,Heung-min Son,,RARE,Korea Republic,Golden Baller,,Base Collection,2026
+007,Erling Haaland,,RARE,Norway,Golden Baller,,Base Collection,2026
+008,Cristiano Ronaldo,,RARE,Portugal,Golden Baller,,Base Collection,2026
+009,Lamine Yamal,,RARE,Spain,Golden Baller,,Base Collection,2026
+010,Rayan Aït-Nouri,,SPECIAL 1,Algeria,Fan Favourite,,Base Collection,2026
+011,Team Crest,,SPECIAL 2,Algeria,Team Crest,,Base Collection,2026
+012,Riyad Mahrez,,SPECIAL 1,Algeria,Icon,,Base Collection,2026
+013,Alexis Guendouz,,CORE,Algeria,Hero,,Base Collection,2026
+014,Ramy Bensebaini,,CORE,Algeria,Hero,,Base Collection,2026
+015,Youcef Atal,,CORE,Algeria,Hero,,Base Collection,2026
+016,Aïssa Mandi,,CORE,Algeria,Hero,,Base Collection,2026
+017,Nabil Bentaleb,,CORE,Algeria,Hero,,Base Collection,2026
+018,Saïd Benrahma,,CORE,Algeria,Hero,,Base Collection,2026
+019,Amine Gouiri,,CORE,Algeria,Hero,,Base Collection,2026
+020,Mohamed Amoura,,CORE,Algeria,Hero,,Base Collection,2026
+021,Baghdad Bounedjah,,CORE,Algeria,Hero,,Base Collection,2026
+022,Julián Álvarez,,SPECIAL 1,Argentina,Fan Favourite,,Base Collection,2026
+023,Team Crest,,SPECIAL 2,Argentina,Team Crest,,Base Collection,2026
+024,Lionel Messi,,SPECIAL 1,Argentina,Icon,,Base Collection,2026
+025,Emiliano Martínez,,CORE,Argentina,Hero,,Base Collection,2026
+026,Nahuel Molina,,CORE,Argentina,Hero,,Base Collection,2026
+027,Cristian Romero,,CORE,Argentina,Hero,,Base Collection,2026
+028,Nicolás Otamendi,,CORE,Argentina,Hero,,Base Collection,2026
+029,Enzo Fernández,,CORE,Argentina,Hero,,Base Collection,2026
+030,Alexis Mac Allister,,CORE,Argentina,Hero,,Base Collection,2026
+031,Rodrigo De Paul,,CORE,Argentina,Hero,,Base Collection,2026
+032,Giuliano Simeone,,CORE,Argentina,Hero,,Base Collection,2026
+033,Lautaro Martínez,,CORE,Argentina,Hero,,Base Collection,2026
+034,Harry Souttar,,SPECIAL 1,Australia,Fan Favourite,,Base Collection,2026
+035,Team Crest,,SPECIAL 2,Australia,Team Crest,,Base Collection,2026
+036,Mathew Ryan,,SPECIAL 1,Australia,Icon,,Base Collection,2026
+037,Alessandro Circati,,CORE,Australia,Hero,,Base Collection,2026
+038,Jordan Bos,,CORE,Australia,Hero,,Base Collection,2026
+039,Lewis Miller,,CORE,Australia,Hero,,Base Collection,2026
+040,Miloš Degenek,,CORE,Australia,Hero,,Base Collection,2026
+041,Jackson Irvine,,CORE,Australia,Hero,,Base Collection,2026
+042,Riley McGree,,CORE,Australia,Hero,,Base Collection,2026
+043,Aiden O'Neill,,CORE,Australia,Hero,,Base Collection,2026
+044,Connor Metcalfe,,CORE,Australia,Hero,,Base Collection,2026
+045,Craig Goodwin,,CORE,Australia,Hero,,Base Collection,2026
+046,Marko Arnautović,,SPECIAL 1,Austria,Fan Favourite,,Base Collection,2026
+047,Team Crest,,SPECIAL 2,Austria,Team Crest,,Base Collection,2026
+048,David Alaba,,SPECIAL 1,Austria,Icon,,Base Collection,2026
+049,Alexander Schlager,,CORE,Austria,Hero,,Base Collection,2026
+050,Kevin Danso,,CORE,Austria,Hero,,Base Collection,2026
+051,Philipp Lienhart,,CORE,Austria,Hero,,Base Collection,2026
+052,Konrad Laimer,,CORE,Austria,Hero,,Base Collection,2026
+053,Nicolas Seiwald,,CORE,Austria,Hero,,Base Collection,2026
+054,Marcel Sabitzer,,CORE,Austria,Hero,,Base Collection,2026
+055,Florian Grillitsch,,CORE,Austria,Hero,,Base Collection,2026
+056,Christoph Baumgartner,,CORE,Austria,Hero,,Base Collection,2026
+057,Michael Gregoritsch,,CORE,Austria,Hero,,Base Collection,2026
+058,Youri Tielemans,,SPECIAL 1,Belgium,Fan Favourite,,Base Collection,2026
+059,Team Crest,,SPECIAL 2,Belgium,Team Crest,,Base Collection,2026
+060,Kevin De Bruyne,,SPECIAL 1,Belgium,Icon,,Base Collection,2026
+061,Thibaut Courtois,,CORE,Belgium,Hero,,Base Collection,2026
+062,Arthur Theate,,CORE,Belgium,Hero,,Base Collection,2026
+063,Timothy Castagne,,CORE,Belgium,Hero,,Base Collection,2026
+064,Maxim De Cuyper,,CORE,Belgium,Hero,,Base Collection,2026
+065,Amadou Onana,,CORE,Belgium,Hero,,Base Collection,2026
+066,Jérémy Doku,,CORE,Belgium,Hero,,Base Collection,2026
+067,Charles De Ketelaere,,CORE,Belgium,Hero,,Base Collection,2026
+068,Leandro Trossard,,CORE,Belgium,Hero,,Base Collection,2026
+069,Romelu Lukaku,,CORE,Belgium,Hero,,Base Collection,2026
+070,Marquinhos,,SPECIAL 1,Brazil,Fan Favourite,,Base Collection,2026
+071,Team Crest,,SPECIAL 2,Brazil,Team Crest,,Base Collection,2026
+072,Vinícius Júnior,,SPECIAL 1,Brazil,Icon,,Base Collection,2026
+073,Alisson,,CORE,Brazil,Hero,,Base Collection,2026
+074,Danilo,,CORE,Brazil,Hero,,Base Collection,2026
+075,Éder Militão,,CORE,Brazil,Hero,,Base Collection,2026
+076,Gabriel Magalhães,,CORE,Brazil,Hero,,Base Collection,2026
+077,Casemiro,,CORE,Brazil,Hero,,Base Collection,2026
+078,Bruno Guimarães,,CORE,Brazil,Hero,,Base Collection,2026
+079,Rodrygo,,CORE,Brazil,Hero,,Base Collection,2026
+080,Matheus Cunha,,CORE,Brazil,Hero,,Base Collection,2026
+081,Raphinha,,CORE,Brazil,Hero,,Base Collection,2026
+082,Jonathan David,,SPECIAL 1,Canada,Fan Favourite,,Base Collection,2026
+083,Team Crest,,SPECIAL 2,Canada,Team Crest,,Base Collection,2026
+084,Alphonso Davies,,SPECIAL 1,Canada,Icon,,Base Collection,2026
+085,Dayne St. Clair,,CORE,Canada,Hero,,Base Collection,2026
+086,Richie Laryea,,CORE,Canada,Hero,,Base Collection,2026
+087,Derek Cornelius,,CORE,Canada,Hero,,Base Collection,2026
+088,Stephen Eustáquio,,CORE,Canada,Hero,,Base Collection,2026
+089,Ismaël Koné,,CORE,Canada,Hero,,Base Collection,2026
+090,Jonathan Osorio,,CORE,Canada,Hero,,Base Collection,2026
+091,Jacob Shaffelburg,,CORE,Canada,Hero,,Base Collection,2026
+092,Tajon Buchanan,,CORE,Canada,Hero,,Base Collection,2026
+093,Cyle Larin,,CORE,Canada,Hero,,Base Collection,2026
+094,Vozinha,,SPECIAL 1,Cape Verde,Fan Favourite,,Base Collection,2026
+095,Team Crest,,SPECIAL 2,Cape Verde,Team Crest,,Base Collection,2026
+096,Ryan Mendes,,SPECIAL 1,Cape Verde,Icon,,Base Collection,2026
+097,Logan Costa,,CORE,Cape Verde,Hero,,Base Collection,2026
+098,Pico,,CORE,Cape Verde,Hero,,Base Collection,2026
+099,Steven Moreira,,CORE,Cape Verde,Hero,,Base Collection,2026
+100,João Paulo,,CORE,Cape Verde,Hero,,Base Collection,2026
+101,Kevin Pina,,CORE,Cape Verde,Hero,,Base Collection,2026
+102,Jamiro Monteiro,,CORE,Cape Verde,Hero,,Base Collection,2026
+103,Yannick Semedo,,CORE,Cape Verde,Hero,,Base Collection,2026
+104,Jovane Cabral,,CORE,Cape Verde,Hero,,Base Collection,2026
+105,Dailon Livramento,,CORE,Cape Verde,Hero,,Base Collection,2026
+106,Luis Díaz,,SPECIAL 1,Colombia,Fan Favourite,,Base Collection,2026
+107,Team Crest,,SPECIAL 2,Colombia,Team Crest,,Base Collection,2026
+108,James Rodríguez,,SPECIAL 1,Colombia,Icon,,Base Collection,2026
+109,Camilo Vargas,,CORE,Colombia,Hero,,Base Collection,2026
+110,Dávinson Sánchez,,CORE,Colombia,Hero,,Base Collection,2026
+111,Yerry Mina,,CORE,Colombia,Hero,,Base Collection,2026
+112,Daniel Muñoz,,CORE,Colombia,Hero,,Base Collection,2026
+113,Jefferson Lerma,,CORE,Colombia,Hero,,Base Collection,2026
+114,Richard Ríos,,CORE,Colombia,Hero,,Base Collection,2026
+115,Juan Fernando Quintero,,CORE,Colombia,Hero,,Base Collection,2026
+116,Jhon Arias,,CORE,Colombia,Hero,,Base Collection,2026
+117,Luis Suárez,,CORE,Colombia,Hero,,Base Collection,2026
+118,Ivan Perišić,,SPECIAL 1,Croatia,Fan Favourite,,Base Collection,2026
+119,Team Crest,,SPECIAL 2,Croatia,Team Crest,,Base Collection,2026
+120,Luka Modrić,,SPECIAL 1,Croatia,Icon,,Base Collection,2026
+121,Dominik Livaković,,CORE,Croatia,Hero,,Base Collection,2026
+122,Duje Ćaleta-Car,,CORE,Croatia,Hero,,Base Collection,2026
+123,Joško Gvardiol,,CORE,Croatia,Hero,,Base Collection,2026
+124,Josip Stanišić,,CORE,Croatia,Hero,,Base Collection,2026
+125,Mateo Kovačić,,CORE,Croatia,Hero,,Base Collection,2026
+126,Lovro Majer,,CORE,Croatia,Hero,,Base Collection,2026
+127,Mario Pašalić,,CORE,Croatia,Hero,,Base Collection,2026
+128,Ante Budimir,,CORE,Croatia,Hero,,Base Collection,2026
+129,Andrej Kramarić,,CORE,Croatia,Hero,,Base Collection,2026
+130,Juriën Gaari,,SPECIAL 1,Curaçao,Fan Favourite,,Base Collection,2026
+131,Team Crest,,SPECIAL 2,Curaçao,Team Crest,,Base Collection,2026
+132,Leandro Bacuna,,SPECIAL 1,Curaçao,Icon,,Base Collection,2026
+133,Eloy Room,,CORE,Curaçao,Hero,,Base Collection,2026
+134,Sherel Floranus,,CORE,Curaçao,Hero,,Base Collection,2026
+135,Roshon van Eijma,,CORE,Curaçao,Hero,,Base Collection,2026
+136,Armando Obispo,,CORE,Curaçao,Hero,,Base Collection,2026
+137,Livano Comenencia,,CORE,Curaçao,Hero,,Base Collection,2026
+138,Juninho Bacuna,,CORE,Curaçao,Hero,,Base Collection,2026
+139,Kenji Gorré,,CORE,Curaçao,Hero,,Base Collection,2026
+140,Sontje Hansen,,CORE,Curaçao,Hero,,Base Collection,2026
+141,Jearl Margaritha,,CORE,Curaçao,Hero,,Base Collection,2026
+142,Moisés Caicedo,,SPECIAL 1,Ecuador,Fan Favourite,,Base Collection,2026
+143,Team Crest,,SPECIAL 2,Ecuador,Team Crest,,Base Collection,2026
+144,Enner Valencia,,SPECIAL 1,Ecuador,Icon,,Base Collection,2026
+145,Hernán Galíndez,,CORE,Ecuador,Hero,,Base Collection,2026
+146,Piero Hincapié,,CORE,Ecuador,Hero,,Base Collection,2026
+147,Pervis Estupiñán,,CORE,Ecuador,Hero,,Base Collection,2026
+148,Willian Pacho,,CORE,Ecuador,Hero,,Base Collection,2026
+149,Ángelo Preciado,,CORE,Ecuador,Hero,,Base Collection,2026
+150,Joel Ordóñez,,CORE,Ecuador,Hero,,Base Collection,2026
+151,Alan Franco,,CORE,Ecuador,Hero,,Base Collection,2026
+152,Gonzalo Plata,,CORE,Ecuador,Hero,,Base Collection,2026
+153,Kevin Rodríguez,,CORE,Ecuador,Hero,,Base Collection,2026
+154,Omar Marmoush,,SPECIAL 1,Egypt,Fan Favourite,,Base Collection,2026
+155,Team Crest,,SPECIAL 2,Egypt,Team Crest,,Base Collection,2026
+156,Mohamed Salah,,SPECIAL 1,Egypt,Icon,,Base Collection,2026
+157,Mohamed El Shenawy,,CORE,Egypt,Hero,,Base Collection,2026
+158,Mohamed Hany,,CORE,Egypt,Hero,,Base Collection,2026
+159,Mohamed Abdelmonem,,CORE,Egypt,Hero,,Base Collection,2026
+160,Ramy Rabia,,CORE,Egypt,Hero,,Base Collection,2026
+161,Marwan Attia,,CORE,Egypt,Hero,,Base Collection,2026
+162,Zizo,,CORE,Egypt,Hero,,Base Collection,2026
+163,Hamdy Fathy,,CORE,Egypt,Hero,,Base Collection,2026
+164,Mostafa Mohamed,,CORE,Egypt,Hero,,Base Collection,2026
+165,Trézéguet,,CORE,Egypt,Hero,,Base Collection,2026
+166,Jude Bellingham,,SPECIAL 1,England,Fan Favourite,,Base Collection,2026
+167,Team Crest,,SPECIAL 2,England,Team Crest,,Base Collection,2026
+168,Harry Kane,,SPECIAL 1,England,Icon,,Base Collection,2026
+169,Jordan Pickford,,CORE,England,Hero,,Base Collection,2026
+170,Reece James,,CORE,England,Hero,,Base Collection,2026
+171,John Stones,,CORE,England,Hero,,Base Collection,2026
+172,Declan Rice,,CORE,England,Hero,,Base Collection,2026
+173,Jordan Henderson,,CORE,England,Hero,,Base Collection,2026
+174,Phil Foden,,CORE,England,Hero,,Base Collection,2026
+175,Bukayo Saka,,CORE,England,Hero,,Base Collection,2026
+176,Cole Palmer,,CORE,England,Hero,,Base Collection,2026
+177,Marcus Rashford,,CORE,England,Hero,,Base Collection,2026
+178,Ousmane Dembélé,,SPECIAL 1,France,Fan Favourite,,Base Collection,2026
+179,Team Crest,,SPECIAL 2,France,Team Crest,,Base Collection,2026
+180,Kylian Mbappé,,SPECIAL 1,France,Icon,,Base Collection,2026
+181,Mike Maignan,,CORE,France,Hero,,Base Collection,2026
+182,William Saliba,,CORE,France,Hero,,Base Collection,2026
+183,Jules Koundé,,CORE,France,Hero,,Base Collection,2026
+184,Théo Hernández,,CORE,France,Hero,,Base Collection,2026
+185,Aurélien Tchouaméni,,CORE,France,Hero,,Base Collection,2026
+186,Eduardo Camavinga,,CORE,France,Hero,,Base Collection,2026
+187,Bradley Barcola,,CORE,France,Hero,,Base Collection,2026
+188,Marcus Thuram,,CORE,France,Hero,,Base Collection,2026
+189,Randal Kolo Muani,,CORE,France,Hero,,Base Collection,2026
+190,Jamal Musiala,,SPECIAL 1,Germany,Fan Favourite,,Base Collection,2026
+191,Team Crest,,SPECIAL 2,Germany,Team Crest,,Base Collection,2026
+192,Joshua Kimmich,,SPECIAL 1,Germany,Icon,,Base Collection,2026
+193,Marc-André ter Stegen,,CORE,Germany,Hero,,Base Collection,2026
+194,Antonio Rüdiger,,CORE,Germany,Hero,,Base Collection,2026
+195,Jonathan Tah,,CORE,Germany,Hero,,Base Collection,2026
+196,Felix Nmecha,,CORE,Germany,Hero,,Base Collection,2026
+197,Leon Goretzka,,CORE,Germany,Hero,,Base Collection,2026
+198,Florian Wirtz,,CORE,Germany,Hero,,Base Collection,2026
+199,Serge Gnabry,,CORE,Germany,Hero,,Base Collection,2026
+200,Kai Havertz,,CORE,Germany,Hero,,Base Collection,2026
+201,Leroy Sané,,CORE,Germany,Hero,,Base Collection,2026
+202,Thomas Partey,,SPECIAL 1,Ghana,Fan Favourite,,Base Collection,2026
+203,Team Crest,,SPECIAL 2,Ghana,Team Crest,,Base Collection,2026
+204,Mohammed Kudus,,SPECIAL 1,Ghana,Icon,,Base Collection,2026
+205,Lawrence Ati Zigi,,CORE,Ghana,Hero,,Base Collection,2026
+206,Alidu Seidu,,CORE,Ghana,Hero,,Base Collection,2026
+207,Alexander Djiku,,CORE,Ghana,Hero,,Base Collection,2026
+208,Gideon Mensah,,CORE,Ghana,Hero,,Base Collection,2026
+209,Caleb Yirenkyi,,CORE,Ghana,Hero,,Base Collection,2026
+210,Abdul Issahaku Fatawu,,CORE,Ghana,Hero,,Base Collection,2026
+211,Kamaldeen Sulemana,,CORE,Ghana,Hero,,Base Collection,2026
+212,Jordan Ayew,,CORE,Ghana,Hero,,Base Collection,2026
+213,Antoine Semenyo,,CORE,Ghana,Hero,,Base Collection,2026
+214,Frantzdy Pierrot,,SPECIAL 1,Haiti,Fan Favourite,,Base Collection,2026
+215,Team Crest,,SPECIAL 2,Haiti,Team Crest,,Base Collection,2026
+216,Duckens Nazon,,SPECIAL 1,Haiti,Icon,,Base Collection,2026
+217,Johny Placide,,CORE,Haiti,Hero,,Base Collection,2026
+218,Ricardo Adé,,CORE,Haiti,Hero,,Base Collection,2026
+219,Carlens Arcus,,CORE,Haiti,Hero,,Base Collection,2026
+220,Hannes Delcroix,,CORE,Haiti,Hero,,Base Collection,2026
+221,Leverton Pierre,,CORE,Haiti,Hero,,Base Collection,2026
+222,Danley Jean Jacques,,CORE,Haiti,Hero,,Base Collection,2026
+223,Jean-Ricner Bellegarde,,CORE,Haiti,Hero,,Base Collection,2026
+224,Ruben Providence,,CORE,Haiti,Hero,,Base Collection,2026
+225,Don Deedson Louicius,,CORE,Haiti,Hero,,Base Collection,2026
+226,Mehdi Taremi,,SPECIAL 1,Iran,Fan Favourite,,Base Collection,2026
+227,Team Crest,,SPECIAL 2,Iran,Team Crest,,Base Collection,2026
+228,Sardar Azmoun,,SPECIAL 1,Iran,Icon,,Base Collection,2026
+229,Alireza Beiranvand,,CORE,Iran,Hero,,Base Collection,2026
+230,Shoja Khalilzadeh,,CORE,Iran,Hero,,Base Collection,2026
+231,Milad Mohammadi,,CORE,Iran,Hero,,Base Collection,2026
+232,Ramin Rezaeian,,CORE,Iran,Hero,,Base Collection,2026
+233,Hossein Kanaani,,CORE,Iran,Hero,,Base Collection,2026
+234,Saeid Ezatolahi,,CORE,Iran,Hero,,Base Collection,2026
+235,Saman Ghoddos,,CORE,Iran,Hero,,Base Collection,2026
+236,Mohammad Mohebi,,CORE,Iran,Hero,,Base Collection,2026
+237,Alireza Jahanbakhsh,,CORE,Iran,Hero,,Base Collection,2026
+238,Franck Kessié,,SPECIAL 1,Ivory Coast,Fan Favourite,,Base Collection,2026
+239,Team Crest,,SPECIAL 2,Ivory Coast,Team Crest,,Base Collection,2026
+240,Sébastien Haller,,SPECIAL 1,Ivory Coast,Icon,,Base Collection,2026
+241,Yahia Fofana,,CORE,Ivory Coast,Hero,,Base Collection,2026
+242,Ghislain Konan,,CORE,Ivory Coast,Hero,,Base Collection,2026
+243,Odilon Kossounou,,CORE,Ivory Coast,Hero,,Base Collection,2026
+244,Evan N'Dicka,,CORE,Ivory Coast,Hero,,Base Collection,2026
+245,Wilfried Singo,,CORE,Ivory Coast,Hero,,Base Collection,2026
+246,Ibrahim Sangaré,,CORE,Ivory Coast,Hero,,Base Collection,2026
+247,Nicolas Pépé,,CORE,Ivory Coast,Hero,,Base Collection,2026
+248,Simon Adingra,,CORE,Ivory Coast,Hero,,Base Collection,2026
+249,Oumar Diakité,,CORE,Ivory Coast,Hero,,Base Collection,2026
+250,Takumi Minamino,,SPECIAL 1,Japan,Fan Favourite,,Base Collection,2026
+251,Team Crest,,SPECIAL 2,Japan,Team Crest,,Base Collection,2026
+252,Takefusa Kubo,,SPECIAL 1,Japan,Icon,,Base Collection,2026
+253,Zion Suzuki,,CORE,Japan,Hero,,Base Collection,2026
+254,Tsuyoshi Watanabe,,CORE,Japan,Hero,,Base Collection,2026
+255,Kaishu Sano,,CORE,Japan,Hero,,Base Collection,2026
+256,Ao Tanaka,,CORE,Japan,Hero,,Base Collection,2026
+257,Daichi Kamada,,CORE,Japan,Hero,,Base Collection,2026
+258,Ritsu Doan,,CORE,Japan,Hero,,Base Collection,2026
+259,Keito Nakamura,,CORE,Japan,Hero,,Base Collection,2026
+260,Shuto Machino,,CORE,Japan,Hero,,Base Collection,2026
+261,Ayase Ueda,,CORE,Japan,Hero,,Base Collection,2026
+262,Yazan al-Naimat,,SPECIAL 1,Jordan,Fan Favourite,,Base Collection,2026
+263,Team Crest,,SPECIAL 2,Jordan,Team Crest,,Base Collection,2026
+264,Musa al-Taamari,,SPECIAL 1,Jordan,Icon,,Base Collection,2026
+265,Yazeed Abulaila,,CORE,Jordan,Hero,,Base Collection,2026
+266,Mohammad Abu Hashish,,CORE,Jordan,Hero,,Base Collection,2026
+267,Yazan al-Arab,,CORE,Jordan,Hero,,Base Collection,2026
+268,Abdallah Nasib,,CORE,Jordan,Hero,,Base Collection,2026
+269,Ibrahim Saadeh,,CORE,Jordan,Hero,,Base Collection,2026
+270,Nizar al-Rashdan,,CORE,Jordan,Hero,,Base Collection,2026
+271,Noor al-Rawabdeh,,CORE,Jordan,Hero,,Base Collection,2026
+272,Mahmoud al-Mardi,,CORE,Jordan,Hero,,Base Collection,2026
+273,Ali Olwan,,CORE,Jordan,Hero,,Base Collection,2026
+274,Min-jae Kim,,SPECIAL 1,Korea Republic,Fan Favourite,,Base Collection,2026
+275,Team Crest,,SPECIAL 2,Korea Republic,Team Crest,,Base Collection,2026
+276,Heung-min Son,,SPECIAL 1,Korea Republic,Icon,,Base Collection,2026
+277,Hyeon-woo Jo,,CORE,Korea Republic,Hero,,Base Collection,2026
+278,Young-woo Seol,,CORE,Korea Republic,Hero,,Base Collection,2026
+279,Yu-min Cho,,CORE,Korea Republic,Hero,,Base Collection,2026
+280,Tae-seok Lee,,CORE,Korea Republic,Hero,,Base Collection,2026
+281,In-beom Hwang,,CORE,Korea Republic,Hero,,Base Collection,2026
+282,Jae-sung Lee,,CORE,Korea Republic,Hero,,Base Collection,2026
+283,Kang-in Lee,,CORE,Korea Republic,Hero,,Base Collection,2026
+284,Hyeon-gyu Oh,,CORE,Korea Republic,Hero,,Base Collection,2026
+285,Hee-chan Hwang,,CORE,Korea Republic,Hero,,Base Collection,2026
+286,Edson Álvarez,,SPECIAL 1,Mexico,Fan Favourite,,Base Collection,2026
+287,Team Crest,,SPECIAL 2,Mexico,Team Crest,,Base Collection,2026
+288,Raúl Jiménez,,SPECIAL 1,Mexico,Icon,,Base Collection,2026
+289,Luis Malagón,,CORE,Mexico,Hero,,Base Collection,2026
+290,Israel Reyes,,CORE,Mexico,Hero,,Base Collection,2026
+291,Johan Vásquez,,CORE,Mexico,Hero,,Base Collection,2026
+292,César Montes,,CORE,Mexico,Hero,,Base Collection,2026
+293,Jesús Gallardo,,CORE,Mexico,Hero,,Base Collection,2026
+294,Carlos Rodríguez,,CORE,Mexico,Hero,,Base Collection,2026
+295,Orbelín Pineda,,CORE,Mexico,Hero,,Base Collection,2026
+296,Hirving Lozano,,CORE,Mexico,Hero,,Base Collection,2026
+297,Santiago Giménez,,CORE,Mexico,Hero,,Base Collection,2026
+298,Youssef En-Nesyri,,SPECIAL 1,Morocco,Fan Favourite,,Base Collection,2026
+299,Team Crest,,SPECIAL 2,Morocco,Team Crest,,Base Collection,2026
+300,Achraf Hakimi,,SPECIAL 1,Morocco,Icon,,Base Collection,2026
+301,Yassine Bounou,,CORE,Morocco,Hero,,Base Collection,2026
+302,Noussair Mazraoui,,CORE,Morocco,Hero,,Base Collection,2026
+303,Nayef Aguerd,,CORE,Morocco,Hero,,Base Collection,2026
+304,Sofyan Amrabat,,CORE,Morocco,Hero,,Base Collection,2026
+305,Eliesse Ben Seghir,,CORE,Morocco,Hero,,Base Collection,2026
+306,Ismael Saibari,,CORE,Morocco,Hero,,Base Collection,2026
+307,Brahim Díaz,,CORE,Morocco,Hero,,Base Collection,2026
+308,Abde Ezzalzouli,,CORE,Morocco,Hero,,Base Collection,2026
+309,Ayoub El Kaabi,,CORE,Morocco,Hero,,Base Collection,2026
+310,Memphis Depay,,SPECIAL 1,Netherlands,Fan Favourite,,Base Collection,2026
+311,Team Crest,,SPECIAL 2,Netherlands,Team Crest,,Base Collection,2026
+312,Virgil van Dijk,,SPECIAL 1,Netherlands,Icon,,Base Collection,2026
+313,Bart Verbruggen,,CORE,Netherlands,Hero,,Base Collection,2026
+314,Nathan Aké,,CORE,Netherlands,Hero,,Base Collection,2026
+315,Jeremie Frimpong,,CORE,Netherlands,Hero,,Base Collection,2026
+316,Denzel Dumfries,,CORE,Netherlands,Hero,,Base Collection,2026
+317,Tijjani Reijnders,,CORE,Netherlands,Hero,,Base Collection,2026
+318,Ryan Gravenberch,,CORE,Netherlands,Hero,,Base Collection,2026
+319,Cody Gakpo,,CORE,Netherlands,Hero,,Base Collection,2026
+320,Donyell Malen,,CORE,Netherlands,Hero,,Base Collection,2026
+321,Wout Weghorst,,CORE,Netherlands,Hero,,Base Collection,2026
+322,Marko Stamenic,,SPECIAL 1,New Zealand,Fan Favourite,,Base Collection,2026
+323,Team Crest,,SPECIAL 2,New Zealand,Team Crest,,Base Collection,2026
+324,Chris Wood,,SPECIAL 1,New Zealand,Icon,,Base Collection,2026
+325,Max Crocombe,,CORE,New Zealand,Hero,,Base Collection,2026
+326,Michael Boxall,,CORE,New Zealand,Hero,,Base Collection,2026
+327,Liberato Cacace,,CORE,New Zealand,Hero,,Base Collection,2026
+328,Tim Payne,,CORE,New Zealand,Hero,,Base Collection,2026
+329,Finn Surman,,CORE,New Zealand,Hero,,Base Collection,2026
+330,Joe Bell,,CORE,New Zealand,Hero,,Base Collection,2026
+331,Sarpreet Singh,,CORE,New Zealand,Hero,,Base Collection,2026
+332,Matt Garbett,,CORE,New Zealand,Hero,,Base Collection,2026
+333,Elijah Just,,CORE,New Zealand,Hero,,Base Collection,2026
+334,Martin Ødegaard,,SPECIAL 1,Norway,Fan Favourite,,Base Collection,2026
+335,Team Crest,,SPECIAL 2,Norway,Team Crest,,Base Collection,2026
+336,Erling Haaland,,SPECIAL 1,Norway,Icon,,Base Collection,2026
+337,Ørjan Nyland,,CORE,Norway,Hero,,Base Collection,2026
+338,Julian Ryerson,,CORE,Norway,Hero,,Base Collection,2026
+339,Kristoffer Vassbakk Ajer,,CORE,Norway,Hero,,Base Collection,2026
+340,David Møller Wolfe,,CORE,Norway,Hero,,Base Collection,2026
+341,Sander Berge,,CORE,Norway,Hero,,Base Collection,2026
+342,Patrick Berg,,CORE,Norway,Hero,,Base Collection,2026
+343,Antonio Nusa,,CORE,Norway,Hero,,Base Collection,2026
+344,Oscar Bobb,,CORE,Norway,Hero,,Base Collection,2026
+345,Alexander Sørloth,,CORE,Norway,Hero,,Base Collection,2026
+346,Michael Amir Murillo,,SPECIAL 1,Panama,Fan Favourite,,Base Collection,2026
+347,Team Crest,,SPECIAL 2,Panama,Team Crest,,Base Collection,2026
+348,Aníbal Godoy,,SPECIAL 1,Panama,Icon,,Base Collection,2026
+349,Orlando Mosquera,,CORE,Panama,Hero,,Base Collection,2026
+350,Andrés Andrade,,CORE,Panama,Hero,,Base Collection,2026
+351,Fidel Escobar,,CORE,Panama,Hero,,Base Collection,2026
+352,Cristian Martínez,,CORE,Panama,Hero,,Base Collection,2026
+353,Adalberto Carrasquilla,,CORE,Panama,Hero,,Base Collection,2026
+354,Édgar Bárcenas,,CORE,Panama,Hero,,Base Collection,2026
+355,José Fajardo,,CORE,Panama,Hero,,Base Collection,2026
+356,Ismael Díaz,,CORE,Panama,Hero,,Base Collection,2026
+357,José Luis Rodríguez,,CORE,Panama,Hero,,Base Collection,2026
+358,Gustavo Gómez,,SPECIAL 1,Paraguay,Fan Favourite,,Base Collection,2026
+359,Team Crest,,SPECIAL 2,Paraguay,Team Crest,,Base Collection,2026
+360,Miguel Almirón,,SPECIAL 1,Paraguay,Icon,,Base Collection,2026
+361,Roberto Fernández,,CORE,Paraguay,Hero,,Base Collection,2026
+362,Juan José Cáceres,,CORE,Paraguay,Hero,,Base Collection,2026
+363,Omar Alderete,,CORE,Paraguay,Hero,,Base Collection,2026
+364,Júnior Alonso,,CORE,Paraguay,Hero,,Base Collection,2026
+365,Andrés Cubas,,CORE,Paraguay,Hero,,Base Collection,2026
+366,Mathías Villasanti,,CORE,Paraguay,Hero,,Base Collection,2026
+367,Julio Enciso,,CORE,Paraguay,Hero,,Base Collection,2026
+368,Ramón Sosa,,CORE,Paraguay,Hero,,Base Collection,2026
+369,Antonio Sanabria,,CORE,Paraguay,Hero,,Base Collection,2026
+370,Vitinha,,SPECIAL 1,Portugal,Fan Favourite,,Base Collection,2026
+371,Team Crest,,SPECIAL 2,Portugal,Team Crest,,Base Collection,2026
+372,Cristiano Ronaldo,,SPECIAL 1,Portugal,Icon,,Base Collection,2026
+373,Diogo Costa,,CORE,Portugal,Hero,,Base Collection,2026
+374,Rúben Dias,,CORE,Portugal,Hero,,Base Collection,2026
+375,Nuno Mendes,,CORE,Portugal,Hero,,Base Collection,2026
+376,Bernardo Silva,,CORE,Portugal,Hero,,Base Collection,2026
+377,Bruno Fernandes,,CORE,Portugal,Hero,,Base Collection,2026
+378,Rúben Neves,,CORE,Portugal,Hero,,Base Collection,2026
+379,Francisco Conceição,,CORE,Portugal,Hero,,Base Collection,2026
+380,Pedro Neto,,CORE,Portugal,Hero,,Base Collection,2026
+381,Rafael Leão,,CORE,Portugal,Hero,,Base Collection,2026
+382,Almoez Ali,,SPECIAL 1,Qatar,Fan Favourite,,Base Collection,2026
+383,Team Crest,,SPECIAL 2,Qatar,Team Crest,,Base Collection,2026
+384,Hasan al-Haydos,,SPECIAL 1,Qatar,Icon,,Base Collection,2026
+385,Meshaal Barsham,,CORE,Qatar,Hero,,Base Collection,2026
+386,Boualem Khoukhi,,CORE,Qatar,Hero,,Base Collection,2026
+387,Lucas Mendes,,CORE,Qatar,Hero,,Base Collection,2026
+388,Pedro Miguel,,CORE,Qatar,Hero,,Base Collection,2026
+389,Homam al-Amin,,CORE,Qatar,Hero,,Base Collection,2026
+390,Ahmed Fathi,,CORE,Qatar,Hero,,Base Collection,2026
+391,Edmílson Junior,,CORE,Qatar,Hero,,Base Collection,2026
+392,Ahmed al-Ganehi,,CORE,Qatar,Hero,,Base Collection,2026
+393,Akram Hassan Afif,,CORE,Qatar,Hero,,Base Collection,2026
+394,Feras al-Brikan,,SPECIAL 1,Saudi Arabia,Fan Favourite,,Base Collection,2026
+395,Team Crest,,SPECIAL 2,Saudi Arabia,Team Crest,,Base Collection,2026
+396,Salem al-Dawsari,,SPECIAL 1,Saudi Arabia,Icon,,Base Collection,2026
+397,Nawaf al-Aqidi,,CORE,Saudi Arabia,Hero,,Base Collection,2026
+398,Hassan al-Tambakti,,CORE,Saudi Arabia,Hero,,Base Collection,2026
+399,Jehad Thikri,,CORE,Saudi Arabia,Hero,,Base Collection,2026
+400,Saud Abdulhamid,,CORE,Saudi Arabia,Hero,,Base Collection,2026
+401,Nasser al-Dawsari,,CORE,Saudi Arabia,Hero,,Base Collection,2026
+402,Abdullah al-Khaibari,,CORE,Saudi Arabia,Hero,,Base Collection,2026
+403,Musab al-Juwayr,,CORE,Saudi Arabia,Hero,,Base Collection,2026
+404,Saleh Abu al-Shamat,,CORE,Saudi Arabia,Hero,,Base Collection,2026
+405,Saleh al-Shehri,,CORE,Saudi Arabia,Hero,,Base Collection,2026
+406,Scott McTominay,,SPECIAL 1,Scotland,Fan Favourite,,Base Collection,2026
+407,Team Crest,,SPECIAL 2,Scotland,Team Crest,,Base Collection,2026
+408,Andrew Robertson,,SPECIAL 1,Scotland,Icon,,Base Collection,2026
+409,Angus Gunn,,CORE,Scotland,Hero,,Base Collection,2026
+410,Kieran Tierney,,CORE,Scotland,Hero,,Base Collection,2026
+411,Grant Hanley,,CORE,Scotland,Hero,,Base Collection,2026
+412,Billy Gilmour,,CORE,Scotland,Hero,,Base Collection,2026
+413,Lewis Ferguson,,CORE,Scotland,Hero,,Base Collection,2026
+414,Ryan Christie,,CORE,Scotland,Hero,,Base Collection,2026
+415,John McGinn,,CORE,Scotland,Hero,,Base Collection,2026
+416,Ben Gannon-Doak,,CORE,Scotland,Hero,,Base Collection,2026
+417,Ché Adams,,CORE,Scotland,Hero,,Base Collection,2026
+418,Kalidou Koulibaly,,SPECIAL 1,Senegal,Fan Favourite,,Base Collection,2026
+419,Team Crest,,SPECIAL 2,Senegal,Team Crest,,Base Collection,2026
+420,Sadio Mané,,SPECIAL 1,Senegal,Icon,,Base Collection,2026
+421,Édouard Mendy,,CORE,Senegal,Hero,,Base Collection,2026
+422,Moussa Niakhaté,,CORE,Senegal,Hero,,Base Collection,2026
+423,El Hadji Malick Diouf,,CORE,Senegal,Hero,,Base Collection,2026
+424,Idrissa Gana Gueye,,CORE,Senegal,Hero,,Base Collection,2026
+425,Pape Matar Sarr,,CORE,Senegal,Hero,,Base Collection,2026
+426,Iliman Ndiaye,,CORE,Senegal,Hero,,Base Collection,2026
+427,Krépin Diatta,,CORE,Senegal,Hero,,Base Collection,2026
+428,Ismaïla Sarr,,CORE,Senegal,Hero,,Base Collection,2026
+429,Nicolas Jackson,,CORE,Senegal,Hero,,Base Collection,2026
+430,Lyle Foster,,SPECIAL 1,South Africa,Fan Favourite,,Base Collection,2026
+431,Team Crest,,SPECIAL 2,South Africa,Team Crest,,Base Collection,2026
+432,Ronwen Williams,,SPECIAL 1,South Africa,Icon,,Base Collection,2026
+433,Siyabonga Ngezana,,CORE,South Africa,Hero,,Base Collection,2026
+434,Aubrey Modiba,,CORE,South Africa,Hero,,Base Collection,2026
+435,Mbekezeli Mbokazi,,CORE,South Africa,Hero,,Base Collection,2026
+436,Khuliso Mudau,,CORE,South Africa,Hero,,Base Collection,2026
+437,Teboho Mokoena,,CORE,South Africa,Hero,,Base Collection,2026
+438,Yaya Sithole,,CORE,South Africa,Hero,,Base Collection,2026
+439,Themba Zwane,,CORE,South Africa,Hero,,Base Collection,2026
+440,Oswin Appollis,,CORE,South Africa,Hero,,Base Collection,2026
+441,Iqraam Rayners,,CORE,South Africa,Hero,,Base Collection,2026
+442,Lamine Yamal,,SPECIAL 1,Spain,Fan Favourite,,Base Collection,2026
+443,Team Crest,,SPECIAL 2,Spain,Team Crest,,Base Collection,2026
+444,Rodri,,SPECIAL 1,Spain,Icon,,Base Collection,2026
+445,Unai Simón,,CORE,Spain,Hero,,Base Collection,2026
+446,Robin Le Normand,,CORE,Spain,Hero,,Base Collection,2026
+447,Dean Huijsen,,CORE,Spain,Hero,,Base Collection,2026
+448,Marc Cucurella,,CORE,Spain,Hero,,Base Collection,2026
+449,Martín Zubimendi,,CORE,Spain,Hero,,Base Collection,2026
+450,Pedri,,CORE,Spain,Hero,,Base Collection,2026
+451,Fabián Ruiz,,CORE,Spain,Hero,,Base Collection,2026
+452,Nico Williams,,CORE,Spain,Hero,,Base Collection,2026
+453,Mikel Oyarzabal,,CORE,Spain,Hero,,Base Collection,2026
+454,Manuel Akanji,,SPECIAL 1,Switzerland,Fan Favourite,,Base Collection,2026
+455,Team Crest,,SPECIAL 2,Switzerland,Team Crest,,Base Collection,2026
+456,Granit Xhaka,,SPECIAL 1,Switzerland,Icon,,Base Collection,2026
+457,Gregor Kobel,,CORE,Switzerland,Hero,,Base Collection,2026
+458,Nico Elvedi,,CORE,Switzerland,Hero,,Base Collection,2026
+459,Ricardo Rodríguez,,CORE,Switzerland,Hero,,Base Collection,2026
+460,Silvan Widmer,,CORE,Switzerland,Hero,,Base Collection,2026
+461,Denis Zakaria,,CORE,Switzerland,Hero,,Base Collection,2026
+462,Remo Freuler,,CORE,Switzerland,Hero,,Base Collection,2026
+463,Breel Embolo,,CORE,Switzerland,Hero,,Base Collection,2026
+464,Rubén Vargas,,CORE,Switzerland,Hero,,Base Collection,2026
+465,Dan Ndoye,,CORE,Switzerland,Hero,,Base Collection,2026
+466,Ferjani Sassi,,SPECIAL 1,Tunisia,Fan Favourite,,Base Collection,2026
+467,Team Crest,,SPECIAL 2,Tunisia,Team Crest,,Base Collection,2026
+468,Ellyes Skhiri,,SPECIAL 1,Tunisia,Icon,,Base Collection,2026
+469,Aymen Dahmen,,CORE,Tunisia,Hero,,Base Collection,2026
+470,Montassar Talbi,,CORE,Tunisia,Hero,,Base Collection,2026
+471,Yassine Meriah,,CORE,Tunisia,Hero,,Base Collection,2026
+472,Ali Abdi,,CORE,Tunisia,Hero,,Base Collection,2026
+473,Aïssa Laïdouni,,CORE,Tunisia,Hero,,Base Collection,2026
+474,Hannibal Mejbri,,CORE,Tunisia,Hero,,Base Collection,2026
+475,Naïm Sliti,,CORE,Tunisia,Hero,,Base Collection,2026
+476,Elias Achouri,,CORE,Tunisia,Hero,,Base Collection,2026
+477,Hazem Mastouri,,CORE,Tunisia,Hero,,Base Collection,2026
+478,Weston McKennie,,SPECIAL 1,United States,Fan Favourite,,Base Collection,2026
+479,Team Crest,,SPECIAL 2,United States,Team Crest,,Base Collection,2026
+480,Christian Pulisic,,SPECIAL 1,United States,Icon,,Base Collection,2026
+481,Matt Freese,,CORE,United States,Hero,,Base Collection,2026
+482,Chris Richards,,CORE,United States,Hero,,Base Collection,2026
+483,Tim Ream,,CORE,United States,Hero,,Base Collection,2026
+484,Antonee Robinson,,CORE,United States,Hero,,Base Collection,2026
+485,Tanner Tessmann,,CORE,United States,Hero,,Base Collection,2026
+486,Tyler Adams,,CORE,United States,Hero,,Base Collection,2026
+487,Timothy Weah,,CORE,United States,Hero,,Base Collection,2026
+488,Malik Tillman,,CORE,United States,Hero,,Base Collection,2026
+489,Folarin Balogun,,CORE,United States,Hero,,Base Collection,2026
+490,José María Giménez,,SPECIAL 1,Uruguay,Fan Favourite,,Base Collection,2026
+491,Team Crest,,SPECIAL 2,Uruguay,Team Crest,,Base Collection,2026
+492,Federico Valverde,,SPECIAL 1,Uruguay,Icon,,Base Collection,2026
+493,Sergio Rochet,,CORE,Uruguay,Hero,,Base Collection,2026
+494,Ronald Araújo,,CORE,Uruguay,Hero,,Base Collection,2026
+495,Sebastián Cáceres,,CORE,Uruguay,Hero,,Base Collection,2026
+496,Mathías Olivera,,CORE,Uruguay,Hero,,Base Collection,2026
+497,Nahitan Nández,,CORE,Uruguay,Hero,,Base Collection,2026
+498,Rodrigo Bentancur,,CORE,Uruguay,Hero,,Base Collection,2026
+499,Manuel Ugarte,,CORE,Uruguay,Hero,,Base Collection,2026
+500,Facundo Pellistri,,CORE,Uruguay,Hero,,Base Collection,2026
+501,Darwin Núñez,,CORE,Uruguay,Hero,,Base Collection,2026
+502,Abdukodir Khusanov,,SPECIAL 1,Uzbekistan,Fan Favourite,,Base Collection,2026
+503,Team Crest,,SPECIAL 2,Uzbekistan,Team Crest,,Base Collection,2026
+504,Eldor Shomurodov,,SPECIAL 1,Uzbekistan,Icon,,Base Collection,2026
+505,Utkir Yusupov,,CORE,Uzbekistan,Hero,,Base Collection,2026
+506,Farrukh Sayfiev,,CORE,Uzbekistan,Hero,,Base Collection,2026
+507,Sherzod Nasrullaev,,CORE,Uzbekistan,Hero,,Base Collection,2026
+508,Husniddin Aliqulov,,CORE,Uzbekistan,Hero,,Base Collection,2026
+509,Rustam Ashurmatov,,CORE,Uzbekistan,Hero,,Base Collection,2026
+510,Khojiakbar Alijonov,,CORE,Uzbekistan,Hero,,Base Collection,2026
+511,Odiljon Hamrobekov,,CORE,Uzbekistan,Hero,,Base Collection,2026
+512,Otabek Shukurov,,CORE,Uzbekistan,Hero,,Base Collection,2026
+513,Abbosbek Fayzullaev,,CORE,Uzbekistan,Hero,,Base Collection,2026
+514,Team Crests,,CORE,,Contenders,Italy–Northern Ireland / Wales–Bosnia & Herzegovina,Base Collection,2026
+515,Team Crests,,CORE,,Contenders,Ukraine–Sweden / Poland–Albania,Base Collection,2026
+516,Team Crests,,CORE,,Contenders,Turkey–Romania / Slovakia–Kosovo,Base Collection,2026
+517,Team Crests,,CORE,,Contenders,Denmark–North Macedonia / Czech Republic–Republic of Ireland,Base Collection,2026
+518,Team Crests,,CORE,,Contenders,New Caledonia–Jamaica / DR Congo,Base Collection,2026
+519,Team Crests,,CORE,,Contenders,Suriname–Bolivia / Iraq,Base Collection,2026
+520,Morten Hjulmand,,CORE,Denmark,Contender,,Base Collection,2026
+521,Pierre-Emile Højbjerg,,CORE,Denmark,Contender,,Base Collection,2026
+522,Christian Eriksen,,CORE,Denmark,Contender,,Base Collection,2026
+523,Mikkel Damsgaard,,CORE,Denmark,Contender,,Base Collection,2026
+524,Rasmus Højlund,,CORE,Denmark,Contender,,Base Collection,2026
+525,Gianluigi Donnarumma,,CORE,Italy,Contender,,Base Collection,2026
+526,Alessandro Bastoni,,CORE,Italy,Contender,,Base Collection,2026
+527,Sandro Tonali,,CORE,Italy,Contender,,Base Collection,2026
+528,Nicolò Barella,,CORE,Italy,Contender,,Base Collection,2026
+529,Moise Kean,,CORE,Italy,Contender,,Base Collection,2026
+530,Andre Blake,,CORE,Jamaica,Contender,,Base Collection,2026
+531,Ethan Pinnock,,CORE,Jamaica,Contender,,Base Collection,2026
+532,Demarai Gray,,CORE,Jamaica,Contender,,Base Collection,2026
+533,Leon Bailey,,CORE,Jamaica,Contender,,Base Collection,2026
+534,Shamar Nicholson,,CORE,Jamaica,Contender,,Base Collection,2026
+535,Matty Cash,,CORE,Poland,Contender,,Base Collection,2026
+536,Jakub Kiwior,,CORE,Poland,Contender,,Base Collection,2026
+537,Piotr Zieliński,,CORE,Poland,Contender,,Base Collection,2026
+538,Sebastian Szymański,,CORE,Poland,Contender,,Base Collection,2026
+539,Robert Lewandowski,,CORE,Poland,Contender,,Base Collection,2026
+540,Isak Hien,,CORE,Sweden,Contender,,Base Collection,2026
+541,Dejan Kulusevski,,CORE,Sweden,Contender,,Base Collection,2026
+542,Anthony Elanga,,CORE,Sweden,Contender,,Base Collection,2026
+543,Viktor Gyökeres,,CORE,Sweden,Contender,,Base Collection,2026
+544,Alexander Isak,,CORE,Sweden,Contender,,Base Collection,2026
+545,Çağlar Söyüncü,,CORE,Turkey,Contender,,Base Collection,2026
+546,Hakan Çalhanoğlu,,CORE,Turkey,Contender,,Base Collection,2026
+547,Arda Güler,,CORE,Turkey,Contender,,Base Collection,2026
+548,Kenan Yıldız,,CORE,Turkey,Contender,,Base Collection,2026
+549,Kerem Aktürkoğlu,,CORE,Turkey,Contender,,Base Collection,2026
+550,Emiliano Martínez,,SPECIAL 2,Argentina,Top Keeper,,Base Collection,2026
+551,Thibaut Courtois,,SPECIAL 2,Belgium,Top Keeper,,Base Collection,2026
+552,Alisson,,SPECIAL 2,Brazil,Top Keeper,,Base Collection,2026
+553,Mike Maignan,,SPECIAL 2,France,Top Keeper,,Base Collection,2026
+554,Zion Suzuki,,SPECIAL 2,Japan,Top Keeper,,Base Collection,2026
+555,Yassine Bounou,,SPECIAL 2,Morocco,Top Keeper,,Base Collection,2026
+556,Diogo Costa,,SPECIAL 2,Portugal,Top Keeper,,Base Collection,2026
+557,Unai Simón,,SPECIAL 2,Spain,Top Keeper,,Base Collection,2026
+558,Gregor Kobel,,SPECIAL 2,Switzerland,Top Keeper,,Base Collection,2026
+559,Éder Militão,,SPECIAL 2,Brazil,Defensive Rock,,Base Collection,2026
+560,Alphonso Davies,,SPECIAL 2,Canada,Defensive Rock,,Base Collection,2026
+561,William Saliba,,SPECIAL 2,France,Defensive Rock,,Base Collection,2026
+562,Antonio Rüdiger,,SPECIAL 2,Germany,Defensive Rock,,Base Collection,2026
+563,Min-jae Kim,,SPECIAL 2,Korea Republic,Defensive Rock,,Base Collection,2026
+564,Achraf Hakimi,,SPECIAL 2,Morocco,Defensive Rock,,Base Collection,2026
+565,Virgil van Dijk,,SPECIAL 2,Netherlands,Defensive Rock,,Base Collection,2026
+566,Nuno Mendes,,SPECIAL 2,Portugal,Defensive Rock,,Base Collection,2026
+567,Dean Huijsen,,SPECIAL 2,Spain,Defensive Rock,,Base Collection,2026
+568,Enzo Fernández,,SPECIAL 2,Argentina,Midfield Maestro,,Base Collection,2026
+569,Kevin De Bruyne,,SPECIAL 2,Belgium,Midfield Maestro,,Base Collection,2026
+570,Casemiro,,SPECIAL 2,Brazil,Midfield Maestro,,Base Collection,2026
+571,Luka Modrić,,SPECIAL 2,Croatia,Midfield Maestro,,Base Collection,2026
+572,Moisés Caicedo,,SPECIAL 2,Ecuador,Midfield Maestro,,Base Collection,2026
+573,Jude Bellingham,,SPECIAL 2,England,Midfield Maestro,,Base Collection,2026
+574,Aurélien Tchouaméni,,SPECIAL 2,France,Midfield Maestro,,Base Collection,2026
+575,Florian Wirtz,,SPECIAL 2,Germany,Midfield Maestro,,Base Collection,2026
+576,Sofyan Amrabat,,SPECIAL 2,Morocco,Midfield Maestro,,Base Collection,2026
+577,Tijjani Reijnders,,SPECIAL 2,Netherlands,Midfield Maestro,,Base Collection,2026
+578,Martin Ødegaard,,SPECIAL 2,Norway,Midfield Maestro,,Base Collection,2026
+579,Vitinha,,SPECIAL 2,Portugal,Midfield Maestro,,Base Collection,2026
+580,Scott McTominay,,SPECIAL 2,Scotland,Midfield Maestro,,Base Collection,2026
+581,Rodri,,SPECIAL 2,Spain,Midfield Maestro,,Base Collection,2026
+582,Pedri,,SPECIAL 2,Spain,Midfield Maestro,,Base Collection,2026
+583,Granit Xhaka,,SPECIAL 2,Switzerland,Midfield Maestro,,Base Collection,2026
+584,Tyler Adams,,SPECIAL 2,United States,Midfield Maestro,,Base Collection,2026
+585,Federico Valverde,,SPECIAL 2,Uruguay,Midfield Maestro,,Base Collection,2026
+586,Julián Álvarez,,SPECIAL 2,Argentina,Goal Machine,,Base Collection,2026
+587,Romelu Lukaku,,SPECIAL 2,Belgium,Goal Machine,,Base Collection,2026
+588,Raphinha,,SPECIAL 2,Brazil,Goal Machine,,Base Collection,2026
+589,Jonathan David,,SPECIAL 2,Canada,Goal Machine,,Base Collection,2026
+590,Luis Díaz,,SPECIAL 2,Colombia,Goal Machine,,Base Collection,2026
+591,Andrej Kramarić,,SPECIAL 2,Croatia,Goal Machine,,Base Collection,2026
+592,Enner Valencia,,SPECIAL 2,Ecuador,Goal Machine,,Base Collection,2026
+593,Omar Marmoush,,SPECIAL 2,Egypt,Goal Machine,,Base Collection,2026
+594,Marcus Rashford,,SPECIAL 2,England,Goal Machine,,Base Collection,2026
+595,Randal Kolo Muani,,SPECIAL 2,France,Goal Machine,,Base Collection,2026
+596,Kai Havertz,,SPECIAL 2,Germany,Goal Machine,,Base Collection,2026
+597,Sébastien Haller,,SPECIAL 2,Ivory Coast,Goal Machine,,Base Collection,2026
+598,Raúl Jiménez,,SPECIAL 2,Mexico,Goal Machine,,Base Collection,2026
+599,Youssef En-Nesyri,,SPECIAL 2,Morocco,Goal Machine,,Base Collection,2026
+600,Cody Gakpo,,SPECIAL 2,Netherlands,Goal Machine,,Base Collection,2026
+601,Chris Wood,,SPECIAL 2,New Zealand,Goal Machine,,Base Collection,2026
+602,Alexander Sørloth,,SPECIAL 2,Norway,Goal Machine,,Base Collection,2026
+603,Nicolas Jackson,,SPECIAL 2,Senegal,Goal Machine,,Base Collection,2026
+604,Mikel Oyarzabal,,SPECIAL 2,Spain,Goal Machine,,Base Collection,2026
+605,Breel Embolo,,SPECIAL 2,Switzerland,Goal Machine,,Base Collection,2026
+606,Christian Pulisic,,SPECIAL 2,United States,Goal Machine,,Base Collection,2026
+607,Darwin Núñez,,SPECIAL 2,Uruguay,Goal Machine,,Base Collection,2026
+608,Nico Paz,,SPECIAL 1,Argentina,Master Rookie,,Base Collection,2026
+609,Franco Mastantuono,,SPECIAL 1,Argentina,Master Rookie,,Base Collection,2026
+610,Zeno Debast,,SPECIAL 1,Belgium,Master Rookie,,Base Collection,2026
+611,Wesley,,SPECIAL 1,Brazil,Master Rookie,,Base Collection,2026
+612,Estêvão,,SPECIAL 1,Brazil,Master Rookie,,Base Collection,2026
+613,Petar Sučić,,SPECIAL 1,Croatia,Master Rookie,,Base Collection,2026
+614,Kendry Páez,,SPECIAL 1,Ecuador,Master Rookie,,Base Collection,2026
+615,Morgan Rogers,,SPECIAL 1,England,Master Rookie,,Base Collection,2026
+616,Désiré Doué,,SPECIAL 1,France,Master Rookie,,Base Collection,2026
+617,Bradley Barcola,,SPECIAL 1,France,Master Rookie,,Base Collection,2026
+618,Nick Woltemade,,SPECIAL 1,Germany,Master Rookie,,Base Collection,2026
+619,Xavi Simons,,SPECIAL 1,Netherlands,Master Rookie,,Base Collection,2026
+620,Andreas Schjelderup,,SPECIAL 1,Norway,Master Rookie,,Base Collection,2026
+621,Diego Gómez,,SPECIAL 1,Paraguay,Master Rookie,,Base Collection,2026
+622,João Neves,,SPECIAL 1,Portugal,Master Rookie,,Base Collection,2026
+623,Pau Cubarsí,,SPECIAL 1,Spain,Master Rookie,,Base Collection,2026
+624,Trophy,,ULTRA RARE,,Official Emblem,,Base Collection,2026
+625,Maple,,CORE,,Official Mascot,,Base Collection,2026
+626,Clutch,,CORE,,Official Mascot,,Base Collection,2026
+627,Zavu,,CORE,,Official Mascot,,Base Collection,2026
+628,Nahuel Molina / Emiliano Martínez / Cristian Romero,,ULTRA RARE,Argentina,Eternos 22,,Base Collection,2026
+629,Alexis Mac Allister / Rodrigo De Paul / Enzo Fernández,,ULTRA RARE,Argentina,Eternos 22,,Base Collection,2026
+630,Lautaro Martínez / Lionel Messi / Julián Álvarez,,ULTRA RARE,Argentina,Eternos 22,,Base Collection,2026

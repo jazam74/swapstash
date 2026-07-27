@@ -1,0 +1,1499 @@
+{
+  "@@locale": "hr",
+  "appName": "SwapStash",
+  "home": "Početna",
+  "collections": "Kolekcije",
+  "trades": "Zamjene",
+  "messages": "Poruke",
+  "profile": "Profil",
+  "welcomeUser": "Dobro došao, Uroš!",
+  "welcomeDescription": "Upravljaj svojim kolekcijama i pronađi najbolje zamjene.",
+  "newMatches": "Nova podudaranja",
+  "activeCollections": "Aktivne kolekcije",
+  "addCollection": "Dodaj kolekciju",
+  "sameCountry": "Ista država",
+  "international": "Međunarodno",
+  "reviewTrade": "Pregledaj zamjenu",
+  "noMessages": "Nema poruka",
+  "noMessagesDescription": "Razgovori o zamjenama prikazat će se ovdje.",
+  "language": "Jezik",
+  "internationalTrades": "Međunarodne zamjene",
+  "allowed": "Dopuštene",
+  "successfulTrades": "Uspješne zamjene",
+  "chooseLanguage": "Odaberi jezik",
+  "chooseLanguageDescription": "Odaberi jezik koji želiš koristiti u aplikaciji SwapStash. Kasnije ga možeš promijeniti u postavkama.",
+  "automaticLanguage": "Automatski – jezik uređaja",
+  "automaticLanguageDescription": "Automatski koristi podržani jezik uređaja.",
+  "englishFallbackDescription": "Ako jezik uređaja nije podržan, koristit će se engleski.",
+  "continueButton": "Nastavi",
+  "saving": "Spremanje…",
+  "settings": "Postavke",
+  "applicationSettings": "Postavke aplikacije",
+  "languageSettingsDescription": "Odaberi jezik aplikacije. Promjena se primjenjuje odmah i sprema za buduća pokretanja.",
+  "languageChanged": "Jezik je promijenjen.",
+  "profileLoadError": "Profil nije moguće učitati:",
+  "profileMissing": "Profil ne postoji.",
+  "unnamedUser": "Neimenovani korisnik",
+  "unknownUser": "Nepoznati korisnik",
+  "rating": "Ocjena",
+  "completedTrades": "Dovršene zamjene",
+  "profileVisibility": "Vidljivost profila",
+  "publicProfile": "Javan",
+  "privateProfile": "Privatan",
+  "notAllowed": "Nisu dopuštene",
+  "editProfile": "Uredi profil",
+  "editProfileSubtitle": "Ime, grad, opis i privatnost",
+  "signOut": "Odjava",
+  "dashboardCatalogTooltip": "Katalog kolekcija",
+  "dashboardFavoritesTooltip": "Moji favoriti",
+  "dashboardLoadError": "Nadzorna ploča nije se mogla učitati",
+  "dashboardMyCollections": "Moje kolekcije",
+  "dashboardShowAll": "Prikaži sve",
+  "dashboardOverview": "Pregled",
+  "dashboardYourCollections": "Tvoje kolekcije",
+  "dashboardWelcomeTitle": "Dobro došao!",
+  "dashboardWelcomeSubtitle": "Pregled tvojih kolekcija i aktivnosti.",
+  "dashboardTodayTasks": "Danas te čeka",
+  "dashboardAllDone": "Sve je riješeno",
+  "dashboardNoOpenTasks": "Trenutačno nemaš otvorenih zadataka.",
+  "dashboardNoCollectionsTitle": "Još nemaš nijednu kolekciju",
+  "dashboardNoCollectionsDescription": "Otvori karticu Kolekcije i dodaj svoju prvu kolekciju.",
+  "dashboardCollected": "Prikupljeno",
+  "dashboardDuplicates": "Duplikati",
+  "dashboardMissing": "Nedostaje",
+  "dashboardCollectionOpenError": "Kolekciju nije moguće otvoriti.",
+  "dashboardCollectionNotFound": "Kolekciju nije moguće pronaći.",
+  "dashboardCollectionOpenErrorDetails": "Kolekciju nije moguće otvoriti: {error}",
+  "dashboardUnreadMessages": "{count, plural, =1{1 nepročitana poruka} other{{count} nepročitanih poruka}}",
+  "dashboardOpenConversation": "Otvori razgovor i pročitaj nove poruke.",
+  "dashboardRespondToCounterOffer": "Odgovori na protuponudu",
+  "dashboardRespondToOffer": "Odgovori na ponudu",
+  "dashboardConfirmHandover": "Potvrdi predaju kartica",
+  "dashboardConfirmReceipt": "Potvrdi primitak kartica",
+  "dashboardOpenTrade": "Otvori zamjenu",
+  "dashboardOpenTradeAndContinue": "Otvori zamjenu i nastavi postupak.",
+  "dashboardTradeWithUser": "Zamjena s korisnikom {userId}",
+  "@dashboardCollectionOpenErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@dashboardUnreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardTradeWithUser": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogAddToFavorites": "Dodaj u favorite",
+  "catalogAddedToFavorites": "Predmet je dodan u favorite.",
+  "catalogAdditionalFilterCount": "{count, plural, one{{count} dodatni filtar} few{{count} dodatna filtra} other{{count} dodatnih filtara}}",
+  "catalogAdditionalFilters": "Dodatni filtri",
+  "catalogAdditionalFiltersCount": "Dodatni filtri ({count})",
+  "catalogAll": "Sve",
+  "catalogAllRarities": "Sve rijetkosti",
+  "catalogApply": "Primijeni",
+  "catalogAttributeBrand": "Marka",
+  "catalogAttributeCharacter": "Lik",
+  "catalogAttributeCountry": "Država",
+  "catalogAttributeDenomination": "Nominala",
+  "catalogAttributeFranchise": "Franšiza",
+  "catalogAttributeManufacturer": "Proizvođač",
+  "catalogAttributeMaterial": "Materijal",
+  "catalogAttributeSeries": "Serija",
+  "catalogAttributeSet": "Set",
+  "catalogAttributeTeam": "Ekipa",
+  "catalogAttributeTheme": "Tema",
+  "catalogAttributeType": "Vrsta",
+  "catalogAttributeYear": "Godina",
+  "catalogCancel": "Odustani",
+  "catalogCategory": "Kategorija",
+  "catalogChooseCsvOrXlsx": "Odaberi CSV ili XLSX",
+  "catalogClear": "Očisti",
+  "catalogClose": "Zatvori",
+  "catalogCollectionAddError": "Kolekciju nije moguće dodati: {error}",
+  "catalogCollectionAdded": "Kolekcija „{name}” dodana je u tvoje kolekcije.",
+  "catalogCollectionComplete": "Kolekcija je potpuna. Ne nedostaje nijedan predmet.",
+  "catalogCollectionCreateError": "Kolekciju nije moguće stvoriti: {error}",
+  "catalogCollectionCreatePermissionDenied": "Firestore je odbio stvaranje kolekcije. Prijavljeni korisnik treba administratorsku dozvolu.",
+  "catalogCollectionCreatedForImport": "Kolekcija „{name}” stvorena je i odabrana za uvoz.",
+  "catalogCollectionId": "ID kolekcije",
+  "catalogCollectionIdExists": "Kolekcija s ID-jem „{id}” već postoji.",
+  "catalogCollectionIdHelp": "Mala slova, brojevi i crtice. Nemoj ga kasnije mijenjati.",
+  "catalogCollectionIdInvalid": "Upotrijebi samo mala slova, brojeve i crtice.",
+  "catalogCollectionName": "Naziv kolekcije",
+  "catalogCollectionProgress": "📊 Napredak kolekcije",
+  "catalogCollectionsLoadErrorDetails": "Kolekcije nije moguće učitati:\n{error}",
+  "catalogCollectionsTitle": "Katalog kolekcija",
+  "catalogColumnCount": "{count, plural, one{{count} stupac} few{{count} stupca} other{{count} stupaca}}",
+  "catalogConfirmImport": "Potvrdi uvoz",
+  "catalogCreate": "Stvori",
+  "catalogCreateNewCollection": "Stvori novu kolekciju",
+  "catalogCreatingCollection": "Stvaranje kolekcije ...",
+  "catalogDecreaseQuantity": "Smanji količinu",
+  "catalogDisableQuickEntry": "Isključi brzi unos",
+  "catalogDuplicates": "Duplikati",
+  "catalogEnableQuickEntry": "Uključi brzi unos",
+  "catalogEnterCollectionId": "Unesi ID kolekcije.",
+  "catalogEnterCollectionName": "Unesi naziv kolekcije.",
+  "catalogFavoriteChangeError": "Status favorita nije moguće promijeniti: {error}",
+  "catalogFileErrors": "Pogreške u datoteci",
+  "catalogFilterByRarity": "Filtriraj prema rijetkosti",
+  "catalogFindTrades": "Pronađi zamjene",
+  "catalogFirstRows": "Prvih {count}",
+  "catalogImageNotAdded": "Slika još nije dodana",
+  "catalogImportAction": "Uvezi",
+  "catalogImportColumnHelp": "Obavezni stupci su number/broj i name/naziv. Stupci rarity/rijetkost i imageUrl/slika nisu obavezni. Ostali stupci automatski se uvoze kao dodatna svojstva.",
+  "catalogImportCompleted": "Uvoz je završen",
+  "catalogImportConfirmRows": "U kolekciji „{collectionName}” obradit će se {count, plural, one{{count} valjani redak} few{{count} valjana retka} other{{count} valjanih redaka}}.",
+  "catalogImportCreated": "Dodano: {count}",
+  "catalogImportCsvAndExcel": "CSV i Excel",
+  "catalogImportCsvReadError": "CSV datoteku nije moguće pročitati: {error}",
+  "catalogImportDescription": "Uvezi predmete iz CSV ili XLSX datoteke.",
+  "catalogImportDuplicateNumber": "Duplikat broja u istoj datoteci.",
+  "catalogImportExcelNoData": "Excel datoteka nema podataka.",
+  "catalogImportExistingSkipped": "Postojeći predmeti bit će preskočeni.",
+  "catalogImportExistingUpdated": "Postojeći predmeti s istim brojem bit će ažurirani.",
+  "catalogImportFailed": "Uvoz nije uspio: {error}",
+  "catalogImportFileNoData": "Datoteka nema podataka.",
+  "catalogImportFileOpenError": "Datoteku nije moguće otvoriti: {error}",
+  "catalogImportFileTooLarge": "Datoteka je veća od dopuštenih 20 MB.",
+  "catalogImportFileTooltip": "Uvezi CSV ili XLSX",
+  "catalogImportItems": "Uvezi {count, plural, one{{count} predmet} few{{count} predmeta} other{{count} predmeta}}",
+  "catalogImportMissingName": "Nedostaje naziv.",
+  "catalogImportMissingNameColumn": "Nedostaje obavezni stupac „name” odnosno „naziv”.",
+  "catalogImportMissingNumber": "Nedostaje broj.",
+  "catalogImportMissingNumberColumn": "Nedostaje obavezni stupac „number” odnosno „broj”.",
+  "catalogImportNoItemsBelowHeader": "Ispod retka zaglavlja nema predmeta.",
+  "catalogImportPermissionDenied": "Firestore je odbio uvoz. Za uvoz u središnji katalog prijavljeni korisnik mora biti administrator.",
+  "catalogImportSkipHelp": "Predmeti s već postojećim brojem neće se promijeniti.",
+  "catalogImportSkipped": "Preskočeno: {count}",
+  "catalogImportSupportedFilesOnly": "Podržane su samo CSV i XLSX datoteke.",
+  "catalogImportTitle": "Uvoz kataloga",
+  "catalogImportUpdateHelp": "Predmeti s već postojećim brojem bit će ažurirani.",
+  "catalogImportUpdated": "Ažurirano: {count}",
+  "catalogImportXlsxReadError": "XLSX datoteku nije moguće pročitati: {error}",
+  "catalogImporting": "Uvoz ...",
+  "catalogIncreaseQuantity": "Povećaj količinu",
+  "catalogInvalidNumber": "Neispravan broj.",
+  "catalogInvalidRows": "{count, plural, one{{count} nevaljan} few{{count} nevaljana} other{{count} nevaljanih}}",
+  "catalogInvalidYear": "Neispravna godina.",
+  "catalogInventoryLoadErrorDetails": "Inventar nije moguće učitati:\n{error}",
+  "catalogItemCount": "Broj predmeta",
+  "catalogItemDefaultName": "Predmet {number}",
+  "catalogItemMarkedMissing": "Predmet je označen kao nedostajući.",
+  "catalogItemMissing": "Predmet nedostaje",
+  "catalogItemOwned": "Imaš predmet",
+  "catalogItemStatusLoadErrorDetails": "Status predmeta nije moguće učitati:\n{error}",
+  "catalogItemsCount": "{count, plural, one{{count} predmet} few{{count} predmeta} other{{count} predmeta}}",
+  "catalogItemsLoadErrorDetails": "Predmete nije moguće učitati:\n{error}",
+  "catalogLoadErrorDetails": "Katalog nije moguće učitati:\n{error}",
+  "catalogMissing": "Nedostaje",
+  "catalogMissingPlural": "Nedostaju",
+  "catalogNewCollection": "Nova kolekcija",
+  "catalogNoCollectionsFound": "Nema pronađenih kolekcija.",
+  "catalogNoDuplicates": "Još nemaš duplikata.",
+  "catalogNoFilterResults": "Nema predmeta koji odgovaraju odabranim filtrima.",
+  "catalogNoItems": "U ovoj kolekciji još nema predmeta.",
+  "catalogNoOwnedItems": "Još nemaš nijedan predmet.",
+  "catalogNoSearchResults": "Nema rezultata za pojam pretraživanja i odabrane filtre.",
+  "catalogNotOwned": "Nemam",
+  "catalogOk": "U redu",
+  "catalogOpeningFile": "Otvaranje datoteke ...",
+  "catalogOther": "Ostalo",
+  "catalogOwned": "Imam",
+  "catalogOwnedSurplusCount": "{count, plural, =0{Nemaš duplikata.} one{Imaš {count} duplikat.} few{Imaš {count} duplikata.} other{Imaš {count} duplikata.}}",
+  "catalogPiecesCount": "{count, plural, one{{count} komad} few{{count} komada} other{{count} komada}}",
+  "catalogPreview": "Pregled",
+  "catalogPublisher": "Izdavač",
+  "catalogQuantity": "Količina",
+  "catalogQuantitySaveError": "Količinu nije moguće spremiti: {error}",
+  "catalogQuantityUpdated": "Količina je ažurirana na {quantity}.",
+  "catalogRarity": "Rijetkost",
+  "catalogRarityAll": "Rijetkost: sve",
+  "catalogRarityCommon": "Uobičajena",
+  "catalogRarityLimitedEdition": "Ograničeno izdanje",
+  "catalogRarityRare": "Rijetka",
+  "catalogRaritySelected": "Rijetkost: {value}",
+  "catalogRarityUltraRare": "Vrlo rijetka",
+  "catalogRarityValue": "Rijetkost: {value}",
+  "catalogRemoveFromFavorites": "Ukloni iz favorita",
+  "catalogRemovedFromFavorites": "Predmet je uklonjen iz favorita.",
+  "catalogResultsCount": "{count, plural, one{{count} rezultat} few{{count} rezultata} other{{count} rezultata}}",
+  "catalogSearchHint": "Pretraži broj ili naziv ...",
+  "catalogSelectTargetCollectionFirst": "Najprije odaberi ciljnu kolekciju.",
+  "catalogSelectValidFileFirst": "Najprije odaberi valjanu datoteku.",
+  "catalogSelectedCollectionMissing": "Odabrana kolekcija više ne postoji.",
+  "catalogSheetName": "List: {name}",
+  "catalogSkip": "Preskoči",
+  "catalogSortItems": "Razvrstaj predmete",
+  "catalogSortNameAscending": "Naziv: A–Ž",
+  "catalogSortNameDescending": "Naziv: Ž–A",
+  "catalogSortNumberAscending": "Broj: uzlazno",
+  "catalogSortNumberDescending": "Broj: silazno",
+  "catalogSortRarityAscending": "Rijetkost: A–Ž",
+  "catalogSortRarityDescending": "Rijetkost: Ž–A",
+  "catalogSurplusCount": "{count, plural, one{+{count} duplikat} few{+{count} duplikata} other{+{count} duplikata}}",
+  "catalogTargetCollection": "Ciljna kolekcija",
+  "catalogTotalPieces": "Ukupno komada",
+  "catalogUnnamedItem": "Bez naziva",
+  "catalogUpdate": "Ažuriraj",
+  "catalogValidRows": "{count, plural, one{{count} valjan} few{{count} valjana} other{{count} valjanih}}",
+  "catalogYear": "Godina",
+  "@catalogAdditionalFilterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogAdditionalFiltersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogCollectionAddError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionCreateError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionCreatedForImport": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionIdExists": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionsLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogColumnCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogFavoriteChangeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogFirstRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportConfirmRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "collectionName": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportCreated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportCsvReadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportFileOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportUpdated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportXlsxReadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogInvalidRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogInventoryLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemDefaultName": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemStatusLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogItemsLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogOwnedSurplusCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogPiecesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogQuantitySaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogQuantityUpdated": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogRaritySelected": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogRarityValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogSheetName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogSurplusCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogValidRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cancel": "Odustani",
+  "clearSearch": "Očisti pretraživanje",
+  "noResults": "Nema rezultata",
+  "now": "Sada",
+  "sending": "Slanje...",
+  "tryAgain": "Pokušaj ponovno",
+  "yesterday": "Jučer",
+  "weekdayMondayShort": "Pon",
+  "weekdayTuesdayShort": "Uto",
+  "weekdayWednesdayShort": "Sri",
+  "weekdayThursdayShort": "Čet",
+  "weekdayFridayShort": "Pet",
+  "weekdaySaturdayShort": "Sub",
+  "weekdaySundayShort": "Ned",
+  "messageSendError": "Poruku nije moguće poslati:\n{error}",
+  "@messageSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesSearchHint": "Pretraži po korisniku, kolekciji ili poruci",
+  "messagesConversationEmptyPreview": "Ovaj razgovor još nema poruka.",
+  "messagesYouPreview": "Ti: {message}",
+  "@messagesYouPreview": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesEmptyTitle": "Još nemaš razgovora",
+  "messagesEmptyDescription": "Razgovor možeš započeti s korisnikom s kojim želiš obaviti zamjenu.",
+  "messagesTryAnotherSearch": "Pokušaj s drugim pojmom za pretraživanje.",
+  "messagesNoConversationsForQuery": "Za „{query}” nisu pronađeni razgovori.",
+  "@messagesNoConversationsForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesLoadError": "Razgovore nije moguće učitati",
+  "messagesSignInRequired": "Za pregled poruka moraš se prijaviti.",
+  "messagesGenericUser": "korisnikom",
+  "messagesStartConversationWith": "Započni razgovor s {name}",
+  "@messagesStartConversationWith": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesConversationAboutCollection": "Razgovor se odnosi na kolekciju {collectionName}.",
+  "@messagesConversationAboutCollection": {
+    "placeholders": {
+      "collectionName": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesWriteFirstMessage": "Napiši prvu poruku i dogovorite zamjenu.",
+  "messagesChatLoadError": "Poruke nije moguće učitati.",
+  "messagesWriteMessageHint": "Napiši poruku...",
+  "messagesSendMessage": "Pošalji poruku",
+  "tradeAccept": "Prihvati",
+  "tradeArchiveEmpty": "Arhiva je prazna.",
+  "tradeAutomaticProposalDescription": "SwapStash predlaže uravnoteženu zamjenu {offeredCount} za {requestedCount}.",
+  "@tradeAutomaticProposalDescription": {
+    "placeholders": {
+      "offeredCount": {
+        "type": "int"
+      },
+      "requestedCount": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeAutomaticProposalTitle": "Automatski prijedlog zamjene",
+  "tradeBackToResults": "Natrag na rezultate",
+  "tradeCanOffer": "Možeš ponuditi",
+  "tradeCanReceive": "Možeš dobiti",
+  "tradeCancelOffer": "Otkaži ponudu",
+  "tradeCardFromCollection": "Kartica iz kolekcije",
+  "tradeCardsCount": "{count, plural, one{{count} kartica} few{{count} kartice} other{{count} kartica}}",
+  "@tradeCardsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeCardsLoadError": "Kartice nije moguće učitati:\n{error}",
+  "@tradeCardsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCollectionMissing": "Zamjena nema određenu kolekciju.",
+  "tradeCommentHint": "Npr. brz dogovor i odlično očuvane kartice.",
+  "tradeComparisonTitle": "Usporedba zamjene",
+  "tradeCompletedSteps": "{completed} od {total} koraka",
+  "@tradeCompletedSteps": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeConfirmHandoverButton": "Da, potvrđujem predaju",
+  "tradeConfirmHandoverDescription": "Potvrdi tek kada si kartice stvarno predao drugoj strani. Nakon potvrde kartice će biti uklonjene iz tvog inventara. Ovaj korak nije moguće poništiti.",
+  "tradeConfirmHandoverTitle": "Potvrdi predaju kartica",
+  "tradeConfirmReceiptButton": "Da, potvrđujem primitak",
+  "tradeConfirmReceiptDescription": "Potvrdi tek kada si dogovorene kartice stvarno primio. Nakon potvrde bit će dodane u tvoj inventar. Ovaj korak nije moguće poništiti.",
+  "tradeConfirmReceiptTitle": "Potvrdi primitak kartica",
+  "tradeConversationOpenError": "Razgovor nije moguće otvoriti:\n{error}",
+  "@tradeConversationOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCounterOfferDescription": "Promijeni ponudu. Omjer nije ograničen pa, primjerice, prijedlog 3 za 3 možeš promijeniti u 5 za 3.",
+  "tradeCounterOfferItemsUnavailable": "Odabrane kartice više nisu dostupne za protuponudu.",
+  "tradeCounterOfferNeedsBothSides": "Protuponuda mora sadržavati barem jedan predmet na obje strane.",
+  "tradeCounterOfferSendError": "Protuponudu nije moguće poslati: {error}",
+  "@tradeCounterOfferSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCounterOfferTitle": "Protuponuda",
+  "tradeDirectionCounterOffer": "PROTUPONUDA",
+  "tradeDirectionReceivedOffer": "PRIMLJENA PONUDA",
+  "tradeDirectionSentOffer": "POSLANA PONUDA",
+  "tradeFilterCancelled": "Otkazane",
+  "tradeFilterCompleted": "Dovršene",
+  "tradeFilterRejected": "Odbijene",
+  "tradeFindTrades": "Pronađi zamjene",
+  "tradeFromTask": "Zamjena iz zadatka",
+  "tradeHandoverConfirmed": "Predaja potvrđena ✓",
+  "tradeHandoverConfirmedSuccess": "Predaja kartica je potvrđena i inventar je ažuriran.",
+  "tradeIAmOffering": "Nudim",
+  "tradeIWant": "Želim",
+  "tradeItemSelectionNextStep": "Odabir predmeta dolazi u sljedećem koraku.",
+  "tradeItemsNextStep": "Popis predmeta dolazi u sljedećem koraku.",
+  "tradeLoadError": "Zamjene nije moguće učitati.",
+  "tradeLoadErrorDetails": "Zamjene nije moguće učitati:\n{error}",
+  "@tradeLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeNewTrade": "Nova zamjena",
+  "tradeNoAvailableItems": "Nema dostupnih predmeta.",
+  "tradeNoCancelledTrades": "Nema otkazanih zamjena.",
+  "tradeNoCards": "Nema kartica.",
+  "tradeNoCompletedTrades": "Nema dovršenih zamjena.",
+  "tradeNoIncomingTrades": "Nema primljenih zamjena.",
+  "tradeNoMatchesFound": "Trenutačno nisu pronađene moguće zamjene.",
+  "tradeNoMatchesHint": "Provjeri jesi li označio duplikate i koriste li drugi korisnici istu kolekciju.",
+  "tradeNoOutgoingTrades": "Nema poslanih zamjena.",
+  "tradeNoRejectedTrades": "Nema odbijenih zamjena.",
+  "tradeNoTradesYet": "Još nemaš nijednu zamjenu.",
+  "tradeNoUsersMatch": "Nema korisnika koji odgovaraju pretraživanju.",
+  "tradeOfferAcceptedSuccess": "Zamjena je prihvaćena.",
+  "tradeOfferCancelledSuccess": "Ponuda je otkazana.",
+  "tradeOfferRejectedSuccess": "Ponuda je odbijena.",
+  "tradeOpeningConversation": "Otvaranje razgovora...",
+  "tradeOptionalComment": "Komentar (neobavezno)",
+  "tradePossibleTradesCount": "{count, plural, one{{count} moguća zamjena} few{{count} moguće zamjene} other{{count} mogućih zamjena}}",
+  "@tradePossibleTradesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeProgressAgreed": "Zamjena dogovorena",
+  "tradeProgressIHandedOver": "Predao sam kartice",
+  "tradeProgressIReceived": "Primio sam kartice",
+  "tradeProgressOtherHandedOver": "Druga strana je predala kartice",
+  "tradeProgressOtherReceived": "Druga strana je primila kartice",
+  "tradeProgressTitle": "Tijek zamjene",
+  "tradeProposalSendError": "Prijedlog zamjene nije moguće poslati:\n{error}",
+  "@tradeProposalSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeProposalSentSuccessfully": "Prijedlog zamjene uspješno je poslan.",
+  "tradeRateUser": "Ocijeni korisnika",
+  "tradeRatingQuestion": "Koliko si zadovoljan obavljenom zamjenom?",
+  "tradeRatingSubmitError": "Ocjenu nije moguće poslati: {error}",
+  "@tradeRatingSubmitError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeRatingSubmitted": "Ocjena je poslana.",
+  "tradeRatingSubmittedSuccessfully": "Ocjena je uspješno poslana.",
+  "tradeRatingUnavailable": "Ocjenjivanje trenutačno nije dostupno. Provjeri jesu li nova Firestore pravila objavljena.",
+  "tradeReceiptConfirmed": "Primitak potvrđen ✓",
+  "tradeReceiptConfirmedSuccess": "Primitak kartica je potvrđen i inventar je ažuriran.",
+  "tradeRecipient": "Primatelj",
+  "tradeReject": "Odbij",
+  "tradeRemoveRecipient": "Ukloni primatelja",
+  "tradeSearchUserHint": "Pretraži korisnika po imenu...",
+  "tradeSendCounterOffer": "Pošalji protuponudu",
+  "tradeSendMessageToUser": "Pošalji poruku korisniku {name}",
+  "@tradeSendMessageToUser": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeSendProposal": "Pošalji prijedlog",
+  "tradeSendingProposal": "Slanje prijedloga...",
+  "tradeStarsOutOfFive": "{value} od 5",
+  "@tradeStarsOutOfFive": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeSubmitRating": "Pošalji ocjenu",
+  "tradeSubmittingRating": "Slanje ocjene...",
+  "tradeSuggestAutomatically": "Automatski predloži zamjenu",
+  "tradeSummaryTitle": "Sažetak zamjene",
+  "tradeTabAll": "Sve",
+  "tradeTabArchive": "Arhiva",
+  "tradeTabReceived": "Primljene",
+  "tradeTabSent": "Poslane",
+  "tradeTheirDuplicates": "Njegovi duplikati",
+  "tradeTheirDuplicatesYouNeed": "Njegovi duplikati koje ti još nemaš.",
+  "tradeUserCanOffer": "{name} može ponuditi",
+  "@tradeUserCanOffer": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserHasNoDuplicatesYouNeed": "{name} trenutačno nema duplikate koji su ti potrebni.",
+  "@tradeUserHasNoDuplicatesYouNeed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserNeedsNoneOfYourDuplicates": "{name} trenutačno ne treba nijedan tvoj duplikat.",
+  "@tradeUserNeedsNoneOfYourDuplicates": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserOffers": "{name} nudi:",
+  "@tradeUserOffers": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserSearchError": "Korisnike nije moguće pretražiti:\n{error}",
+  "@tradeUserSearchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeWantedItemsNextStep": "Popis željenih predmeta dolazi u sljedećem koraku.",
+  "tradeWith": "Zamjena s",
+  "tradeYouCanOffer": "Ti možeš ponuditi",
+  "tradeYouGive": "Daješ",
+  "tradeYouOfferColon": "Ti nudiš:",
+  "tradeYouOfferCount": "{count} nudiš",
+  "@tradeYouOfferCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeYouReceive": "Primaš",
+  "tradeYouReceiveCount": "{count} dobivaš",
+  "@tradeYouReceiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeYourDuplicatesTheyNeed": "Tvoji duplikati koje ovaj korisnik još nema.",
+  "tradeAllowsInternationalTrades": "Dopušta međunarodne zamjene",
+  "tradeActionExecutionError": "Radnju nije moguće izvršiti: {error}",
+  "@tradeActionExecutionError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeActionCompletedTitle": "Zamjena je dovršena",
+  "tradeActionCompletedDescription": "Obje strane potvrdile su predaju i primitak kartica. Inventari su ažurirani.",
+  "tradeActionRejectedTitle": "Ponuda je odbijena",
+  "tradeActionCancelledTitle": "Ponuda je otkazana",
+  "tradeActionNoActionRequired": "Za ovu ponudu više nije potrebna nikakva radnja.",
+  "tradeActionYourTurnTitle": "Ti si na potezu",
+  "tradeActionReviewOfferDescription": "Pregledaj kartice i prihvati ponudu, odbij je ili pošalji protuponudu.",
+  "tradeActionOtherTurnTitle": "Druga strana je na potezu",
+  "tradeActionWaitingResponseDescription": "Trenutačno nije potrebna nikakva radnja. Čeka se odgovor drugog korisnika.",
+  "tradeActionNoActionTitle": "Trenutačno nije potrebna nikakva radnja",
+  "tradeActionStatusNoResponseDescription": "Status zamjene ne zahtijeva tvoj odgovor.",
+  "tradeActionNextStepTitle": "Sljedeći korak",
+  "tradeActionConfirmHandoverDescription": "Kada svoje kartice stvarno predaš drugoj strani, potvrdi predaju. Zatim će biti oduzete iz tvog inventara.",
+  "tradeActionConfirmReceiptDescription": "Kada dogovorene kartice stvarno primiš, potvrdi primitak. Zatim će biti dodane u tvoj inventar.",
+  "tradeActionWaitingOtherHandoverDescription": "Već si potvrdio predaju. Čeka se da druga strana preda svoje kartice.",
+  "tradeActionWaitingOtherConfirmationTitle": "Čeka se potvrda druge strane",
+  "tradeActionWaitingOtherReceiptDescription": "Već si potvrdio primitak. Zamjena će se dovršiti kada i druga strana potvrdi primitak.",
+  "tradeActionWaitingNextConfirmationDescription": "Čeka se sljedeća potvrda druge strane.",
+  "tradeStatusCompletedTitle": "Zamjena dovršena",
+  "tradeStatusCompletedSubtitle": "Oba korisnika potvrdila su predaju i primitak.",
+  "tradeStatusCompletedBadge": "Dovršena",
+  "tradeStatusRejectedTitle": "Ponuda odbijena",
+  "tradeStatusRejectedSubtitle": "Ovaj prijedlog zamjene nije prihvaćen.",
+  "tradeStatusRejectedBadge": "Odbijena",
+  "tradeStatusCancelledTitle": "Ponuda otkazana",
+  "tradeStatusCancelledSubtitle": "Pošiljatelj je otkazao prijedlog zamjene.",
+  "tradeStatusCancelledBadge": "Otkazana",
+  "tradeStatusCounterOfferReceivedTitle": "Primio si protuponudu",
+  "tradeStatusAwaitingYourResponseTitle": "Ponuda čeka tvoj odgovor",
+  "tradeStatusReviewOfferSubtitle": "Pregledaj kartice i odaberi Prihvati, Odbij ili Protuponuda.",
+  "tradeStatusWaitingForYouBadge": "Čeka tebe",
+  "tradeStatusCounterOfferSentTitle": "Protuponuda poslana",
+  "tradeStatusOfferSentTitle": "Ponuda poslana",
+  "tradeStatusWaitingOtherUserSubtitle": "Čeka se odgovor drugog korisnika.",
+  "tradeStatusWaitingResponseBadge": "Čeka odgovor",
+  "tradeStatusReceivedTitle": "Primio si paket",
+  "tradeStatusReceivedSubtitle": "Primljene kartice dodane su u inventar. Čeka se još potvrda druge strane.",
+  "tradeStatusReceivedBadge": "Primljeno",
+  "tradeStatusBothOnWayTitle": "Oba paketa su na putu",
+  "tradeStatusPackageOnWayTitle": "Paket je na putu prema tebi",
+  "tradeStatusBothOnWaySubtitle": "Oba paketa su predana. Kada primiš paket, potvrdi primitak.",
+  "tradeStatusOtherSentSubtitle": "Druga strana je predala paket. Tvoje kartice su još rezervirane.",
+  "tradeStatusOnWayBadge": "Na putu",
+  "tradeStatusSentTitle": "Poslao si paket",
+  "tradeStatusSentSubtitle": "Predane kartice uklonjene su iz inventara. Čeka se druga strana.",
+  "tradeStatusSentBadge": "Poslano",
+  "tradeStatusOtherReceivedTitle": "Druga strana je primila paket",
+  "tradeStatusConfirmWhenReceivedSubtitle": "Kada primiš svoju pošiljku, potvrdi primitak.",
+  "tradeStatusWaitingReceiptBadge": "Čeka primitak",
+  "tradeStatusAgreedTitle": "Zamjena dogovorena",
+  "tradeStatusAgreedSubtitle": "Kartice na obje strane su rezervirane. Inventar se mijenja tek nakon potvrde predaje ili primitka.",
+  "tradeStatusAgreedBadge": "Dogovorena",
+  "authLoginSubtitle": "Prijavi se na svoj račun",
+  "authRegisterSubtitle": "Izradi novi kolekcionarski račun",
+  "authDisplayNameLabel": "Prikazano ime",
+  "authDisplayNameHint": "Na primjer Marko",
+  "authDisplayNameRequired": "Unesi prikazano ime.",
+  "authDisplayNameMinLength": "Ime mora imati najmanje 2 znaka.",
+  "authDisplayNameMaxLength": "Ime može imati najviše 40 znakova.",
+  "authEmailLabel": "Adresa e-pošte",
+  "authEmailRequired": "Unesi adresu e-pošte.",
+  "authEmailInvalid": "Unesi valjanu adresu e-pošte.",
+  "authPasswordLabel": "Lozinka",
+  "authShowPassword": "Prikaži lozinku",
+  "authHidePassword": "Sakrij lozinku",
+  "authPasswordRequired": "Unesi lozinku.",
+  "authPasswordMinLength": "Lozinka mora imati najmanje 6 znakova.",
+  "authConfirmPasswordLabel": "Ponovi lozinku",
+  "authConfirmPasswordRequired": "Ponovno unesi lozinku.",
+  "authPasswordsDoNotMatch": "Lozinke se ne podudaraju.",
+  "authLoginButton": "Prijava",
+  "authCreateAccountButton": "Izradi račun",
+  "authNoAccountRegister": "Još nemaš račun? Registriraj se",
+  "authHaveAccountLogin": "Već imaš račun? Prijavi se",
+  "authInvalidData": "Uneseni podaci nisu valjani.",
+  "authUnexpectedError": "Dogodila se neočekivana pogreška: {error}",
+  "authFirebaseInvalidEmail": "Adresa e-pošte nije valjana.",
+  "authFirebaseEmailAlreadyInUse": "Račun s ovom adresom e-pošte već postoji.",
+  "authFirebaseWeakPassword": "Lozinka je preslaba.",
+  "authFirebaseInvalidCredentials": "Adresa e-pošte ili lozinka nisu ispravne.",
+  "authFirebaseTooManyRequests": "Previše pokušaja. Pokušaj ponovno kasnije.",
+  "authFirebaseNetworkError": "Provjeri internetsku vezu.",
+  "authFirebaseGenericError": "Prijava ili registracija nije uspjela.",
+  "favoritesTitle": "Moji favoriti",
+  "favoritesSearchHint": "Pretraži favorite",
+  "favoritesClearSearch": "Očisti",
+  "favoritesRemoved": "Uklonjeno iz favorita.",
+  "favoritesNamedItemRemoved": "„{name}“ je uklonjen iz favorita.",
+  "favoritesRemoveError": "Favorit nije moguće ukloniti: {error}",
+  "favoritesUnnamedItem": "Predmet bez imena",
+  "favoritesRemoveTooltip": "Ukloni iz favorita",
+  "favoritesEmptyTitle": "Još nemaš favorita",
+  "favoritesEmptyDescription": "Na stranici s pojedinostima predmeta pritisni srce i predmet će se pojaviti ovdje.",
+  "favoritesNoResults": "Nema rezultata.",
+  "favoritesNoResultsForQuery": "Za „{query}“ nisu pronađeni favoriti.",
+  "favoritesLoadError": "Favorite nije moguće učitati.",
+  "myCollectionsTitle": "Moje kolekcije",
+  "myCollectionsAddFromCatalog": "Dodaj kolekciju iz kataloga",
+  "myCollectionsAddButton": "Dodaj kolekciju",
+  "myCollectionsRemoveTitle": "Ukloni kolekciju",
+  "myCollectionsRemoveQuestion": "Želiš li ukloniti „{name}“ iz svojih kolekcija?",
+  "myCollectionsRemoveButton": "Ukloni",
+  "myCollectionsRemoved": "„{name}“ je uklonjena iz tvojih kolekcija.",
+  "myCollectionsRemoveError": "Kolekciju nije moguće ukloniti: {error}",
+  "myCollectionsLoadError": "Tvoje kolekcije nije moguće učitati:\n{error}",
+  "myCollectionsCatalogLoadError": "Kolekciju nije moguće učitati.",
+  "myCollectionsCatalogMissing": "Kolekcija iz kataloga ne postoji.",
+  "myCollectionsStatisticsLoadError": "Statistiku kolekcije nije moguće učitati.",
+  "myCollectionsStatisticsUnavailable": "Statistika kolekcije nije dostupna.",
+  "myCollectionsEmptyTitle": "Još nemaš dodanih kolekcija.",
+  "myCollectionsEmptyDescription": "Odaberi kolekciju iz središnjeg kataloga.",
+  "myCollectionsOpenCatalog": "Otvori katalog",
+  "myCollectionsUnnamedCollection": "Kolekcija bez imena",
+  "myCollectionsMenuTooltip": "Mogućnosti kolekcije",
+  "myCollectionsEditMenu": "Uredi",
+  "myCollectionsRemoveMenu": "Ukloni",
+  "myCollectionsProgressCount": "Prikupljeno: {owned} / {total}",
+  "myCollectionsDuplicateCount": "Duplikati: {count}",
+  "myCollectionsMissingCount": "Nedostaje: {count}",
+  "@authUnexpectedError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesNamedItemRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesNoResultsForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoveQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsProgressCount": {
+    "placeholders": {
+      "owned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@myCollectionsDuplicateCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@myCollectionsMissingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectors": "Kolekcionari",
+  "editProfileDisplayName": "Ime za prikaz",
+  "editProfileCity": "Grad",
+  "editProfileBio": "Opis",
+  "editProfilePublicTitle": "Javni profil",
+  "editProfilePublicSubtitle": "Drugi korisnici mogu te pronaći.",
+  "editProfileInternationalTitle": "Dopusti međunarodne zamjene",
+  "editProfileInternationalSubtitle": "Možeš primati ponude iz drugih država.",
+  "editProfileSave": "Spremi",
+  "editProfileSaving": "Spremanje…",
+  "editProfileSaved": "Profil je uspješno spremljen.",
+  "editProfileSaveError": "Profil nije moguće spremiti: {error}",
+  "editProfileLoadError": "Profil nije moguće učitati:\n{error}",
+  "editProfileMissing": "Profil ne postoji.",
+  "editProfileDisplayNameRequired": "Unesi ime za prikaz.",
+  "collectorsSearchLabel": "Pretraži kolekcionare",
+  "collectorsSearchHint": "Unesi ime za prikaz",
+  "collectorsSearchError": "Korisnike nije moguće pretražiti:\n{error}",
+  "collectorsNoResults": "Nisu pronađeni kolekcionari.",
+  "collectorsSearchDescription": "Pronađi druge kolekcionare prema imenu za prikaz.",
+  "collectorsInternationalAllowed": "Međunarodne zamjene dopuštene",
+  "collectorsLocalOnly": "Samo lokalne zamjene",
+  "collectorProfileTitle": "Profil kolekcionara",
+  "collectorProfileMissing": "Korisnički profil ne postoji.",
+  "collectorChatOpenError": "Razgovor nije moguće otvoriti:\n{error}",
+  "collectorOpeningChat": "Otvaranje razgovora…",
+  "collectorSendMessage": "Pošalji poruku",
+  "collectorInternationalTrades": "Međunarodne zamjene",
+  "collectorLocalTrades": "Lokalne zamjene",
+  "collectorAbout": "O kolekcionaru",
+  "collectorPrivateTitle": "Ovaj profil je privatan",
+  "collectorPrivateDescription": "Lokacija, opis i komentari ocjena nisu javno prikazani.",
+  "collectorProfileLoadError": "Profil nije moguće učitati:\n{error}",
+  "ratingUnavailable": "Ocjena nije dostupna",
+  "ratingLoading": "Učitavanje ocjena",
+  "ratingNone": "Nema ocjena",
+  "ratingCount": "{count, plural, one{{count} ocjena} few{{count} ocjene} other{{count} ocjena}}",
+  "ratingCommentsLoadError": "Komentare ocjena nije moguće učitati.",
+  "ratingNoPublicComments": "Ovaj kolekcionar još nema javnih komentara.",
+  "ratingRecentComments": "Najnoviji komentari",
+  "@editProfileSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@editProfileLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorsSearchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorChatOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorProfileLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@ratingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogCategorySportsCards": "Sportske kartice",
+  "collectorsNavigation": "Korisnici",
+  "tradeManualStepRecipient": "Primatelj",
+  "tradeManualStepItems": "Kartice",
+  "tradeManualStepSummary": "Sažetak",
+  "tradeManualChooseRecipientDescription": "Pronađi kolekcionara kojem želiš poslati ponudu za zamjenu.",
+  "tradeManualChangeRecipient": "Promijeni",
+  "tradeManualLoadingOptions": "Provjeravam zajedničke kolekcije i dostupne kartice…",
+  "tradeManualOptionsError": "Kartice za zamjenu nije moguće učitati: {error}",
+  "tradeManualNoCommonCollections": "Nemate zajedničku kolekciju",
+  "tradeManualNoCommonCollectionsDescription": "Za ručnu zamjenu oba korisnika moraju imati dodanu barem jednu istu kolekciju.",
+  "tradeManualNoAvailableItems": "Trenutačno nema dostupnih kartica",
+  "tradeManualNeedsBothDirections": "Za ponudu svaki korisnik mora imati barem jedan dostupan duplikat.",
+  "tradeManualChooseCollection": "Kolekcija",
+  "tradeManualSelectionsRemainAcrossCollections": "Jedna ponuda može sadržavati kartice samo iz jedne kolekcije. Promjena kolekcije briše odabir.",
+  "tradeManualNoOfferedItemsInCollection": "U ovoj kolekciji nemaš dostupnih duplikata.",
+  "tradeManualNoRequestedItemsInCollection": "Drugi korisnik u ovoj kolekciji nema dostupnih duplikata.",
+  "tradeManualSelectedItems": "Odabrano: {count}",
+  "tradeManualAvailableQuantity": "Dostupno za zamjenu: {count}",
+  "tradeManualChooseAtLeastOneEach": "Odaberi barem jednu karticu na svakoj strani zamjene.",
+  "tradeManualReviewOffer": "Pregledaj ponudu",
+  "tradeManualSummaryRecipient": "Primatelj",
+  "tradeManualSummaryOffering": "Nudim",
+  "tradeManualSummaryRequesting": "Želim",
+  "tradeManualSendOffer": "Pošalji ponudu",
+  "tradeManualSendingOffer": "Slanje ponude…",
+  "tradeManualOfferCreated": "Ponuda za zamjenu je poslana.",
+  "tradeManualOfferError": "Ponudu nije moguće poslati: {error}",
+  "tradeManualYourInventoryUnavailable": "Kartica #{itemNumber} više nije dostupna među tvojim duplikatima.",
+  "tradeManualTheirInventoryUnavailable": "Kartica #{itemNumber} više nije dostupna kod drugog korisnika.",
+  "tradeManualCatalogItemUnavailable": "Karticu #{itemNumber} nije moguće povezati s katalogom.",
+  "tradeManualInvalidOffer": "Ponuda nije valjana. Provjeri odabrane kartice i količine.",
+  "tradeManualBack": "Natrag",
+  "@tradeManualOptionsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualOfferError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualYourInventoryUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualTheirInventoryUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualCatalogItemUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualSelectedItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@tradeManualAvailableQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "forgotPassword": "Zaboravljena lozinka?",
+  "forgotPasswordTitle": "Ponovno postavljanje lozinke",
+  "forgotPasswordDescription": "Unesi adresu e-pošte svojeg računa. Poslat ćemo ti poveznicu za postavljanje nove lozinke.",
+  "sendPasswordResetEmail": "Pošalji poveznicu",
+  "sendingEmail": "Slanje…",
+  "passwordResetEmailSentTitle": "Provjeri e-poštu",
+  "passwordResetEmailSentDescription": "Ako račun s ovom adresom e-pošte postoji, primit ćeš poveznicu za ponovno postavljanje lozinke.",
+  "backToSignIn": "Natrag na prijavu",
+  "passwordResetError": "Poveznicu za ponovno postavljanje lozinke nije moguće poslati: {error}",
+  "verifyEmailTitle": "Potvrdi adresu e-pošte",
+  "verifyEmailDescription": "Poslali smo poruku za potvrdu na {email}. Otvori poveznicu u poruci, a zatim provjeri status.",
+  "checkVerificationStatus": "Provjeri status",
+  "checkingVerification": "Provjera…",
+  "resendVerificationEmail": "Ponovno pošalji poruku",
+  "verificationEmailSent": "Poruka za potvrdu je poslana.",
+  "verificationEmailSendError": "Poruku za potvrdu nije moguće poslati: {error}",
+  "emailVerificationConfirmed": "Adresa e-pošte je potvrđena.",
+  "emailStillNotVerified": "Adresa e-pošte još nije potvrđena.",
+  "continueWithoutVerification": "Za sada nastavi bez potvrde",
+  "emailVerified": "E-pošta je potvrđena",
+  "emailNotVerified": "E-pošta nije potvrđena",
+  "emailVerificationReminder": "Adresa e-pošte još nije potvrđena",
+  "accountSecurityTitle": "Račun i sigurnost",
+  "accountSecuritySubtitle": "E-pošta, lozinka i brisanje računa",
+  "changePasswordTitle": "Promijeni lozinku",
+  "changePasswordSubtitle": "Postavi novu lozinku za prijavu",
+  "changePasswordDescription": "Radi sigurnosti najprije unesi trenutačnu lozinku, a zatim odaberi novu.",
+  "currentPassword": "Trenutačna lozinka",
+  "currentPasswordRequired": "Unesi trenutačnu lozinku.",
+  "newPassword": "Nova lozinka",
+  "newPasswordRequired": "Unesi novu lozinku.",
+  "newPasswordMustDiffer": "Nova lozinka mora se razlikovati od trenutačne.",
+  "confirmNewPassword": "Ponovi novu lozinku",
+  "confirmNewPasswordRequired": "Ponovno unesi novu lozinku.",
+  "changePasswordButton": "Promijeni lozinku",
+  "changingPassword": "Promjena…",
+  "passwordChanged": "Lozinka je uspješno promijenjena.",
+  "passwordChangeError": "Lozinku nije moguće promijeniti: {error}",
+  "deleteAccountTitle": "Izbriši račun",
+  "deleteAccountSubtitle": "Trajno ukloni profil, kolekcije i favorite",
+  "deleteAccountWarningTitle": "Ova se radnja ne može poništiti",
+  "deleteAccountWarning": "Izbrisat će se tvoj profil, inventar, kolekcije, favoriti i račun za prijavu.",
+  "deleteAccountHistoryNotice": "Radi očuvanja povijesti drugih sudionika dovršene zamjene, poruke i poslane ocjene ostaju spremljene bez tvojeg javnog profila.",
+  "deleteAccountConfirmationWord": "IZBRIŠI",
+  "deleteAccountConfirmationLabel": "Za potvrdu upiši {word}",
+  "deleteAccountConfirmationInvalid": "Upiši {word}.",
+  "deleteAccountButton": "Trajno izbriši račun",
+  "deletingAccount": "Brisanje računa…",
+  "deleteAccountConfirmationTitle": "Izbrisati ovaj račun?",
+  "deleteAccountConfirmationMessage": "Račun i tvoji osobni podaci profila bit će trajno uklonjeni.",
+  "accountDeleteError": "Račun nije moguće izbrisati: {error}",
+  "signOutConfirmationTitle": "Odjava",
+  "signOutConfirmationMessage": "Želiš li se odjaviti s ovog računa?",
+  "authFirebaseRequiresRecentLogin": "Radi sigurnosti ponovno se prijavi prije nastavka.",
+  "authFirebaseUserDisabled": "Ovaj korisnički račun je onemogućen.",
+  "authFirebaseOperationNotAllowed": "Ovaj način prijave trenutačno nije omogućen.",
+  "@passwordResetError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@verifyEmailDescription": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "@verificationEmailSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@passwordChangeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleteAccountConfirmationLabel": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleteAccountConfirmationInvalid": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "@accountDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteActiveTrades": "Račun nije moguće izbrisati dok imaš aktivne ili nedovršene zamjene.",
+  "tradeManualShowAllSurpluses": "Prikaži sve duplikate",
+  "tradeManualSuggestedSurplusesDescription": "Najprije se prikazuju samo duplikati koji drugom korisniku dopunjuju kolekciju.",
+  "tradeManualAllSurplusesDescription": "Prikazuju se svi dostupni duplikati oba korisnika.",
+  "tradeManualNoSuggestedOfferedItemsInCollection": "Nemaš duplikate koji bi ovom korisniku dopunili kolekciju.",
+  "tradeManualNoSuggestedRequestedItemsInCollection": "Ovaj korisnik nema duplikate koji bi dopunili tvoju kolekciju.",
+  "tradeRatingTitle": "Ocjena zamjene",
+  "tradeRatingYourRating": "Tvoja ocjena",
+  "tradeRatingEdit": "Uredi ocjenu",
+  "tradeRatingCommentHint": "Kratak komentar (neobavezno)",
+  "tradeRatingSaveChanges": "Spremi promjene",
+  "tradeRatingUpdating": "Spremanje promjena...",
+  "tradeRatingUpdatedSuccessfully": "Ocjena je uspješno ažurirana.",
+  "tradeRatingSelectStars": "Odaberi od 1 do 5 zvjezdica.",
+  "ratingReviewsTitle": "Primljene ocjene",
+  "ratingNoReviews": "Ovaj kolekcionar još nema ocjena.",
+  "safetySettingsTitle": "Sigurnost i privatnost",
+  "safetyMenu": "Sigurnosne mogućnosti",
+  "safetyBlockUser": "Blokiraj korisnika",
+  "safetyBlockUserTitle": "Blokiranje korisnika",
+  "safetyBlockUserConfirmation": "Ovaj korisnik ti neće moći slati poruke ni nove ponude za zamjenu. Ni ti njemu nećeš moći slati poruke ili novu ponudu.",
+  "safetyUserBlocked": "Korisnik je blokiran.",
+  "safetyUnblockUser": "Odblokiraj",
+  "safetyUnblockUserTitle": "Odblokiranje korisnika",
+  "safetyUnblockUserConfirmation": "Ponovno dopustiti poruke i nove ponude za zamjenu s ovim korisnikom?",
+  "safetyUserUnblocked": "Korisnik je odblokiran.",
+  "safetyReportUser": "Prijavi korisnika",
+  "safetyReportTrade": "Prijavi zamjenu",
+  "safetyReportMessage": "Prijavi poruku",
+  "safetyReportTitle": "Pošalji prijavu",
+  "safetyReportDescription": "Odaberi razlog i po želji dodaj detalje. Prijavu može pregledati samo administrator.",
+  "safetyReportReason": "Razlog",
+  "safetyReportReasonSpam": "Spam ili neželjeni sadržaj",
+  "safetyReportReasonHarassment": "Uznemiravanje ili vrijeđanje",
+  "safetyReportReasonFraud": "Sumnja na prijevaru",
+  "safetyReportReasonInappropriate": "Neprimjeren sadržaj",
+  "safetyReportReasonOther": "Drugo",
+  "safetyReportDetails": "Detalji (neobavezno)",
+  "safetyReportDetailsHint": "Ukratko opiši što se dogodilo.",
+  "safetyReportSubmit": "Pošalji prijavu",
+  "safetyReportSubmitting": "Slanje...",
+  "safetyReportSubmitted": "Prijava je poslana.",
+  "safetyReportError": "Prijavu nije bilo moguće poslati",
+  "safetyActionError": "Radnju nije bilo moguće izvršiti",
+  "safetyBlockedUsers": "Blokirani korisnici",
+  "safetyBlockedUsersDescription": "Pregledaj i odblokiraj korisnike.",
+  "safetyBlockedUsersLoadError": "Blokirane korisnike nije bilo moguće učitati.",
+  "safetyNoBlockedUsers": "Nemaš blokiranih korisnika.",
+  "safetyConversationBlockedByYou": "Blokirao si ovog korisnika. Razgovor ostaje vidljiv, ali nove poruke nije moguće poslati.",
+  "safetyConversationBlockedByOther": "Slanje novih poruka u ovom razgovoru nije dostupno.",
+  "safetyProfileBlockedByYou": "Blokirao si ovog korisnika.",
+  "safetyProfileBlockedByOther": "Komunikacija s ovim korisnikom nije dostupna.",
+  "safetyAdminReports": "Pregled prijava",
+  "safetyAdminReportsDescription": "Administrativni pregled prijavljenih korisnika i sadržaja.",
+  "safetyReportsLoadError": "Prijave nije bilo moguće učitati.",
+  "safetyNoReports": "Nema prijava za odabrani filtar.",
+  "safetyReportTypeUser": "Korisnik",
+  "safetyReportTypeMessage": "Poruka",
+  "safetyReportTypeTrade": "Zamjena",
+  "safetyReportStatusOpen": "Otvoreno",
+  "safetyReportStatusReviewing": "U pregledu",
+  "safetyReportStatusResolved": "Riješeno",
+  "safetyReportStatusDismissed": "Odbačeno",
+  "safetyReportStatusUpdated": "Status prijave je ažuriran.",
+  "safetyReporterId": "Prijavitelj",
+  "safetyReportedUserId": "Prijavljeni korisnik",
+  "safetyTargetId": "Prijavljeni sadržaj",
+  "safetyConversationId": "Razgovor",
+  "tradeDeliverySectionTitle": "Primopredaja i slanje",
+  "tradeDeliverySectionDescription": "Odaberi način primopredaje i podijeli potrebne privatne podatke s partnerom za zamjenu.",
+  "tradeDeliveryYourDetails": "Tvoji podaci",
+  "tradeDeliveryPartnerDetails": "Podaci partnera",
+  "tradeDeliveryYourDetailsMissing": "Još nisi dodao podatke za primopredaju ili slanje.",
+  "tradeDeliveryPartnerDetailsMissing": "Partner još nije dodao podatke za primopredaju ili slanje.",
+  "tradeDeliveryAdd": "Dodaj",
+  "tradeDeliveryEdit": "Uredi",
+  "tradeDeliveryFormTitle": "Podaci za primopredaju",
+  "tradeDeliveryChooseMethod": "Način primopredaje",
+  "tradeDeliveryByMail": "Poštom",
+  "tradeDeliveryInPerson": "Osobna primopredaja",
+  "tradeDeliveryFullName": "Ime i prezime",
+  "tradeDeliveryAddressLine1": "Adresa",
+  "tradeDeliveryAddressLine2": "Dodatni redak adrese (neobavezno)",
+  "tradeDeliveryPostalCode": "Poštanski broj",
+  "tradeDeliveryCity": "Mjesto",
+  "tradeDeliveryCountry": "Država",
+  "tradeDeliveryPhone": "Broj telefona (neobavezno)",
+  "tradeDeliveryMeetingDetails": "Detalji osobne primopredaje",
+  "tradeDeliveryMeetingDetailsHint": "Predloži mjesto, vrijeme ili način dogovora.",
+  "tradeDeliveryCarrier": "Dostavna služba (neobavezno)",
+  "tradeDeliveryCarrierHint": "Na primjer pošta, GLS ili DPD",
+  "tradeDeliveryTrackingNumber": "Broj za praćenje (neobavezno)",
+  "tradeDeliveryNotes": "Napomena (neobavezno)",
+  "tradeDeliveryNotesHint": "Dodaj važne upute za partnera.",
+  "tradeDeliveryPrivateTitle": "Privatni podaci",
+  "tradeDeliveryPrivateDescription": "Ovi podaci nisu javni. Može ih vidjeti samo drugi sudionik prihvaćene zamjene.",
+  "tradeDeliveryPrivateShortDescription": "Podaci su vidljivi samo sudionicima ove prihvaćene ili završene zamjene.",
+  "tradeDeliveryRequiredField": "Ovo je polje obavezno.",
+  "tradeDeliverySave": "Spremi podatke",
+  "tradeDeliverySaving": "Spremanje...",
+  "tradeDeliverySaved": "Podaci za primopredaju su spremljeni.",
+  "tradeDeliverySaveError": "Podatke nije bilo moguće spremiti: {error}",
+  "@tradeDeliverySaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeDeliveryLoadError": "Podatke za primopredaju nije bilo moguće učitati.",
+  "tradeDeliveryAddress": "Adresa za slanje",
+  "tradeDeliveryTrackingMissing": "Broj za praćenje još nije dodan.",
+  "tradeDeliveryCopyAddress": "Kopiraj adresu",
+  "tradeDeliveryCopyPhone": "Kopiraj broj telefona",
+  "tradeDeliveryCopyTracking": "Kopiraj broj za praćenje",
+  "tradeDeliveryCopied": "Podatak je kopiran.",
+  "continueLabel": "Nastavi",
+  "done": "Gotovo",
+  "betaOnboardingTitle": "Predstavljanje aplikacije",
+  "betaOnboardingSkip": "Preskoči",
+  "betaOnboardingStart": "Započni",
+  "betaOnboardingCollectionsTitle": "Zbirke na jednom mjestu",
+  "betaOnboardingCollectionsDescription": "Označi koje kartice imaš, koje ti nedostaju i koliko duplikata imaš. Pregled zbirke ažurira se tijekom unosa.",
+  "betaOnboardingTradesTitle": "Pronađi smislene zamjene",
+  "betaOnboardingTradesDescription": "SwapStash uspoređuje duplikate i kartice koje nedostaju te predlaže kolekcionare s kojima je moguća obostrano korisna zamjena.",
+  "betaOnboardingCompleteTradeTitle": "Dogovor, primopredaja i ocjena",
+  "betaOnboardingCompleteTradeDescription": "Pošalji ponudu, razgovaraj, privatno podijeli podatke za primopredaju ili slanje i nakon završetka ocijeni partnera.",
+  "betaOnboardingSafetyTitle": "Sigurnost i kontrola",
+  "betaOnboardingSafetyDescription": "Blokiraj korisnika, prijavi neprimjeren sadržaj i odluči koji su podaci javni, a koji su vidljivi samo partneru u zamjeni.",
+  "betaOnboardingShowAgain": "Ponovno prikaži predstavljanje",
+  "betaOnboardingShowAgainDescription": "Ponovno pregledaj glavne funkcije aplikacije.",
+  "legalAcceptanceTitle": "Uvjeti i privatnost",
+  "legalAcceptanceHeading": "Prije nastavka",
+  "legalAcceptanceDescription": "Pročitaj osnovna pravila korištenja i informacije o obradi osobnih podataka.",
+  "legalAgeConfirmation": "Potvrđujem da imam najmanje 13 godina. Ako sam u Sloveniji mlađi od 15 godina, imam dopuštenje roditelja ili skrbnika.",
+  "legalDocumentsConfirmation": "Pročitao sam i prihvaćam Uvjete korištenja i Politiku privatnosti.",
+  "legalAcceptAndContinue": "Prihvati i nastavi",
+  "legalAcceptanceSaving": "Spremanje prihvaćanja...",
+  "legalBetaNoticeTitle": "Zatvorena beta verzija",
+  "legalBetaNoticeDescription": "Aplikacija se još testira. Funkcije se mogu mijenjati, a povremeno su moguće pogreške ili prekidi.",
+  "legalTermsTitle": "Uvjeti korištenja",
+  "legalPrivacyTitle": "Politika privatnosti",
+  "legalEffectiveDate": "Vrijedi od: 24. srpnja 2026.",
+  "legalContactFooter": "Voditelj obrade: SwapStash · Kontakt: uros2004@gmail.com",
+  "legalTermsIntro": "Ovi uvjeti uređuju korištenje aplikacije SwapStash. Korištenjem aplikacije prihvaćaš ih.",
+  "legalTermsEligibilityTitle": "1. Dob i korisnički račun",
+  "legalTermsEligibilityBody": "Aplikaciju može koristiti osoba koja ima najmanje 13 godina. Kada primjenjivi zakon zahtijeva višu dob za samostalnu privolu, maloljetni korisnik mora dobiti dopuštenje roditelja ili skrbnika. U Sloveniji korisnik mlađi od 15 godina treba takvo dopuštenje. Korisnik mora navesti točne podatke, čuvati podatke za prijavu i odgovoran je za aktivnosti računa.",
+  "legalTermsServiceTitle": "2. Svrha usluge i beta verzija",
+  "legalTermsServiceBody": "SwapStash omogućuje vođenje zbirki, pronalaženje mogućih zamjena, ponude, poruke, dogovor o primopredaji i ocjenjivanje završenih zamjena. SwapStash nije prodavatelj, kupac, posrednik, dostavna služba ni strana dogovora između korisnika. Tijekom beta razdoblja funkcije se mogu mijenjati ili privremeno biti nedostupne.",
+  "legalTermsConductTitle": "3. Dopušteno korištenje",
+  "legalTermsConductBody": "Zabranjeni su uznemiravanje, prijetnje, govor mržnje, spam, obmana, prijevara, lažno predstavljanje, nezakonit sadržaj, ometanje aplikacije i neovlaštena automatizirana uporaba. Korisnik ne smije objaviti podatke druge osobe bez odgovarajuće pravne osnove.",
+  "legalTermsTradesTitle": "4. Zamjene i dostava",
+  "legalTermsTradesBody": "Korisnici sami provjeravaju stanje, autentičnost i vrijednost predmeta te dogovaraju primopredaju, troškove i praćenje pošiljke. SwapStash ne jamči da će druga strana ispuniti dogovor i ne nadoknađuje izgubljene, oštećene ili sporne pošiljke. Za osobnu primopredaju odaberi sigurno javno mjesto; maloljetnici trebaju uključiti roditelja ili skrbnika.",
+  "legalTermsContentTitle": "5. Poruke i korisnički sadržaj",
+  "legalTermsContentBody": "Korisnik ostaje odgovoran za sadržaj koji unese ili pošalje. Radi sigurnosti, prijava, sprječavanja zlouporabe ili zakonskih obveza SwapStash može ograničiti pristup, ukloniti sadržaj ili proslijediti podatke nadležnim tijelima kada je to potrebno i zakonito.",
+  "legalTermsSuspensionTitle": "6. Blokiranje i mjere",
+  "legalTermsSuspensionBody": "Korisnici mogu blokirati ili prijaviti druge korisnike. SwapStash može ograničiti ili ukinuti račun kada postoji opravdana sumnja na kršenje uvjeta, zlouporabu, sigurnosni rizik ili nezakonito ponašanje. Kada je moguće, korisnik će biti obaviješten o razlogu.",
+  "legalTermsLiabilityTitle": "7. Dostupnost i odgovornost",
+  "legalTermsLiabilityBody": "Usluga se pruža po načelu „kakva jest”. SwapStash nastoji osigurati siguran i pouzdan rad, ali ne jamči neprekidnu dostupnost, potpunu točnost ni uspjeh pojedine zamjene. Ograničenja odgovornosti vrijede samo u zakonom dopuštenom opsegu i ne isključuju prava koja se ne mogu ograničiti.",
+  "legalTermsChangesTitle": "8. Izmjene, pravo i kontakt",
+  "legalTermsChangesBody": "Uvjeti se mogu ažurirati zbog novih funkcija, sigurnosnih zahtjeva ili zakona. Kod važnih promjena aplikacija će zatražiti ponovno prihvaćanje. Primjenjuje se pravo Republike Slovenije uz poštovanje obveznih prava korisnika prema pravu njegove države. Pitanja pošalji na uros2004@gmail.com.",
+  "legalPrivacyIntro": "Ova politika objašnjava koje osobne podatke SwapStash obrađuje, zašto ih koristi i koja prava ima korisnik.",
+  "legalPrivacyControllerTitle": "1. Voditelj obrade i kontakt",
+  "legalPrivacyControllerBody": "Voditelj obrade osobnih podataka je SwapStash. Pitanja, zahtjeve ili prigovore u vezi privatnosti pošalji na uros2004@gmail.com.",
+  "legalPrivacyDataTitle": "2. Podaci koje obrađujemo",
+  "legalPrivacyDataBody": "Obrađujemo podatke računa i prijave, e-adresu, prikazno ime, državu, grad, jezik, fotografiju profila i opis; podatke o zbirkama, karticama i duplikatima; ponude, statuse zamjena, ocjene, poruke i prijave; dobrovoljno unesene podatke za primopredaju ili slanje; tokene za push obavijesti te osnovne tehničke i sigurnosne podatke.",
+  "legalPrivacyPurposeTitle": "3. Svrhe i pravne osnove",
+  "legalPrivacyPurposeBody": "Podatke koristimo za izradu i upravljanje računom, funkcije zbirki i zamjena, komunikaciju, obavijesti, sprječavanje zlouporabe, obradu prijava, sigurnost, podršku i zakonske obveze. Pravne osnove uključuju izvršavanje dogovora s korisnikom, privolu, legitimne interese sigurnosti i poboljšanja usluge te zakonske obveze.",
+  "legalPrivacyVisibilityTitle": "4. Vidljivost i dijeljenje s drugim korisnicima",
+  "legalPrivacyVisibilityBody": "Javni profil može prikazivati odabrano ime, fotografiju, lokaciju, opis, ocjene i statistiku zamjena. Poruke su vidljive sudionicima razgovora. Adresa, telefon, podaci osobne primopredaje i praćenje pošiljke vidljivi su samo sudionicima prihvaćene ili završene zamjene. Prijave su u dopuštenom opsegu vidljive prijavitelju i administratoru.",
+  "legalPrivacyRetentionTitle": "5. Čuvanje i brisanje",
+  "legalPrivacyRetentionBody": "Podatke čuvamo koliko je potrebno za korištenje računa, sigurnost, rješavanje sporova i zakonske obveze. Korisnik može zatražiti brisanje računa. Neki se zapisi mogu ograničeno čuvati radi sprječavanja zlouporabe, pravnih zahtjeva ili zakonske obveze. Lokalno prihvaćanje dokumenata sprema se na uređaju.",
+  "legalPrivacyProcessorsTitle": "6. Pružatelji usluga i prijenosi",
+  "legalPrivacyProcessorsBody": "Za hosting, prijavu, bazu podataka, pohranu fotografija i push obavijesti koristimo Firebase odnosno Google Cloud i druge tehničke pružatelje. Podatke obrađuju prema uputama i ugovornim obvezama. Kod obrade izvan Europskog gospodarskog prostora koriste se odgovarajuće zaštitne mjere poput odluka o primjerenosti ili standardnih ugovornih klauzula.",
+  "legalPrivacyRightsTitle": "7. Prava korisnika",
+  "legalPrivacyRightsBody": "Ovisno o okolnostima možeš zatražiti pristup, ispravak, brisanje, ograničenje, prenosivost ili uložiti prigovor. Privolu možeš povući za budućnost. Zahtjeve pošalji na uros2004@gmail.com. Možeš podnijeti pritužbu slovenskom Informacijskom pooblaščencu ili nadležnom nadzornom tijelu.",
+  "legalPrivacyChildrenTitle": "8. Djeca i mladi",
+  "legalPrivacyChildrenBody": "SwapStash nije namijenjen djeci mlađoj od 13 godina. Korisnik u dobi od 13 ili 14 godina u Sloveniji mora imati dopuštenje roditelja ili skrbnika. Roditelji ili skrbnici mogu zatražiti pregled ili brisanje podataka maloljetnika. Maloljetnici ne bi trebali javno objavljivati kućnu adresu i osobne primopredaje trebaju obavljati uz odraslu osobu.",
+  "legalPrivacySecurityTitle": "9. Sigurnost i izmjene politike",
+  "legalPrivacySecurityBody": "Koristimo tehničke i organizacijske mjere kao što su provjere pristupa, privatne podzbirke, sigurnosna pravila baze, blokiranje, prijave i sigurna prijava. Nijedan sustav nije potpuno siguran. Važne promjene bit će prikazane u aplikaciji i mogu zahtijevati ponovno prihvaćanje.",
+  "aboutAppTitle": "O aplikaciji",
+  "aboutAppDescription": "SwapStash pomaže kolekcionarima voditi zbirke, pronaći odgovarajuće partnere i sigurnije završiti zamjene.",
+  "aboutVersion": "Verzija aplikacije",
+  "aboutVersionLoading": "Učitavanje verzije...",
+  "aboutOperator": "Voditelj obrade",
+  "aboutContact": "Kontakt i podrška",
+  "aboutLegalSection": "Pravne informacije",
+  "aboutSendFeedback": "Pošalji povratne informacije",
+  "aboutFeedbackEmailSubject": "SwapStash beta – povratne informacije",
+  "aboutFeedbackOpenError": "Aplikaciju za e-poštu nije bilo moguće otvoriti.",
+  "aboutBetaFooter": "Zatvorena beta verzija · podaci i funkcije mogu se promijeniti prije javne objave.",
+  "settingsAboutAndLegalTitle": "O aplikaciji i pravne informacije",
+  "settingsAboutAppSubtitle": "Verzija, kontakt, povratne informacije i dokumenti"
+}

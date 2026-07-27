@@ -15,19 +15,45 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    function interactionBlocked(firstUserId, secondUserId) {
+      return exists(
+            /databases/$(database)/documents/users/$(firstUserId)/blockedUsers/$(secondUserId)
+          )
+          || exists(
+            /databases/$(database)/documents/users/$(secondUserId)/blockedUsers/$(firstUserId)
+          );
+    }
+
+    // Začasna razvojna administratorska pravica za centralni katalog.
+    // Pred objavo produkcijske različice jo zamenjaj s Firebase custom claimom.
+    function isCatalogAdmin() {
+      return isSignedIn()
+          && request.auth.uid == 'GTCWV8yUJjdCxFpNRfHllKs2ctD3';
+    }
+
     // ===========================
     // KATALOŠKE ZBIRKE
     // ===========================
 
     match /catalogCollections/{collectionId} {
+
+      // Katalog lahko berejo vsi prijavljeni uporabniki.
       allow read: if isSignedIn();
-      allow write: if false;
+
+      // Centralni katalog lahko ustvarja, spreminja in briše samo skrbnik.
+      allow create, update, delete: if isCatalogAdmin();
+
+      // ===========================
+      // KATALOŠKI PREDMETI
+      // ===========================
 
       match /items/{itemId} {
+
+        // Predmete lahko berejo vsi prijavljeni uporabniki.
         allow read: if isSignedIn();
 
-        // Kataloške kartice trenutno urejamo samo administrativno.
-        allow write: if false;
+        // Uvoz in urejanje predmetov sta dovoljena samo skrbniku.
+        allow create, update, delete: if isCatalogAdmin();
       }
     }
 
@@ -94,6 +120,35 @@ service cloud.firestore {
       }
 
       // ===========================
+      // BLOKIRANI UPORABNIKI
+      // ===========================
+
+      match /blockedUsers/{blockedUserId} {
+
+        // Lastnik vidi svoj celoten seznam. Blokirani uporabnik lahko
+        // preveri samo svoj konkretni dokument, kar je potrebno za
+        // obojestransko blokiranje sporočil in ponudb.
+        allow get: if isOwner(userId)
+            || (
+              isSignedIn()
+              && request.auth.uid == blockedUserId
+            );
+
+        allow list: if isOwner(userId);
+
+        allow create, update: if isOwner(userId)
+            && blockedUserId != userId
+            && request.resource.data.keys().hasOnly([
+              'blockedUserId',
+              'createdAt'
+            ])
+            && request.resource.data.blockedUserId == blockedUserId
+            && request.resource.data.createdAt is timestamp;
+
+        allow delete: if isOwner(userId);
+      }
+
+      // ===========================
       // OCENE PO ZAKLJUČENI MENJAVI
       // ===========================
 
@@ -111,29 +166,49 @@ service cloud.firestore {
           return get(ratingTradePath()).data;
         }
 
-        function isValidCompletedTradeRating() {
-          return isSignedIn()
+        function hasValidRatingFields() {
+          return request.resource.data.keys().hasAll([
+                'tradeId',
+                'reviewerId',
+                'reviewedUserId',
+                'stars',
+                'comment',
+                'createdAt',
+                'updatedAt'
+              ])
               && request.resource.data.keys().hasOnly([
                 'tradeId',
                 'reviewerId',
                 'reviewedUserId',
                 'stars',
                 'comment',
-                'createdAt'
+                'createdAt',
+                'updatedAt'
               ])
               && request.resource.data.tradeId is string
               && request.resource.data.tradeId.size() > 0
-              && request.resource.data.reviewerId == request.auth.uid
-              && request.resource.data.reviewedUserId == userId
-              && request.resource.data.reviewerId != userId
-              && ratingId
-                  == request.resource.data.tradeId + '_' + request.auth.uid
+              && request.resource.data.reviewerId is string
+              && request.resource.data.reviewedUserId is string
               && request.resource.data.stars is int
               && request.resource.data.stars >= 1
               && request.resource.data.stars <= 5
               && request.resource.data.comment is string
               && request.resource.data.comment.size() <= 300
               && request.resource.data.createdAt is timestamp
+              && (
+                request.resource.data.updatedAt == null
+                || request.resource.data.updatedAt is timestamp
+              );
+        }
+
+        function isValidCompletedTradeRating() {
+          return isSignedIn()
+              && hasValidRatingFields()
+              && request.resource.data.reviewerId == request.auth.uid
+              && request.resource.data.reviewedUserId == userId
+              && request.resource.data.reviewerId != userId
+              && ratingId
+                  == request.resource.data.tradeId + '_' + request.auth.uid
               && ratingTradeExists()
               && ratingTrade().status == 'completed'
               && (
@@ -149,16 +224,31 @@ service cloud.firestore {
               );
         }
 
-        // Ocene so vidne prijavljenim uporabnikom.
-        // To omogoča prikaz povprečja in komentarjev na profilu.
+        function keepsRatingIdentity() {
+          return request.resource.data.tradeId == resource.data.tradeId
+              && request.resource.data.reviewerId
+                  == resource.data.reviewerId
+              && request.resource.data.reviewedUserId
+                  == resource.data.reviewedUserId
+              && request.resource.data.createdAt
+                  == resource.data.createdAt;
+        }
+
+        // Prejete ocene in komentarji so vidni prijavljenim uporabnikom.
         allow get, list: if isSignedIn();
 
-        // Dokument ima deterministični ID, zato ga isti uporabnik
-        // za isto menjavo lahko ustvari samo enkrat.
-        allow create: if isValidCompletedTradeRating();
+        // En deterministični dokument na menjavo in ocenjevalca.
+        allow create: if isValidCompletedTradeRating()
+            && request.resource.data.updatedAt == null;
 
-        // Oddane ocene ni mogoče spreminjati ali brisati.
-        allow update, delete: if false;
+        // Ocenjevalec lahko pozneje popravi zvezdice ali komentar,
+        // ne more pa zamenjati menjave, avtorja, prejemnika ali datuma.
+        allow update: if isValidCompletedTradeRating()
+            && resource.data.reviewerId == request.auth.uid
+            && keepsRatingIdentity()
+            && request.resource.data.updatedAt is timestamp;
+
+        allow delete: if false;
       }
     }
 
@@ -183,7 +273,11 @@ service cloud.firestore {
       // Menjave samemu sebi ne dovolimo.
       allow create: if isSignedIn()
           && request.resource.data.senderId == request.auth.uid
-          && request.resource.data.receiverId != request.auth.uid;
+          && request.resource.data.receiverId != request.auth.uid
+          && !interactionBlocked(
+            request.resource.data.senderId,
+            request.resource.data.receiverId
+          );
 
       // Posamezno menjavo lahko neposredno prebere samo eden
       // od obeh udeležencev.
@@ -211,7 +305,224 @@ service cloud.firestore {
           && request.resource.data.senderId
               == resource.data.senderId
           && request.resource.data.receiverId
-              == resource.data.receiverId;
+              == resource.data.receiverId
+          && (
+            request.resource.data.status != 'countered'
+            || !interactionBlocked(
+              resource.data.senderId,
+              resource.data.receiverId
+            )
+          );
+
+      // ===========================
+      // ZASEBNI PODATKI ZA PREDAJO IN POŠILJANJE
+      // ===========================
+
+      match /deliveryDetails/{deliveryUserId} {
+
+        function parentTrade() {
+          return get(
+            /databases/$(database)/documents/trades/$(tradeId)
+          );
+        }
+
+        function isDeliveryParticipant() {
+          return isSignedIn()
+              && (
+                parentTrade().data.senderId == request.auth.uid
+                || parentTrade().data.receiverId == request.auth.uid
+              );
+        }
+
+        function deliveryDetailsAreVisible() {
+          return parentTrade().data.status in ['accepted', 'completed'];
+        }
+
+        function canWriteOwnDeliveryDetails() {
+          return isDeliveryParticipant()
+              && parentTrade().data.status == 'accepted'
+              && deliveryUserId == request.auth.uid;
+        }
+
+        function hasValidDeliveryDetails() {
+          return request.resource.data.keys().hasAll([
+                'userId',
+                'method',
+                'fullName',
+                'addressLine1',
+                'addressLine2',
+                'postalCode',
+                'city',
+                'country',
+                'phone',
+                'meetingDetails',
+                'carrier',
+                'trackingNumber',
+                'notes',
+                'createdAt',
+                'updatedAt'
+              ])
+              && request.resource.data.keys().hasOnly([
+                'userId',
+                'method',
+                'fullName',
+                'addressLine1',
+                'addressLine2',
+                'postalCode',
+                'city',
+                'country',
+                'phone',
+                'meetingDetails',
+                'carrier',
+                'trackingNumber',
+                'notes',
+                'createdAt',
+                'updatedAt'
+              ])
+              && request.resource.data.userId == deliveryUserId
+              && request.resource.data.method in ['mail', 'inPerson']
+              && request.resource.data.fullName is string
+              && request.resource.data.fullName.size() <= 120
+              && request.resource.data.addressLine1 is string
+              && request.resource.data.addressLine1.size() <= 120
+              && request.resource.data.addressLine2 is string
+              && request.resource.data.addressLine2.size() <= 120
+              && request.resource.data.postalCode is string
+              && request.resource.data.postalCode.size() <= 120
+              && request.resource.data.city is string
+              && request.resource.data.city.size() <= 120
+              && request.resource.data.country is string
+              && request.resource.data.country.size() <= 120
+              && request.resource.data.phone is string
+              && request.resource.data.phone.size() <= 120
+              && request.resource.data.meetingDetails is string
+              && request.resource.data.meetingDetails.size() <= 500
+              && request.resource.data.carrier is string
+              && request.resource.data.carrier.size() <= 120
+              && request.resource.data.trackingNumber is string
+              && request.resource.data.trackingNumber.size() <= 120
+              && request.resource.data.notes is string
+              && request.resource.data.notes.size() <= 500
+              && request.resource.data.createdAt is timestamp
+              && request.resource.data.updatedAt is timestamp
+              && (
+                (
+                  request.resource.data.method == 'mail'
+                  && request.resource.data.fullName.size() > 0
+                  && request.resource.data.addressLine1.size() > 0
+                  && request.resource.data.postalCode.size() > 0
+                  && request.resource.data.city.size() > 0
+                  && request.resource.data.country.size() > 0
+                  && request.resource.data.meetingDetails == ''
+                )
+                ||
+                (
+                  request.resource.data.method == 'inPerson'
+                  && request.resource.data.meetingDetails.size() > 0
+                  && request.resource.data.fullName == ''
+                  && request.resource.data.addressLine1 == ''
+                  && request.resource.data.addressLine2 == ''
+                  && request.resource.data.postalCode == ''
+                  && request.resource.data.city == ''
+                  && request.resource.data.country == ''
+                  && request.resource.data.carrier == ''
+                  && request.resource.data.trackingNumber == ''
+                )
+              );
+        }
+
+        // Podatke lahko bere samo eden od dveh udeležencev
+        // sprejete ali zaključene menjave.
+        allow get: if isDeliveryParticipant()
+            && deliveryDetailsAreVisible();
+
+        allow list: if false;
+
+        allow create: if canWriteOwnDeliveryDetails()
+            && hasValidDeliveryDetails();
+
+        allow update: if canWriteOwnDeliveryDetails()
+            && hasValidDeliveryDetails()
+            && resource.data.userId == request.auth.uid
+            && request.resource.data.createdAt
+                == resource.data.createdAt;
+
+        allow delete: if false;
+      }
+
+      allow delete: if false;
+    }
+
+    // ===========================
+    // PRIJAVE UPORABNIKOV IN VSEBINE
+    // ===========================
+
+    match /reports/{reportId} {
+
+      function hasValidReportFields() {
+        return request.resource.data.keys().hasAll([
+              'reporterId',
+              'reportedUserId',
+              'targetType',
+              'targetId',
+              'conversationId',
+              'reason',
+              'details',
+              'status',
+              'createdAt',
+              'reviewedAt',
+              'reviewedBy'
+            ])
+            && request.resource.data.keys().hasOnly([
+              'reporterId',
+              'reportedUserId',
+              'targetType',
+              'targetId',
+              'conversationId',
+              'reason',
+              'details',
+              'status',
+              'createdAt',
+              'reviewedAt',
+              'reviewedBy'
+            ])
+            && request.resource.data.reporterId is string
+            && request.resource.data.reportedUserId is string
+            && request.resource.data.targetType
+                in ['user', 'message', 'trade']
+            && request.resource.data.targetId is string
+            && request.resource.data.targetId.size() > 0
+            && request.resource.data.conversationId is string
+            && request.resource.data.reason
+                in ['spam', 'harassment', 'fraud', 'inappropriate', 'other']
+            && request.resource.data.details is string
+            && request.resource.data.details.size() <= 1000
+            && request.resource.data.status == 'open'
+            && request.resource.data.createdAt is timestamp
+            && request.resource.data.reviewedAt == null
+            && request.resource.data.reviewedBy == '';
+      }
+
+      allow create: if isSignedIn()
+          && hasValidReportFields()
+          && request.resource.data.reporterId == request.auth.uid
+          && request.resource.data.reportedUserId != request.auth.uid;
+
+      allow get: if isSignedIn()
+          && (
+            resource.data.reporterId == request.auth.uid
+            || isCatalogAdmin()
+          );
+
+      allow list: if isCatalogAdmin();
+
+      allow update: if isCatalogAdmin()
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['status', 'reviewedAt', 'reviewedBy'])
+          && request.resource.data.status
+              in ['open', 'reviewing', 'resolved', 'dismissed']
+          && request.resource.data.reviewedAt is timestamp
+          && request.resource.data.reviewedBy == request.auth.uid;
 
       allow delete: if false;
     }
@@ -244,7 +555,11 @@ service cloud.firestore {
           && request.resource.data.participantIds is list
           && request.resource.data.participantIds.size() == 2
           && request.resource.data.participantIds[0]
-              != request.resource.data.participantIds[1];
+              != request.resource.data.participantIds[1]
+          && !interactionBlocked(
+            request.resource.data.participantIds[0],
+            request.resource.data.participantIds[1]
+          );
 
       allow update: if isConversationParticipant()
           && request.resource.data.participantIds
@@ -270,13 +585,24 @@ service cloud.firestore {
                   in parentConversation().data.participantIds;
         }
 
+        function otherMessageParticipant() {
+          let participants = parentConversation().data.participantIds;
+          return participants[0] == request.auth.uid
+              ? participants[1]
+              : participants[0];
+        }
+
         allow read: if isMessageParticipant();
 
         allow create: if isMessageParticipant()
             && request.resource.data.senderId
                 == request.auth.uid
             && request.resource.data.text is string
-            && request.resource.data.text.size() > 0;
+            && request.resource.data.text.size() > 0
+            && !interactionBlocked(
+              request.auth.uid,
+              otherMessageParticipant()
+            );
 
         // Omogoča dodajanje uporabnika v readBy.
         allow update: if isMessageParticipant()

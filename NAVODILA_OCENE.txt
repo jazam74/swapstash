@@ -1,0 +1,60 @@
+SWAPSTASH – OCENE PO ZAKLJUČENI MENJAVI
+
+KAJ JE DODANO
+
+- ocena od 1 do 5 zvezdic;
+- neobvezen komentar do 300 znakov;
+- ocenjevanje samo pri resnično zaključeni menjavi;
+- ocenjuje lahko samo eden od obeh udeležencev;
+- največ ena ocena posameznega uporabnika za isto menjavo;
+- poznejše urejanje lastne ocene;
+- živo povprečje in število prejetih ocen;
+- seznam zadnjih prejetih ocen na profilu;
+- varna Firestore pravila proti ponarejanju ocen.
+
+POMEMBNO
+
+trades_page.dart je že pravilno povezan z:
+TradeRatingSection(trade: trade)
+
+Zato te datoteke paket ne prepisuje.
+
+NAMESTITEV
+
+ZIP razširi v:
+
+C:\Users\urosm\Documents\swapstash
+
+Nato zaženi:
+
+flutter gen-l10n
+
+dart format lib/core/models/trade_rating.dart lib/core/models/trade_rating_summary.dart lib/core/services/trade_rating_service.dart lib/features/trades/widgets/trade_rating_section.dart lib/features/users/widgets/user_rating_summary.dart lib/features/users/widgets/user_rating_list.dart lib/features/profile/profile_page.dart
+
+flutter analyze
+
+Objavi Firestore pravila:
+
+firebase deploy --only firestore:rules
+
+Nato aplikacijo popolnoma ponovno zaženi na obeh emulatorjih.
+
+TEST
+
+1. Uporabi zaključeno menjavo oziroma jo dokončaj:
+   oba uporabnika označita poslano in prejeto.
+2. Odpri:
+   Menjave -> Arhiv -> Zaključene.
+3. Na obeh računih oddaj oceno drugega uporabnika.
+4. Preveri profil:
+   - povprečna ocena,
+   - število ocen,
+   - seznam prejetih ocen in komentarjev.
+5. Pri že oddani oceni klikni »Uredi oceno« in shrani spremembo.
+
+PODATKI V FIRESTORE
+
+users/{ocenjeniUporabnik}/ratings/{tradeId}_{reviewerId}
+
+Povprečje se izračuna neposredno iz preverjenih ocen, zato za ta korak
+ni potreben dodaten Cloud Function.

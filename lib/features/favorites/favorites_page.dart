@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/favorite_item.dart';
 import 'package:swapstash/core/services/favorite_service.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -28,6 +29,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
   }
 
   Future<void> _removeFavorite(FavoriteItem item) async {
+    final localizations = AppLocalizations.of(context)!;
+
     try {
       await _favoriteService.toggleFavorite(favorite: item);
 
@@ -37,8 +40,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
         SnackBar(
           content: Text(
             item.name.trim().isEmpty
-                ? 'Odstranjeno iz priljubljenih.'
-                : '${item.name} je odstranjen iz priljubljenih.',
+                ? localizations.favoritesRemoved
+                : localizations.favoritesNamedItemRemoved(item.name),
           ),
           behavior: SnackBarBehavior.floating,
         ),
@@ -48,7 +51,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Napaka pri odstranjevanju: $error'),
+          content: Text(localizations.favoritesRemoveError(error.toString())),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -71,8 +74,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Moji favoriti')),
+      appBar: AppBar(title: Text(localizations.favoritesTitle)),
       body: StreamBuilder<List<FavoriteItem>>(
         stream: _favoriteService.watchFavorites(),
         builder: (context, snapshot) {
@@ -100,12 +105,12 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   controller: _searchController,
                   onChanged: _updateSearch,
                   decoration: InputDecoration(
-                    hintText: 'Išči med favoriti',
+                    hintText: localizations.favoritesSearchHint,
                     prefixIcon: const Icon(Icons.search_rounded),
                     suffixIcon: _searchController.text.isEmpty
                         ? null
                         : IconButton(
-                            tooltip: 'Počisti',
+                            tooltip: localizations.favoritesClearSearch,
                             onPressed: () {
                               _searchController.clear();
                               _updateSearch('');
@@ -151,6 +156,7 @@ class _FavoriteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -176,7 +182,9 @@ class _FavoriteCard extends StatelessWidget {
                     ),
                   const SizedBox(height: 3),
                   Text(
-                    item.name.trim().isEmpty ? 'Brez imena' : item.name,
+                    item.name.trim().isEmpty
+                        ? localizations.favoritesUnnamedItem
+                        : item.name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.titleMedium?.copyWith(
@@ -197,7 +205,7 @@ class _FavoriteCard extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             IconButton(
-              tooltip: 'Odstrani iz favoritov',
+              tooltip: localizations.favoritesRemoveTooltip,
               onPressed: onRemove,
               icon: const Icon(Icons.favorite_rounded),
               color: colorScheme.error,
@@ -246,6 +254,7 @@ class _EmptyFavoritesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Center(
@@ -261,7 +270,7 @@ class _EmptyFavoritesView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Še nimaš favoritov',
+              localizations.favoritesEmptyTitle,
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,
@@ -269,7 +278,7 @@ class _EmptyFavoritesView extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'Na podrobnostih kartice pritisni srček in kartica se bo pojavila tukaj.',
+              localizations.favoritesEmptyDescription,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: colorScheme.onSurfaceVariant,
@@ -289,13 +298,15 @@ class _NoResultsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Text(
           query.isEmpty
-              ? 'Ni zadetkov.'
-              : 'Za »$query« ni bilo najdenih favoritov.',
+              ? localizations.favoritesNoResults
+              : localizations.favoritesNoResultsForQuery(query),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
@@ -311,6 +322,8 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -320,7 +333,7 @@ class _ErrorView extends StatelessWidget {
             const Icon(Icons.error_outline_rounded, size: 64),
             const SizedBox(height: 16),
             Text(
-              'Favoritov ni bilo mogoče naložiti.',
+              localizations.favoritesLoadError,
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,

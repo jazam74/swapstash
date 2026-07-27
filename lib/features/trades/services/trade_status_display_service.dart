@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/core/theme/app_colors.dart';
 import 'package:swapstash/features/trades/models/trade_display_status.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 abstract final class TradeStatusDisplayService {
   static TradeDisplayStatus build({
     required Trade trade,
     required String currentUserId,
+    required AppLocalizations localizations,
   }) {
     switch (trade.status) {
       case TradeStatus.pending:
@@ -14,43 +16,49 @@ abstract final class TradeStatusDisplayService {
           trade: trade,
           currentUserId: currentUserId,
           isCounterOffer: false,
+          localizations: localizations,
         );
       case TradeStatus.countered:
         return _awaitingStatus(
           trade: trade,
           currentUserId: currentUserId,
           isCounterOffer: true,
+          localizations: localizations,
         );
       case TradeStatus.accepted:
-        return _acceptedStatus(trade: trade, currentUserId: currentUserId);
+        return _acceptedStatus(
+          trade: trade,
+          currentUserId: currentUserId,
+          localizations: localizations,
+        );
       case TradeStatus.completed:
-        return const TradeDisplayStatus(
-          title: 'Menjava zaključena',
-          subtitle: 'Oba uporabnika sta potrdila pošiljanje in prejem.',
-          badgeLabel: 'Zaključena',
+        return TradeDisplayStatus(
+          title: localizations.tradeStatusCompletedTitle,
+          subtitle: localizations.tradeStatusCompletedSubtitle,
+          badgeLabel: localizations.tradeStatusCompletedBadge,
           icon: Icons.check_circle,
           color: AppColors.success,
-          backgroundColor: Color(0xFFEAF7EE),
+          backgroundColor: const Color(0xFFEAF7EE),
           completedSteps: 4,
         );
       case TradeStatus.rejected:
-        return const TradeDisplayStatus(
-          title: 'Ponudba zavrnjena',
-          subtitle: 'Ta predlog menjave ni bil sprejet.',
-          badgeLabel: 'Zavrnjena',
+        return TradeDisplayStatus(
+          title: localizations.tradeStatusRejectedTitle,
+          subtitle: localizations.tradeStatusRejectedSubtitle,
+          badgeLabel: localizations.tradeStatusRejectedBadge,
           icon: Icons.cancel_outlined,
           color: AppColors.error,
-          backgroundColor: Color(0xFFFDECEC),
+          backgroundColor: const Color(0xFFFDECEC),
           completedSteps: 0,
         );
       case TradeStatus.cancelled:
-        return const TradeDisplayStatus(
-          title: 'Ponudba preklicana',
-          subtitle: 'Pošiljatelj je predlog menjave preklical.',
-          badgeLabel: 'Preklicana',
+        return TradeDisplayStatus(
+          title: localizations.tradeStatusCancelledTitle,
+          subtitle: localizations.tradeStatusCancelledSubtitle,
+          badgeLabel: localizations.tradeStatusCancelledBadge,
           icon: Icons.block,
           color: AppColors.disabled,
-          backgroundColor: Color(0xFFF3F4F6),
+          backgroundColor: const Color(0xFFF3F4F6),
           completedSteps: 0,
         );
     }
@@ -60,6 +68,7 @@ abstract final class TradeStatusDisplayService {
     required Trade trade,
     required String currentUserId,
     required bool isCounterOffer,
+    required AppLocalizations localizations,
   }) {
     final awaitingMe = trade.awaitingUserId.isNotEmpty
         ? trade.awaitingUserId == currentUserId
@@ -68,10 +77,10 @@ abstract final class TradeStatusDisplayService {
     if (awaitingMe) {
       return TradeDisplayStatus(
         title: isCounterOffer
-            ? 'Prejel si protiponudbo'
-            : 'Ponudba čaka na tvoj odgovor',
-        subtitle: 'Preglej kartice in izberi Sprejmi, Zavrni ali Protiponudba.',
-        badgeLabel: 'Čaka nate',
+            ? (localizations.tradeStatusCounterOfferReceivedTitle)
+            : (localizations.tradeStatusAwaitingYourResponseTitle),
+        subtitle: localizations.tradeStatusReviewOfferSubtitle,
+        badgeLabel: localizations.tradeStatusWaitingForYouBadge,
         icon: isCounterOffer ? Icons.swap_horiz : Icons.notifications_active,
         color: AppColors.warning,
         backgroundColor: const Color(0xFFFFF7E6),
@@ -80,9 +89,11 @@ abstract final class TradeStatusDisplayService {
     }
 
     return TradeDisplayStatus(
-      title: isCounterOffer ? 'Protiponudba poslana' : 'Ponudba poslana',
-      subtitle: 'Čaka se odgovor drugega uporabnika.',
-      badgeLabel: 'Čaka odgovor',
+      title: isCounterOffer
+          ? (localizations.tradeStatusCounterOfferSentTitle)
+          : (localizations.tradeStatusOfferSentTitle),
+      subtitle: localizations.tradeStatusWaitingOtherUserSubtitle,
+      badgeLabel: localizations.tradeStatusWaitingResponseBadge,
       icon: isCounterOffer ? Icons.swap_horiz : Icons.schedule,
       color: AppColors.info,
       backgroundColor: const Color(0xFFEAF5FB),
@@ -93,6 +104,7 @@ abstract final class TradeStatusDisplayService {
   static TradeDisplayStatus _acceptedStatus({
     required Trade trade,
     required String currentUserId,
+    required AppLocalizations localizations,
   }) {
     final isSender = trade.senderId == currentUserId;
     final myShipped = isSender ? trade.senderShipped : trade.receiverShipped;
@@ -111,10 +123,9 @@ abstract final class TradeStatusDisplayService {
 
     if (myReceived && !otherReceived) {
       return TradeDisplayStatus(
-        title: 'Paket si prejel',
-        subtitle:
-            'Prejete kartice so dodane v inventar. Čaka se še potrditev druge strani.',
-        badgeLabel: 'Prejel',
+        title: localizations.tradeStatusReceivedTitle,
+        subtitle: localizations.tradeStatusReceivedSubtitle,
+        badgeLabel: localizations.tradeStatusReceivedBadge,
         icon: Icons.inventory_2,
         color: AppColors.success,
         backgroundColor: const Color(0xFFEAF7EE),
@@ -124,11 +135,13 @@ abstract final class TradeStatusDisplayService {
 
     if (!myReceived && otherShipped) {
       return TradeDisplayStatus(
-        title: myShipped ? 'Pošiljki sta na poti' : 'Paket je na poti k tebi',
+        title: myShipped
+            ? (localizations.tradeStatusBothOnWayTitle)
+            : (localizations.tradeStatusPackageOnWayTitle),
         subtitle: myShipped
-            ? 'Obe pošiljki sta oddani. Ko paket prejmeš, potrdi prejem.'
-            : 'Druga stran je paket oddala. Tvoje kartice so še rezervirane.',
-        badgeLabel: 'Na poti',
+            ? (localizations.tradeStatusBothOnWaySubtitle)
+            : (localizations.tradeStatusOtherSentSubtitle),
+        badgeLabel: localizations.tradeStatusOnWayBadge,
         icon: Icons.local_shipping_outlined,
         color: AppColors.tradeShipping,
         backgroundColor: const Color(0xFFFFF1E8),
@@ -138,10 +151,9 @@ abstract final class TradeStatusDisplayService {
 
     if (myShipped && !otherShipped) {
       return TradeDisplayStatus(
-        title: 'Paket si poslal',
-        subtitle:
-            'Oddane kartice so odstranjene iz inventarja. Čaka se druga stran.',
-        badgeLabel: 'Poslal',
+        title: localizations.tradeStatusSentTitle,
+        subtitle: localizations.tradeStatusSentSubtitle,
+        badgeLabel: localizations.tradeStatusSentBadge,
         icon: Icons.outbox_outlined,
         color: AppColors.primary,
         backgroundColor: const Color(0xFFEAF0FF),
@@ -151,9 +163,9 @@ abstract final class TradeStatusDisplayService {
 
     if (otherReceived && !myReceived) {
       return TradeDisplayStatus(
-        title: 'Druga stran je paket prejela',
-        subtitle: 'Ko prejmeš svojo pošiljko, potrdi prejem.',
-        badgeLabel: 'Čaka prejem',
+        title: localizations.tradeStatusOtherReceivedTitle,
+        subtitle: localizations.tradeStatusConfirmWhenReceivedSubtitle,
+        badgeLabel: localizations.tradeStatusWaitingReceiptBadge,
         icon: Icons.markunread_mailbox_outlined,
         color: AppColors.tradeShipping,
         backgroundColor: const Color(0xFFFFF1E8),
@@ -161,14 +173,13 @@ abstract final class TradeStatusDisplayService {
       );
     }
 
-    return const TradeDisplayStatus(
-      title: 'Menjava dogovorjena',
-      subtitle:
-          'Kartice na obeh straneh so rezervirane. Inventar se spremeni šele ob potrditvi pošiljanja ali prejema.',
-      badgeLabel: 'Dogovorjena',
+    return TradeDisplayStatus(
+      title: localizations.tradeStatusAgreedTitle,
+      subtitle: localizations.tradeStatusAgreedSubtitle,
+      badgeLabel: localizations.tradeStatusAgreedBadge,
       icon: Icons.handshake_outlined,
       color: AppColors.tradeAccepted,
-      backgroundColor: Color(0xFFEAF0FF),
+      backgroundColor: const Color(0xFFEAF0FF),
       completedSteps: 0,
     );
   }

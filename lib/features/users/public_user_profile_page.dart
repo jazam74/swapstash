@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/user_profile.dart';
 import 'package:swapstash/core/services/chat_service.dart';
 import 'package:swapstash/core/services/firestore_service.dart';
+import 'package:swapstash/core/services/block_service.dart';
+import 'package:swapstash/features/safety/user_safety_menu.dart';
 import 'package:swapstash/features/messages/chat_page.dart';
+import 'package:swapstash/features/users/widgets/completed_trades_value.dart';
 import 'package:swapstash/features/users/widgets/user_rating_list.dart';
 import 'package:swapstash/features/users/widgets/user_rating_summary.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class PublicUserProfilePage extends StatefulWidget {
   final String userId;
@@ -30,6 +34,8 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
     if (_openingChat) {
       return;
     }
+
+    final localizations = AppLocalizations.of(context)!;
 
     setState(() {
       _openingChat = true;
@@ -57,7 +63,9 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Pogovora ni bilo mogoče odpreti:\n$error')),
+        SnackBar(
+          content: Text(localizations.collectorChatOpenError(error.toString())),
+        ),
       );
     } finally {
       if (mounted) {
@@ -70,8 +78,13 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Profil zbiratelja')),
+      appBar: AppBar(
+        title: Text(localizations.collectorProfileTitle),
+        actions: [UserSafetyMenuButton(otherUserId: widget.userId)],
+      ),
       body: StreamBuilder<UserProfile?>(
         stream: _firestoreService.watchUserProfile(widget.userId),
         initialData: widget.initialProfile,
@@ -88,13 +101,23 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
           final profile = snapshot.data;
 
           if (profile == null) {
-            return const Center(child: Text('Profil uporabnika ne obstaja.'));
+            return Center(child: Text(localizations.collectorProfileMissing));
           }
 
-          return _PublicProfileContent(
-            profile: profile,
-            openingChat: _openingChat,
-            onOpenChat: () => _openChat(profile),
+          return StreamBuilder<BlockRelationship>(
+            stream: BlockService().watchRelationship(otherUserId: profile.uid),
+            initialData: const BlockRelationship.none(),
+            builder: (context, relationshipSnapshot) {
+              final relationship =
+                  relationshipSnapshot.data ?? const BlockRelationship.none();
+
+              return _PublicProfileContent(
+                profile: profile,
+                openingChat: _openingChat,
+                relationship: relationship,
+                onOpenChat: () => _openChat(profile),
+              );
+            },
           );
         },
       ),
@@ -105,18 +128,21 @@ class _PublicUserProfilePageState extends State<PublicUserProfilePage> {
 class _PublicProfileContent extends StatelessWidget {
   final UserProfile profile;
   final bool openingChat;
+  final BlockRelationship relationship;
   final VoidCallback onOpenChat;
 
   const _PublicProfileContent({
     required this.profile,
     required this.openingChat,
+    required this.relationship,
     required this.onOpenChat,
   });
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final displayName = profile.displayName.trim().isEmpty
-        ? 'Neimenovan uporabnik'
+        ? localizations.unnamedUser
         : profile.displayName.trim();
 
     final locationParts = <String>[
@@ -143,8 +169,21 @@ class _PublicProfileContent extends StatelessWidget {
         ] else
           const _PrivateProfileNotice(),
         const SizedBox(height: 20),
+        if (relationship.isBlocked) ...[
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.block_outlined),
+              title: Text(
+                relationship.iBlockedThem
+                    ? localizations.safetyProfileBlockedByYou
+                    : localizations.safetyProfileBlockedByOther,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
         FilledButton.icon(
-          onPressed: openingChat ? null : onOpenChat,
+          onPressed: openingChat || relationship.isBlocked ? null : onOpenChat,
           icon: openingChat
               ? const SizedBox(
                   width: 18,
@@ -152,7 +191,11 @@ class _PublicProfileContent extends StatelessWidget {
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
               : const Icon(Icons.chat_bubble_outline_rounded),
-          label: Text(openingChat ? 'Odpiram pogovor ...' : 'Pošlji sporočilo'),
+          label: Text(
+            openingChat
+                ? localizations.collectorOpeningChat
+                : localizations.collectorSendMessage,
+          ),
         ),
         const SizedBox(height: 24),
       ],
@@ -173,6 +216,7 @@ class _ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final initial = displayName.isEmpty
         ? '?'
         : displayName.substring(0, 1).toUpperCase();
@@ -218,14 +262,18 @@ class _ProfileHeader extends StatelessWidget {
                 profile.isPublic ? Icons.public : Icons.lock_outline,
                 size: 18,
               ),
-              label: Text(profile.isPublic ? 'Javen profil' : 'Zaseben profil'),
+              label: Text(
+                profile.isPublic
+                    ? localizations.publicProfile
+                    : localizations.privateProfile,
+              ),
             ),
             Chip(
               avatar: const Icon(Icons.language, size: 18),
               label: Text(
                 profile.allowInternationalTrades
-                    ? 'Mednarodne menjave'
-                    : 'Lokalne menjave',
+                    ? localizations.collectorInternationalTrades
+                    : localizations.collectorLocalTrades,
               ),
             ),
           ],
@@ -242,6 +290,8 @@ class _ProfileStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -252,8 +302,13 @@ class _ProfileStatsCard extends StatelessWidget {
             Expanded(
               child: _ProfileStat(
                 icon: Icons.handshake_outlined,
-                value: profile.completedTrades.toString(),
-                label: 'Zaključene menjave',
+                value: CompletedTradesValue(
+                  userId: profile.uid,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                label: localizations.completedTrades,
               ),
             ),
           ],
@@ -265,7 +320,7 @@ class _ProfileStatsCard extends StatelessWidget {
 
 class _ProfileStat extends StatelessWidget {
   final IconData icon;
-  final String value;
+  final Widget value;
   final String label;
 
   const _ProfileStat({
@@ -280,12 +335,7 @@ class _ProfileStat extends StatelessWidget {
       children: [
         Icon(icon),
         const SizedBox(height: 6),
-        Text(
-          value,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-        ),
+        value,
         const SizedBox(height: 2),
         Text(
           label,
@@ -304,6 +354,8 @@ class _ProfileBioCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -311,7 +363,7 @@ class _ProfileBioCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'O zbiratelju',
+              localizations.collectorAbout,
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
@@ -330,6 +382,8 @@ class _PrivateProfileNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -338,14 +392,14 @@ class _PrivateProfileNotice extends StatelessWidget {
             const Icon(Icons.lock_outline_rounded, size: 42),
             const SizedBox(height: 12),
             Text(
-              'Ta profil je zaseben',
+              localizations.collectorPrivateTitle,
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 6),
-            const Text(
-              'Lokacija, opis in komentarji ocen niso javno prikazani.',
+            Text(
+              localizations.collectorPrivateDescription,
               textAlign: TextAlign.center,
             ),
           ],
@@ -362,11 +416,13 @@ class _ProfileErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Text(
-          'Profila ni bilo mogoče naložiti:\n$error',
+          localizations.collectorProfileLoadError(error.toString()),
           textAlign: TextAlign.center,
         ),
       ),

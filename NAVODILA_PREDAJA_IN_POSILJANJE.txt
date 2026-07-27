@@ -1,0 +1,70 @@
+SWAPSTASH – PREDAJA IN POŠILJANJE
+
+DODANO
+
+- izbira »Po pošti« ali »Osebna predaja«;
+- zaseben naslov za pošiljanje;
+- neobvezna telefonska številka;
+- kraj in način osebne predaje;
+- dostavna služba;
+- sledilna številka;
+- kopiranje naslova, telefona in sledilne številke;
+- prikaz lastnih in partnerjevih podatkov v sprejeti menjavi;
+- ogled podatkov tudi po zaključku menjave;
+- push obvestilo, ko partner doda ali spremeni podatke;
+- posebno push obvestilo ob dodani ali spremenjeni sledilni številki.
+
+ZASEBNOST
+
+Podatki se shranijo v:
+
+trades/{tradeId}/deliveryDetails/{userId}
+
+Firestore pravila dovolijo:
+- branje samo obema udeležencema sprejete ali zaključene menjave;
+- pisanje samo lastnega dokumenta;
+- urejanje samo dokler je menjava sprejeta;
+- brez javnega dostopa in brez zbirčnih poizvedb.
+
+NAMESTITEV
+
+ZIP razširi v:
+
+C:\Users\urosm\Documents\swapstash
+
+Nato zaženi:
+
+flutter gen-l10n
+
+dart format lib/core/models/trade_delivery_details.dart lib/core/services/trade_delivery_service.dart lib/features/trades/trade_delivery_form_page.dart lib/features/trades/widgets/trade_delivery_section.dart lib/features/trades/trades_page.dart
+
+flutter analyze
+
+OBJAVA
+
+firebase deploy --only firestore:rules
+
+cd functions
+npm run check
+cd ..
+
+firebase deploy --only functions
+
+Po uspešnem deployu aplikacijo popolnoma ustavi in ponovno zaženi
+na obeh emulatorjih.
+
+TEST PO POŠTI
+
+1. Odpri sprejeto menjavo.
+2. Pri razdelku »Predaja in pošiljanje« klikni »Dodaj«.
+3. Izberi »Po pošti« in vnesi naslov.
+4. Shrani.
+5. Na drugem računu preveri prikaz naslova in push obvestilo.
+6. Na prvem računu dodaj sledilno številko.
+7. Na drugem računu preveri novo push obvestilo in kopiranje številke.
+
+TEST OSEBNE PREDAJE
+
+1. V drugi sprejeti menjavi izberi »Osebna predaja«.
+2. Vnesi kraj, čas ali navodila za dogovor.
+3. Shrani in preveri prikaz pri partnerju.

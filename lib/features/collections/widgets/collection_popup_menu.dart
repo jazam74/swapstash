@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 enum CollectionMenuAction { edit, remove }
 
@@ -14,29 +15,31 @@ class CollectionPopupMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return PopupMenuButton<CollectionMenuAction>(
-      tooltip: 'Možnosti zbirke',
+      tooltip: localizations.myCollectionsMenuTooltip,
       onSelected: onSelected,
       itemBuilder: (context) {
         return [
           if (allowEdit)
-            const PopupMenuItem(
+            PopupMenuItem(
               value: CollectionMenuAction.edit,
               child: Row(
                 children: [
-                  Icon(Icons.edit_outlined),
-                  SizedBox(width: 8),
-                  Text('Uredi'),
+                  const Icon(Icons.edit_outlined),
+                  const SizedBox(width: 8),
+                  Text(localizations.myCollectionsEditMenu),
                 ],
               ),
             ),
-          const PopupMenuItem(
+          PopupMenuItem(
             value: CollectionMenuAction.remove,
             child: Row(
               children: [
-                Icon(Icons.delete_outline),
-                SizedBox(width: 8),
-                Text('Odstrani'),
+                const Icon(Icons.delete_outline),
+                const SizedBox(width: 8),
+                Text(localizations.myCollectionsRemoveMenu),
               ],
             ),
           ),

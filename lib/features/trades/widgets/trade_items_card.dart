@@ -5,6 +5,7 @@ import 'package:swapstash/core/theme/app_radius.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/core/theme/app_text_styles.dart';
 import 'package:swapstash/features/trades/widgets/trade_item_tile.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class TradeItemsCard extends StatelessWidget {
   final String title;
@@ -64,7 +65,10 @@ class TradeItemsCard extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           if (items.isEmpty)
-            Text('Ni kartic.', style: AppTextStyles.bodySecondary)
+            Text(
+              AppLocalizations.of(context)!.tradeNoCards,
+              style: AppTextStyles.bodySecondary,
+            )
           else
             Column(
               children: [

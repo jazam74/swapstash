@@ -1,0 +1,58 @@
+SWAPSTASH – KONČNA IKONA
+
+IZBRANA IKONA
+
+Zelena in zlata ikona z:
+- veliko črko oziroma obliko S iz izmenjevalnih puščic,
+- zbirateljsko kartico,
+- kovancem,
+- zbirateljsko figurico.
+
+Paket vsebuje:
+- očiščeno ikono 1024 x 1024 brez črnih vogalov,
+- ikono 512 x 512 za Google Play,
+- PowerShell skript za namestitev v Flutter projekt.
+
+NAMESTITEV
+
+1. ZIP razširi neposredno v:
+
+C:\Users\urosm\Documents\swapstash
+
+2. V PowerShellu v korenski mapi projekta zaženi:
+
+Set-ExecutionPolicy -Scope Process Bypass
+.\NAMESTI_KONCNO_IKONO.ps1
+
+Skript:
+- naredi varnostno kopijo obstoječih ikon in pubspec datotek,
+- doda flutter_launcher_icons,
+- namesti izbrano sliko,
+- ustvari vse Android velikosti launcher ikone,
+- izvede flutter clean, pub get in analyze.
+
+TEST
+
+Po uspešni namestitvi zaženi:
+
+flutter run -d emulator-5554
+
+Če launcher še prikazuje staro ikono zaradi predpomnilnika, odstrani aplikacijo
+net.swapstash.app z emulatorja in jo ponovno zaženi.
+
+NOVI AAB
+
+Po uspešnem preizkusu zaženi:
+
+.\ZGRADI_RELEASE_AAB.ps1
+
+S tem se obstoječi app-release.aab prepiše z novo različico, ki vsebuje
+končno ikono.
+
+GOOGLE PLAY
+
+Za Store Listing uporabi datoteko:
+
+swapstash_play_store_icon_512.png
+
+Datoteke upload ključa, key.properties in gesla ne nalagaj v ZIP ali v pogovor.

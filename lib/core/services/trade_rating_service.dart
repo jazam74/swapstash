@@ -53,38 +53,33 @@ class TradeRatingService {
       return Stream<TradeRatingSummary>.value(const TradeRatingSummary.empty());
     }
 
-    return _db
-        .collection('users')
-        .doc(id)
-        .collection('ratings')
-        .snapshots()
-        .map((snapshot) {
-          var totalStars = 0;
-          var ratingCount = 0;
+    return _ratingsReference(id).snapshots().map((snapshot) {
+      var totalStars = 0;
+      var ratingCount = 0;
 
-          for (final document in snapshot.docs) {
-            final rating = TradeRating.fromMap(document.id, document.data());
+      for (final document in snapshot.docs) {
+        final rating = TradeRating.fromMap(document.id, document.data());
 
-            if (rating.stars < 1 || rating.stars > 5) {
-              continue;
-            }
+        if (rating.stars < 1 || rating.stars > 5) {
+          continue;
+        }
 
-            totalStars += rating.stars;
-            ratingCount++;
-          }
+        totalStars += rating.stars;
+        ratingCount++;
+      }
 
-          if (ratingCount == 0) {
-            return const TradeRatingSummary.empty();
-          }
+      if (ratingCount == 0) {
+        return const TradeRatingSummary.empty();
+      }
 
-          return TradeRatingSummary(
-            average: totalStars / ratingCount,
-            count: ratingCount,
-          );
-        });
+      return TradeRatingSummary(
+        average: totalStars / ratingCount,
+        count: ratingCount,
+      );
+    });
   }
 
-  Stream<List<TradeRating>> watchRatingsForUser({
+  Stream<List<TradeRating>> watchRatings({
     required String userId,
     int limit = 20,
   }) {
@@ -94,16 +89,9 @@ class TradeRatingService {
       return Stream<List<TradeRating>>.value(const []);
     }
 
-    final safeLimit = limit < 1
-        ? 1
-        : limit > 50
-        ? 50
-        : limit;
+    final safeLimit = limit.clamp(1, 100);
 
-    return _db
-        .collection('users')
-        .doc(id)
-        .collection('ratings')
+    return _ratingsReference(id)
         .orderBy('createdAt', descending: true)
         .limit(safeLimit)
         .snapshots()
@@ -112,11 +100,13 @@ class TradeRatingService {
               .map(
                 (document) => TradeRating.fromMap(document.id, document.data()),
               )
+              .where((rating) => rating.stars >= 1 && rating.stars <= 5)
               .toList(growable: false),
         );
   }
 
-  Future<void> submitRating({
+  /// Vrne true, kadar je bila obstoječa ocena posodobljena.
+  Future<bool> saveRating({
     required Trade trade,
     required int stars,
     String comment = '',
@@ -136,7 +126,7 @@ class TradeRatingService {
     final reviewerId = _currentUserId;
     final tradeReference = _db.collection('trades').doc(trade.id);
 
-    await _db.runTransaction((transaction) async {
+    return _db.runTransaction<bool>((transaction) async {
       final tradeDocument = await transaction.get(tradeReference);
       final tradeData = tradeDocument.data();
 
@@ -161,11 +151,14 @@ class TradeRatingService {
         reviewedUserId: reviewedUserId,
       );
 
-      final ratingDocument = await transaction.get(ratingReference);
+      final existingDocument = await transaction.get(ratingReference);
+      final existingData = existingDocument.data();
+      final isUpdate = existingDocument.exists && existingData != null;
+      final now = Timestamp.now();
 
-      if (ratingDocument.exists) {
-        throw StateError('To menjavo si že ocenil.');
-      }
+      final createdAt = isUpdate
+          ? TradeRating.fromMap(existingDocument.id, existingData).createdAt
+          : now;
 
       final rating = TradeRating(
         id: ratingReference.id,
@@ -174,10 +167,13 @@ class TradeRatingService {
         reviewedUserId: reviewedUserId,
         stars: stars,
         comment: normalizedComment,
-        createdAt: Timestamp.now(),
+        createdAt: createdAt,
+        updatedAt: isUpdate ? now : null,
       );
 
       transaction.set(ratingReference, rating.toMap());
+
+      return isUpdate;
     });
   }
 
@@ -186,22 +182,32 @@ class TradeRatingService {
     required String reviewerId,
   }) {
     if (trade.senderId == reviewerId) {
-      if (trade.receiverId.trim().isEmpty) {
+      final receiverId = trade.receiverId.trim();
+
+      if (receiverId.isEmpty) {
         throw StateError('Drugi uporabnik ni določen.');
       }
 
-      return trade.receiverId;
+      return receiverId;
     }
 
     if (trade.receiverId == reviewerId) {
-      if (trade.senderId.trim().isEmpty) {
+      final senderId = trade.senderId.trim();
+
+      if (senderId.isEmpty) {
         throw StateError('Drugi uporabnik ni določen.');
       }
 
-      return trade.senderId;
+      return senderId;
     }
 
     throw StateError('Ocenjuje lahko samo udeleženec menjave.');
+  }
+
+  CollectionReference<Map<String, dynamic>> _ratingsReference(
+    String reviewedUserId,
+  ) {
+    return _db.collection('users').doc(reviewedUserId).collection('ratings');
   }
 
   DocumentReference<Map<String, dynamic>> _ratingReference({
@@ -211,10 +217,6 @@ class TradeRatingService {
   }) {
     final ratingId = '${tradeId}_$reviewerId';
 
-    return _db
-        .collection('users')
-        .doc(reviewedUserId)
-        .collection('ratings')
-        .doc(ratingId);
+    return _ratingsReference(reviewedUserId).doc(ratingId);
   }
 }

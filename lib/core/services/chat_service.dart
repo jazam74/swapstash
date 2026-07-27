@@ -4,11 +4,13 @@ import 'package:swapstash/core/models/chat_message.dart';
 import 'package:swapstash/core/models/conversation.dart';
 import 'package:swapstash/core/models/user_profile.dart';
 import 'package:swapstash/core/services/firestore_service.dart';
+import 'package:swapstash/core/services/block_service.dart';
 
 class ChatService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirestoreService _firestoreService = FirestoreService();
+  final BlockService _blockService = BlockService();
 
   User get _currentUser {
     final user = _auth.currentUser;
@@ -96,6 +98,8 @@ class ChatService {
         : otherUserName.trim();
 
     final normalizedOtherUserPhotoUrl = otherUserPhotoUrl.trim();
+
+    await _blockService.ensureInteractionAllowed(otherUserId: candidateUserId);
 
     final UserProfile? currentProfile = await _firestoreService.getUserProfile(
       currentUserId,
@@ -266,6 +270,8 @@ class ChatService {
     if (otherUserId.isEmpty) {
       throw StateError('Sogovornik ni bil najden.');
     }
+
+    await _blockService.ensureInteractionAllowed(otherUserId: otherUserId);
 
     final messageReference = conversationReference.collection('messages').doc();
     final now = Timestamp.now();

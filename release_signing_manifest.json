@@ -1,0 +1,8 @@
+{
+  "androidPackage": "net.swapstash.app",
+  "keyAlias": "swapstash-upload",
+  "keystoreLocation": "%USERPROFILE%/.swapstash/swapstash-upload-keystore.jks",
+  "keyPropertiesLocation": "android/key.properties",
+  "bundleOutput": "build/app/outputs/bundle/release/app-release.aab",
+  "version": "0.9.0+2"
+}

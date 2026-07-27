@@ -1,0 +1,72 @@
+SWAPSTASH – SPREMEMBA ANDROID PACKAGE IMENA
+
+NOVO TRAJNO ANDROID PACKAGE IME
+
+net.swapstash.app
+
+NOVI FIREBASE ANDROID APP ID
+
+1:216798493473:android:62ff8893c397ae3d24dc60
+
+POMEMBNO
+
+Sprememba applicationId pomeni, da Android novo različico obravnava
+kot drugo aplikacijo. Stara com.example.swapstash lahko zato ostane
+nameščena ob novi aplikaciji.
+
+- Firebase uporabniki in podatki ostanejo ohranjeni.
+- V novi aplikaciji se bo treba znova prijaviti.
+- Uvodni vodič in sprejem pogojev se bosta prikazala znova.
+- Ustvarjen bo nov FCM žeton za potisna obvestila.
+- Stare aplikacije še ne briši, dokler nova ni preverjena.
+
+NAMESTITEV
+
+1. ZIP razširi neposredno v:
+
+   C:\Users\urosm\Documents\swapstash
+
+2. V PowerShellu v korenski mapi projekta zaženi:
+
+   Set-ExecutionPolicy -Scope Process Bypass
+   .\NAMesti_PACKAGE_RENAME.ps1
+
+Skript:
+- naredi časovno označeno varnostno kopijo;
+- spremeni namespace in applicationId;
+- namesti novi google-services.json;
+- spremeni Android Firebase App ID;
+- ustvari novo lokacijo MainActivity;
+- odstrani staro Kotlin datoteko;
+- preveri vse ključne vrednosti.
+
+3. Nato zaženi:
+
+   flutter clean
+   flutter pub get
+   flutter analyze
+   flutter run
+
+4. Pri flutter run izberi Android emulator 1 ali 2.
+
+PREVERJANJE
+
+Po zagonu preveri:
+- aplikacija se namesti kot nova aplikacija SwapStash;
+- prijava z obstoječim Firebase računom deluje;
+- zbirke in menjave so še vedno prisotne;
+- nalaganje profilne slike deluje;
+- pošlji testno sporočilo;
+- preveri potisno obvestilo na drugem emulatorju.
+
+STARA FIREBASE ANDROID APLIKACIJA
+
+Odjemalca com.example.swapstash v Firebase Console še ne briši.
+Izbrišemo ga šele po uspešnem preizkusu nove aplikacije in po izdelavi
+release AAB.
+
+IOS IN MACOS
+
+V lib/firebase_options.dart ostajata stara iOS/macOS bundle ID-ja.
+To je namerno. Za iOS bomo pozneje posebej registrirali končno
+Apple bundle ime in prenesli GoogleService-Info.plist.

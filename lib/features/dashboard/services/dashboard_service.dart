@@ -14,6 +14,7 @@ import 'package:swapstash/features/dashboard/models/dashboard_action.dart';
 import 'package:swapstash/features/dashboard/models/dashboard_data.dart';
 import 'package:swapstash/features/dashboard/services/dashboard_message_action_mapper.dart';
 import 'package:swapstash/features/dashboard/services/dashboard_trade_action_mapper.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class DashboardService {
   final UserCollectionService _userCollectionService;
@@ -36,7 +37,9 @@ class DashboardService {
        _tradeService = tradeService ?? TradeService(),
        _chatService = chatService ?? ChatService();
 
-  Stream<DashboardData> watchDashboard() {
+  Stream<DashboardData> watchDashboard({
+    required AppLocalizations localizations,
+  }) {
     late final StreamController<DashboardData> controller;
 
     StreamSubscription<List<UserCollection>>? collectionsSubscription;
@@ -72,12 +75,14 @@ class DashboardService {
         outgoingTrades: latestOutgoingTrades,
         currentUserId: _tradeService.currentUserId,
         limit: 50,
+        localizations: localizations,
       );
 
       final messageActions = DashboardMessageActionMapper.build(
         conversations: latestConversations,
         currentUserId: _chatService.currentUserId,
         limit: 50,
+        localizations: localizations,
       );
 
       final actions = <DashboardAction>[...tradeActions, ...messageActions]

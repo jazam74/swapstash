@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/collection_stats.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class CatalogProgress extends StatelessWidget {
   final CollectionStats stats;
@@ -13,6 +14,7 @@ class CatalogProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final progress = stats.progress(totalCount);
     final percent = (progress * 100).toStringAsFixed(1);
 
@@ -24,7 +26,7 @@ class CatalogProgress extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '📊 Napredek zbirke',
+              localizations.catalogCollectionProgress,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
@@ -43,25 +45,25 @@ class CatalogProgress extends StatelessWidget {
             const SizedBox(height: 8),
             _StatRow(
               icon: Icons.check_circle,
-              label: 'Imam',
+              label: localizations.catalogOwned,
               value: stats.owned.toString(),
               color: Colors.green,
             ),
             _StatRow(
               icon: Icons.cancel,
-              label: 'Manjka',
+              label: localizations.catalogMissing,
               value: stats.missing(totalCount).toString(),
               color: Colors.red,
             ),
             _StatRow(
               icon: Icons.swap_horiz,
-              label: 'Viški',
+              label: localizations.catalogDuplicates,
               value: stats.duplicates.toString(),
               color: Colors.orange,
             ),
             _StatRow(
               icon: Icons.inventory_2,
-              label: 'Skupaj kosov',
+              label: localizations.catalogTotalPieces,
               value: stats.totalQuantity.toString(),
               color: Colors.blue,
             ),

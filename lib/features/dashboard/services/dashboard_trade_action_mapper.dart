@@ -2,12 +2,14 @@ import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/features/dashboard/models/dashboard_action.dart';
 import 'package:swapstash/features/trades/models/trade_action.dart';
 import 'package:swapstash/features/trades/services/trade_action_service.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 abstract final class DashboardTradeActionMapper {
   static List<DashboardAction> build({
     required List<Trade> incomingTrades,
     required List<Trade> outgoingTrades,
     required String currentUserId,
+    required AppLocalizations localizations,
     int limit = 5,
   }) {
     final tradesById = <String, Trade>{};
@@ -22,6 +24,7 @@ abstract final class DashboardTradeActionMapper {
       final tradeAction = TradeActionService.build(
         trade: trade,
         currentUserId: currentUserId,
+        localizations: localizations,
       );
 
       if (!tradeAction.requiresUserAction) {
@@ -37,10 +40,16 @@ abstract final class DashboardTradeActionMapper {
           action: DashboardAction(
             icon: tradeAction.icon,
             color: tradeAction.color,
-            title: _titleFor(type: tradeAction.type, tradeStatus: trade.status),
+            title: _titleFor(
+              type: tradeAction.type,
+              tradeStatus: trade.status,
+              localizations: localizations,
+            ),
             subtitle: otherUserId.trim().isEmpty
-                ? 'Odpri menjavo in nadaljuj postopek.'
-                : 'Menjava z uporabnikom ${_shortUserId(otherUserId)}',
+                ? localizations.dashboardOpenTradeAndContinue
+                : localizations.dashboardTradeWithUser(
+                    _shortUserId(otherUserId),
+                  ),
             tradeId: trade.id,
             tradeTabIndex: _tabIndexFor(
               trade: trade,
@@ -85,20 +94,21 @@ abstract final class DashboardTradeActionMapper {
   static String _titleFor({
     required TradeActionType type,
     required TradeStatus tradeStatus,
+    required AppLocalizations localizations,
   }) {
     switch (type) {
       case TradeActionType.respondToOffer:
         return tradeStatus == TradeStatus.countered
-            ? 'Odgovori na protiponudbo'
-            : 'Odgovori na ponudbo';
+            ? localizations.dashboardRespondToCounterOffer
+            : localizations.dashboardRespondToOffer;
       case TradeActionType.confirmHandover:
-        return 'Potrdi predajo kartic';
+        return localizations.dashboardConfirmHandover;
       case TradeActionType.confirmReceipt:
-        return 'Potrdi prejem kartic';
+        return localizations.dashboardConfirmReceipt;
       case TradeActionType.waiting:
       case TradeActionType.completed:
       case TradeActionType.unavailable:
-        return 'Odpri menjavo';
+        return localizations.dashboardOpenTrade;
     }
   }
 

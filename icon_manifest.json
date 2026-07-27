@@ -1,0 +1,16 @@
+{
+  "brand": "SwapStash",
+  "androidPackage": "net.swapstash.app",
+  "sourceImage": "ee857537-59a4-4557-9c36-bbd494d40d63.png",
+  "launcherSource": "_swapstash_icon_payload/assets/app_icon/swapstash_launcher_icon.png",
+  "playStoreIcon": "swapstash_play_store_icon_512.png",
+  "launcherIconSize": [
+    1024,
+    1024
+  ],
+  "playStoreIconSize": [
+    512,
+    512
+  ],
+  "transparentCorners": true
+}

@@ -2,6 +2,14 @@
   "projects": {
     "default": "swapstash-49199"
   },
-  "targets": {},
+  "targets": {
+    "swapstash-49199": {
+      "hosting": {
+        "app": [
+          "swapstash-app-49199"
+        ]
+      }
+    }
+  },
   "etags": {}
 }

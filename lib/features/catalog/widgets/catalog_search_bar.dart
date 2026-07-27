@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class CatalogSearchBar extends StatelessWidget {
   final ValueChanged<String> onChanged;
@@ -7,13 +8,15 @@ class CatalogSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
       child: TextField(
-        decoration: const InputDecoration(
-          prefixIcon: Icon(Icons.search),
-          hintText: 'Išči številko ali ime...',
-          border: OutlineInputBorder(),
+        decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.search),
+          hintText: localizations.catalogSearchHint,
+          border: const OutlineInputBorder(),
         ),
         onChanged: onChanged,
       ),

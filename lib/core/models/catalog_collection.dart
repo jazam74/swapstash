@@ -8,6 +8,7 @@ class CatalogCollection {
   final int year;
   final int totalItems;
   final String coverImageUrl;
+  final String itemImageBasePath;
   final bool isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -20,6 +21,7 @@ class CatalogCollection {
     required this.year,
     required this.totalItems,
     required this.coverImageUrl,
+    this.itemImageBasePath = '',
     required this.isActive,
     this.createdAt,
     this.updatedAt,
@@ -34,6 +36,7 @@ class CatalogCollection {
       year: (map['year'] as num?)?.toInt() ?? 0,
       totalItems: (map['totalItems'] as num?)?.toInt() ?? 0,
       coverImageUrl: map['coverImageUrl'] as String? ?? '',
+      itemImageBasePath: map['itemImageBasePath'] as String? ?? '',
       isActive: map['isActive'] as bool? ?? true,
       createdAt: _dateTimeFromValue(map['createdAt']),
       updatedAt: _dateTimeFromValue(map['updatedAt']),
@@ -48,6 +51,7 @@ class CatalogCollection {
       'year': year,
       'totalItems': totalItems,
       'coverImageUrl': coverImageUrl,
+      'itemImageBasePath': itemImageBasePath,
       'isActive': isActive,
       'createdAt': createdAt == null ? null : Timestamp.fromDate(createdAt!),
       'updatedAt': updatedAt == null ? null : Timestamp.fromDate(updatedAt!),
@@ -62,6 +66,7 @@ class CatalogCollection {
     int? year,
     int? totalItems,
     String? coverImageUrl,
+    String? itemImageBasePath,
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -74,6 +79,7 @@ class CatalogCollection {
       year: year ?? this.year,
       totalItems: totalItems ?? this.totalItems,
       coverImageUrl: coverImageUrl ?? this.coverImageUrl,
+      itemImageBasePath: itemImageBasePath ?? this.itemImageBasePath,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

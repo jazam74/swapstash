@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/trade_item.dart';
+import 'package:swapstash/core/services/catalog_service.dart';
 import 'package:swapstash/core/theme/app_colors.dart';
 import 'package:swapstash/core/theme/app_radius.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/core/theme/app_text_styles.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class TradeItemTile extends StatelessWidget {
+  static final CatalogService _catalogService = CatalogService();
+
+  static final Map<String, Future<CatalogCollection?>> _collectionFutureById =
+      {};
+
   final TradeItem item;
   final Color accentColor;
 
@@ -15,8 +23,23 @@ class TradeItemTile extends StatelessWidget {
     required this.accentColor,
   });
 
+  Future<CatalogCollection?> _loadCollection() {
+    final collectionId = item.collectionId.trim();
+
+    if (collectionId.isEmpty) {
+      return Future<CatalogCollection?>.value(null);
+    }
+
+    return _collectionFutureById.putIfAbsent(
+      collectionId,
+      () => _catalogService.getCollection(collectionId),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
@@ -43,7 +66,24 @@ class TradeItemTile extends StatelessWidget {
               children: [
                 Text('#${item.itemNumber}', style: AppTextStyles.title),
                 const SizedBox(height: AppSpacing.xs),
-                Text('Kartica iz zbirke', style: AppTextStyles.caption),
+                FutureBuilder<CatalogCollection?>(
+                  future: _loadCollection(),
+                  builder: (context, snapshot) {
+                    final collectionName = snapshot.data?.name.trim() ?? '';
+
+                    final text = collectionName.isEmpty
+                        ? localizations.tradeCardFromCollection
+                        : '${localizations.tradeCardFromCollection}: '
+                              '$collectionName';
+
+                    return Text(
+                      text,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.caption,
+                    );
+                  },
+                ),
               ],
             ),
           ),

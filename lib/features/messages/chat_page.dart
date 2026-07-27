@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/chat_message.dart';
 import 'package:swapstash/core/models/conversation.dart';
 import 'package:swapstash/core/services/chat_service.dart';
+import 'package:swapstash/core/services/block_service.dart';
+import 'package:swapstash/core/models/safety_report.dart';
+import 'package:swapstash/features/safety/report_dialog.dart';
+import 'package:swapstash/features/safety/user_safety_menu.dart';
 import 'package:swapstash/features/messages/widgets/message_bubble.dart';
 import 'package:swapstash/features/messages/widgets/message_input.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class ChatPage extends StatefulWidget {
   final Conversation conversation;
@@ -23,10 +28,14 @@ class _ChatPageState extends State<ChatPage> {
     final user = _auth.currentUser;
 
     if (user == null) {
-      throw StateError('Uporabnik ni prijavljen.');
+      throw StateError('user_not_signed_in');
     }
 
     return user.uid;
+  }
+
+  String get _otherUserId {
+    return widget.conversation.otherUserId(_currentUserId);
   }
 
   @override
@@ -61,7 +70,11 @@ class _ChatPageState extends State<ChatPage> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sporočila ni bilo mogoče poslati:\n$error')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.messageSendError(error.toString()),
+          ),
+        ),
       );
 
       rethrow;
@@ -70,8 +83,14 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final currentUserId = _currentUserId;
-    final otherUserName = widget.conversation.otherUserName(currentUserId);
+    final storedOtherUserName = widget.conversation
+        .otherUserName(currentUserId)
+        .trim();
+    final otherUserName = storedOtherUserName.isEmpty
+        ? localizations.messagesGenericUser
+        : storedOtherUserName;
     final isDirectConversation =
         widget.conversation.collectionId.trim() == 'direct_messages';
 
@@ -107,56 +126,117 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ],
         ),
+        actions: [UserSafetyMenuButton(otherUserId: _otherUserId)],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<List<ChatMessage>>(
-              stream: _chatService.watchMessages(
-                conversationId: widget.conversation.id,
-              ),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting &&
-                    !snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+      body: StreamBuilder<BlockRelationship>(
+        stream: BlockService().watchRelationship(otherUserId: _otherUserId),
+        initialData: const BlockRelationship.none(),
+        builder: (context, relationshipSnapshot) {
+          final relationship =
+              relationshipSnapshot.data ?? const BlockRelationship.none();
 
-                if (snapshot.hasError) {
-                  return _ChatErrorView(error: snapshot.error);
-                }
+          return Column(
+            children: [
+              Expanded(
+                child: StreamBuilder<List<ChatMessage>>(
+                  stream: _chatService.watchMessages(
+                    conversationId: widget.conversation.id,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting &&
+                        !snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                final messages = snapshot.data ?? <ChatMessage>[];
+                    if (snapshot.hasError) {
+                      return _ChatErrorView(error: snapshot.error);
+                    }
 
-                if (messages.isEmpty) {
-                  return _EmptyChatView(
-                    otherUserName: otherUserName,
-                    collectionName: isDirectConversation
-                        ? ''
-                        : widget.conversation.collectionName,
-                  );
-                }
+                    final messages = snapshot.data ?? <ChatMessage>[];
 
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _markAsRead();
-                });
+                    if (messages.isEmpty) {
+                      return _EmptyChatView(
+                        otherUserName: otherUserName,
+                        collectionName: isDirectConversation
+                            ? ''
+                            : widget.conversation.collectionName,
+                      );
+                    }
 
-                return ListView.builder(
-                  reverse: true,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    return MessageBubble(
-                      message: messages[index],
-                      currentUserId: currentUserId,
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _markAsRead();
+                    });
+
+                    return ListView.builder(
+                      reverse: true,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        final message = messages[index];
+
+                        return GestureDetector(
+                          onLongPress: message.isMine(currentUserId)
+                              ? null
+                              : () {
+                                  showSafetyReportDialog(
+                                    context: context,
+                                    reportedUserId: message.senderId,
+                                    targetType: SafetyReportType.message,
+                                    targetId: message.id,
+                                    conversationId: widget.conversation.id,
+                                  );
+                                },
+                          child: MessageBubble(
+                            message: message,
+                            currentUserId: currentUserId,
+                          ),
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ),
+              const Divider(height: 1),
+              if (relationship.isBlocked)
+                _BlockedConversationNotice(relationship: relationship)
+              else
+                MessageInput(onSend: _sendMessage),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _BlockedConversationNotice extends StatelessWidget {
+  final BlockRelationship relationship;
+
+  const _BlockedConversationNotice({required this.relationship});
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
+    return SafeArea(
+      top: false,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        child: Row(
+          children: [
+            const Icon(Icons.block_outlined),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                relationship.iBlockedThem
+                    ? localizations.safetyConversationBlockedByYou
+                    : localizations.safetyConversationBlockedByOther,
+              ),
             ),
-          ),
-          const Divider(height: 1),
-          MessageInput(onSend: _sendMessage),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -197,8 +277,9 @@ class _EmptyChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final normalizedName = otherUserName.trim().isEmpty
-        ? 'uporabnikom'
+        ? localizations.messagesGenericUser
         : otherUserName.trim();
 
     return Center(
@@ -210,20 +291,22 @@ class _EmptyChatView extends StatelessWidget {
             const Icon(Icons.chat_bubble_outline, size: 64),
             const SizedBox(height: 16),
             Text(
-              'Začni pogovor z $normalizedName',
+              localizations.messagesStartConversationWith(normalizedName),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             if (collectionName.trim().isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                'Pogovor se nanaša na zbirko $collectionName.',
+                localizations.messagesConversationAboutCollection(
+                  collectionName,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
             const SizedBox(height: 12),
-            const Text(
-              'Napiši prvo sporočilo in se dogovorita za menjavo.',
+            Text(
+              localizations.messagesWriteFirstMessage,
               textAlign: TextAlign.center,
             ),
           ],
@@ -240,6 +323,8 @@ class _ChatErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -248,8 +333,8 @@ class _ChatErrorView extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, size: 56),
             const SizedBox(height: 16),
-            const Text(
-              'Sporočil ni bilo mogoče naložiti.',
+            Text(
+              localizations.messagesChatLoadError,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),

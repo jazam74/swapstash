@@ -5,6 +5,7 @@ import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/core/models/trade_item.dart';
 import 'package:swapstash/core/services/inventory_compare_service.dart';
 import 'package:swapstash/core/services/trade_service.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class CounterOfferPage extends StatefulWidget {
   final Trade trade;
@@ -68,7 +69,7 @@ class _CounterOfferPageState extends State<CounterOfferPage> {
     final all = [...widget.trade.offeredItems, ...widget.trade.requestedItems];
 
     if (all.isEmpty) {
-      throw Exception('Menjava nima določene zbirke.');
+      throw StateError('missing_trade_collection');
     }
 
     return all.first.collectionId;
@@ -80,9 +81,9 @@ class _CounterOfferPageState extends State<CounterOfferPage> {
   Future<void> _sendCounterOffer() async {
     if (_selectedOfferedIds.isEmpty || _selectedRequestedIds.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Protiponudba mora vsebovati vsaj en predmet na obeh straneh.',
+            AppLocalizations.of(context)!.tradeCounterOfferNeedsBothSides,
           ),
         ),
       );
@@ -115,9 +116,9 @@ class _CounterOfferPageState extends State<CounterOfferPage> {
 
     if (offered.isEmpty || requested.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Izbrane kartice niso več razpoložljive za protiponudbo.',
+            AppLocalizations.of(context)!.tradeCounterOfferItemsUnavailable,
           ),
         ),
       );
@@ -142,7 +143,13 @@ class _CounterOfferPageState extends State<CounterOfferPage> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Protiponudbe ni bilo mogoče poslati: $error')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(
+              context,
+            )!.tradeCounterOfferSendError(error.toString()),
+          ),
+        ),
       );
     } finally {
       if (mounted) {
@@ -155,11 +162,16 @@ class _CounterOfferPageState extends State<CounterOfferPage> {
 
   @override
   Widget build(BuildContext context) {
-    final firstTitle = _currentUserIsSender ? 'Ti oddaš' : 'Ti prejmeš';
-    final secondTitle = _currentUserIsSender ? 'Ti prejmeš' : 'Ti oddaš';
+    final localizations = AppLocalizations.of(context)!;
+    final firstTitle = _currentUserIsSender
+        ? localizations.tradeYouGive
+        : localizations.tradeYouReceive;
+    final secondTitle = _currentUserIsSender
+        ? localizations.tradeYouReceive
+        : localizations.tradeYouGive;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Protiponudba')),
+      appBar: AppBar(title: Text(localizations.tradeCounterOfferTitle)),
       body: FutureBuilder<void>(
         future: _future,
         builder: (context, snapshot) {
@@ -172,7 +184,11 @@ class _CounterOfferPageState extends State<CounterOfferPage> {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Kartic ni bilo mogoče naložiti:\n${snapshot.error}',
+                  snapshot.error.toString().contains('missing_trade_collection')
+                      ? localizations.tradeCollectionMissing
+                      : localizations.tradeCardsLoadError(
+                          snapshot.error.toString(),
+                        ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -183,8 +199,7 @@ class _CounterOfferPageState extends State<CounterOfferPage> {
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
             children: [
               Text(
-                'Spremeni ponudbo. Razmerje ni omejeno, zato lahko '
-                'na primer predlog 3 za 3 spremeniš v 5 za 3.',
+                localizations.tradeCounterOfferDescription,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 20),
@@ -227,7 +242,11 @@ class _CounterOfferPageState extends State<CounterOfferPage> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.swap_horiz),
-                label: Text(_saving ? 'Pošiljam...' : 'Pošlji protiponudbo'),
+                label: Text(
+                  _saving
+                      ? localizations.sending
+                      : localizations.tradeSendCounterOffer,
+                ),
               ),
             ],
           );
@@ -267,7 +286,7 @@ class _SelectionSection extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             if (items.isEmpty)
-              const Text('Ni razpoložljivih predmetov.')
+              Text(AppLocalizations.of(context)!.tradeNoAvailableItems)
             else
               ...items.map(
                 (item) => CheckboxListTile(

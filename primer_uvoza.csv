@@ -1,0 +1,4 @@
+﻿number,name,imageUrl,rarity,attr_country,attr_team,attr_type,attr_year
+001,Lionel Messi,https://example.com/images/001.jpg,Gold,Argentina,Argentina,Star Player,2026
+002,Kylian Mbappé,https://example.com/images/002.jpg,Rare,France,France,Base,2026
+003,Luka Modrić,,Limited Edition,Hrvaška,Hrvaška,International Star,2026

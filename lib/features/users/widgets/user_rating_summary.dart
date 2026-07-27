@@ -1,76 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/trade_rating_summary.dart';
 import 'package:swapstash/core/services/trade_rating_service.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class UserRatingSummary extends StatelessWidget {
   final String userId;
+  final TextStyle? style;
 
-  const UserRatingSummary({super.key, required this.userId});
+  const UserRatingSummary({super.key, required this.userId, this.style});
 
   @override
   Widget build(BuildContext context) {
-    final ratingService = TradeRatingService();
+    final localizations = AppLocalizations.of(context)!;
 
     return StreamBuilder<TradeRatingSummary>(
-      stream: ratingService.watchRatingSummary(userId: userId),
+      stream: TradeRatingService().watchRatingSummary(userId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return const _RatingSummaryContent(
-            value: '—',
-            label: 'Ocena ni na voljo',
-          );
+          return Text(localizations.ratingUnavailable, style: style);
         }
 
         if (snapshot.connectionState == ConnectionState.waiting &&
             !snapshot.hasData) {
-          return const _RatingSummaryContent(
-            value: '...',
-            label: 'Nalagam ocene',
+          return const SizedBox(
+            width: 18,
+            height: 18,
+            child: CircularProgressIndicator(strokeWidth: 2),
           );
         }
 
         final summary = snapshot.data ?? const TradeRatingSummary.empty();
 
-        if (summary.count <= 0) {
-          return const _RatingSummaryContent(value: '—', label: 'Brez ocen');
+        if (!summary.hasRatings) {
+          return Text(localizations.ratingNone, style: style);
         }
 
-        final label = summary.count == 1 ? '1 ocena' : '${summary.count} ocen';
-
-        return _RatingSummaryContent(
-          value: summary.average.toStringAsFixed(1),
-          label: label,
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.star_rounded, size: 18),
+            const SizedBox(width: 4),
+            Text(summary.average.toStringAsFixed(1), style: style),
+            const SizedBox(width: 5),
+            Text(
+              '(${localizations.ratingCount(summary.count)})',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
         );
       },
-    );
-  }
-}
-
-class _RatingSummaryContent extends StatelessWidget {
-  final String value;
-  final String label;
-
-  const _RatingSummaryContent({required this.value, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Icon(Icons.star_rounded),
-        const SizedBox(height: 6),
-        Text(
-          value,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
     );
   }
 }

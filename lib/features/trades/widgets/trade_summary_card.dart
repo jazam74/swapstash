@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/core/theme/app_colors.dart';
 import 'package:swapstash/core/theme/app_radius.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/core/theme/app_text_styles.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 import 'package:swapstash/shared/widgets/app_card.dart';
 
 class TradeSummaryCard extends StatelessWidget {
@@ -21,6 +21,8 @@ class TradeSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final materialLocalizations = MaterialLocalizations.of(context);
     final isSender = trade.senderId == currentUserId;
     final outgoingItems = isSender ? trade.offeredItems : trade.requestedItems;
     final incomingItems = isSender ? trade.requestedItems : trade.offeredItems;
@@ -34,6 +36,12 @@ class TradeSummaryCard extends StatelessWidget {
       (sum, item) => sum + item.quantity,
     );
 
+    final date = materialLocalizations.formatMediumDate(trade.createdAt);
+    final time = materialLocalizations.formatTimeOfDay(
+      TimeOfDay.fromDateTime(trade.createdAt),
+      alwaysUse24HourFormat: MediaQuery.alwaysUse24HourFormatOf(context),
+    );
+
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,26 +51,26 @@ class TradeSummaryCard extends StatelessWidget {
               const Icon(Icons.handshake_outlined),
               const SizedBox(width: AppSpacing.sm),
               Expanded(
-                child: Text('Povzetek menjave', style: AppTextStyles.subtitle),
+                child: Text(
+                  localizations.tradeSummaryTitle,
+                  style: AppTextStyles.subtitle,
+                ),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          Text('Menjava z', style: AppTextStyles.caption),
+          Text(localizations.tradeWith, style: AppTextStyles.caption),
           const SizedBox(height: AppSpacing.xs),
           Text(otherUserLabel, style: AppTextStyles.title),
           const SizedBox(height: AppSpacing.xs),
-          Text(
-            DateFormat('dd. MM. yyyy, HH:mm').format(trade.createdAt),
-            style: AppTextStyles.caption,
-          ),
+          Text('$date, $time', style: AppTextStyles.caption),
           const SizedBox(height: AppSpacing.md),
           Row(
             children: [
               Expanded(
                 child: _SummaryValue(
                   icon: Icons.upload_rounded,
-                  label: 'Oddaš',
+                  label: localizations.tradeYouGive,
                   value: outgoingCount,
                   color: AppColors.primary,
                 ),
@@ -71,7 +79,7 @@ class TradeSummaryCard extends StatelessWidget {
               Expanded(
                 child: _SummaryValue(
                   icon: Icons.download_rounded,
-                  label: 'Prejmeš',
+                  label: localizations.tradeYouReceive,
                   value: incomingCount,
                   color: AppColors.success,
                 ),
@@ -99,7 +107,7 @@ class _SummaryValue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemLabel = value == 1 ? 'kartica' : 'kartic';
+    final localizations = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.sm),
@@ -120,7 +128,10 @@ class _SummaryValue extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          Text('$value $itemLabel', style: AppTextStyles.title),
+          Text(
+            localizations.tradeCardsCount(value),
+            style: AppTextStyles.title,
+          ),
         ],
       ),
     );

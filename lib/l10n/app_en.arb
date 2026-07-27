@@ -19,5 +19,1481 @@
   "language": "Language",
   "internationalTrades": "International trades",
   "allowed": "Allowed",
-  "successfulTrades": "Successful trades"
+  "successfulTrades": "Successful trades",
+  "chooseLanguage": "Choose your language",
+  "chooseLanguageDescription": "Select the language you want to use in SwapStash. You can change it later in settings.",
+  "automaticLanguage": "Automatic – device language",
+  "automaticLanguageDescription": "Uses a supported device language automatically.",
+  "englishFallbackDescription": "If the device language is not supported, English will be used.",
+  "continueButton": "Continue",
+  "saving": "Saving…",
+  "settings": "Settings",
+  "applicationSettings": "Application settings",
+  "languageSettingsDescription": "Choose the application language. The change is applied immediately and saved for future launches.",
+  "languageChanged": "The language has been changed.",
+  "profileLoadError": "The profile could not be loaded:",
+  "profileMissing": "The profile does not exist.",
+  "unnamedUser": "Unnamed user",
+  "unknownUser": "Unknown user",
+  "rating": "Rating",
+  "completedTrades": "Completed trades",
+  "profileVisibility": "Profile visibility",
+  "publicProfile": "Public",
+  "privateProfile": "Private",
+  "notAllowed": "Not allowed",
+  "editProfile": "Edit profile",
+  "editProfileSubtitle": "Name, city, description and privacy",
+  "signOut": "Sign out",
+  "dashboardCatalogTooltip": "Collection catalog",
+  "dashboardFavoritesTooltip": "My favorites",
+  "dashboardLoadError": "The dashboard could not be loaded",
+  "dashboardMyCollections": "My collections",
+  "dashboardShowAll": "Show all",
+  "dashboardOverview": "Overview",
+  "dashboardYourCollections": "Your collections",
+  "dashboardWelcomeTitle": "Welcome!",
+  "dashboardWelcomeSubtitle": "An overview of your collections and activity.",
+  "dashboardTodayTasks": "Your tasks for today",
+  "dashboardAllDone": "Everything is up to date",
+  "dashboardNoOpenTasks": "You currently have no open tasks.",
+  "dashboardNoCollectionsTitle": "You do not have any collections yet",
+  "dashboardNoCollectionsDescription": "Open the Collections tab and add your first collection.",
+  "dashboardCollected": "Collected",
+  "dashboardDuplicates": "Duplicates",
+  "dashboardMissing": "Missing",
+  "dashboardCollectionOpenError": "The collection could not be opened.",
+  "dashboardCollectionNotFound": "The collection could not be found.",
+  "dashboardCollectionOpenErrorDetails": "The collection could not be opened: {error}",
+  "dashboardUnreadMessages": "{count, plural, =1{1 unread message} other{{count} unread messages}}",
+  "dashboardOpenConversation": "Open the conversation and read the new messages.",
+  "dashboardRespondToCounterOffer": "Respond to the counteroffer",
+  "dashboardRespondToOffer": "Respond to the offer",
+  "dashboardConfirmHandover": "Confirm card handover",
+  "dashboardConfirmReceipt": "Confirm receipt of cards",
+  "dashboardOpenTrade": "Open trade",
+  "dashboardOpenTradeAndContinue": "Open the trade and continue the process.",
+  "dashboardTradeWithUser": "Trade with user {userId}",
+  "@dashboardCollectionOpenErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@dashboardUnreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardTradeWithUser": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogAddToFavorites": "Add to favorites",
+  "catalogAddedToFavorites": "The item was added to favorites.",
+  "catalogAdditionalFilterCount": "{count, plural, one{{count} additional filter} other{{count} additional filters}}",
+  "catalogAdditionalFilters": "Additional filters",
+  "catalogAdditionalFiltersCount": "Additional filters ({count})",
+  "catalogAll": "All",
+  "catalogAllRarities": "All rarities",
+  "catalogApply": "Apply",
+  "catalogAttributeBrand": "Brand",
+  "catalogAttributeCharacter": "Character",
+  "catalogAttributeCountry": "Country",
+  "catalogAttributeDenomination": "Denomination",
+  "catalogAttributeFranchise": "Franchise",
+  "catalogAttributeManufacturer": "Manufacturer",
+  "catalogAttributeMaterial": "Material",
+  "catalogAttributeSeries": "Series",
+  "catalogAttributeSet": "Set",
+  "catalogAttributeTeam": "Team",
+  "catalogAttributeTheme": "Theme",
+  "catalogAttributeType": "Type",
+  "catalogAttributeYear": "Year",
+  "catalogCancel": "Cancel",
+  "catalogCategory": "Category",
+  "catalogChooseCsvOrXlsx": "Choose CSV or XLSX",
+  "catalogClear": "Clear",
+  "catalogClose": "Close",
+  "catalogCollectionAddError": "The collection could not be added: {error}",
+  "catalogCollectionAdded": "“{name}” was added to your collections.",
+  "catalogCollectionComplete": "The collection is complete. No items are missing.",
+  "catalogCollectionCreateError": "The collection could not be created: {error}",
+  "catalogCollectionCreatePermissionDenied": "Firestore rejected collection creation. The signed-in user needs administrator permission.",
+  "catalogCollectionCreatedForImport": "“{name}” was created and selected for import.",
+  "catalogCollectionId": "Collection ID",
+  "catalogCollectionIdExists": "A collection with the ID “{id}” already exists.",
+  "catalogCollectionIdHelp": "Lowercase letters, numbers and hyphens. Do not change it later.",
+  "catalogCollectionIdInvalid": "Use only lowercase letters, numbers and hyphens.",
+  "catalogCollectionName": "Collection name",
+  "catalogCollectionProgress": "📊 Collection progress",
+  "catalogCollectionsLoadErrorDetails": "Collections could not be loaded:\n{error}",
+  "catalogCollectionsTitle": "Collection catalog",
+  "catalogColumnCount": "{count, plural, one{{count} column} other{{count} columns}}",
+  "catalogConfirmImport": "Confirm import",
+  "catalogCreate": "Create",
+  "catalogCreateNewCollection": "Create new collection",
+  "catalogCreatingCollection": "Creating collection ...",
+  "catalogDecreaseQuantity": "Decrease quantity",
+  "catalogDisableQuickEntry": "Disable quick entry",
+  "catalogDuplicates": "Duplicates",
+  "catalogEnableQuickEntry": "Enable quick entry",
+  "catalogEnterCollectionId": "Enter the collection ID.",
+  "catalogEnterCollectionName": "Enter the collection name.",
+  "catalogFavoriteChangeError": "The favorite status could not be changed: {error}",
+  "catalogFileErrors": "File errors",
+  "catalogFilterByRarity": "Filter by rarity",
+  "catalogFindTrades": "Find trades",
+  "catalogFirstRows": "First {count}",
+  "catalogImageNotAdded": "No image has been added yet",
+  "catalogImportAction": "Import",
+  "catalogImportColumnHelp": "The required columns are number and name. The rarity and imageUrl columns are optional. All other columns are automatically imported as additional attributes.",
+  "catalogImportCompleted": "Import completed",
+  "catalogImportConfirmRows": "{count, plural, one{{count} valid row will be processed} other{{count} valid rows will be processed}} in “{collectionName}”.",
+  "catalogImportCreated": "Created: {count}",
+  "catalogImportCsvAndExcel": "CSV and Excel",
+  "catalogImportCsvReadError": "The CSV file could not be read: {error}",
+  "catalogImportDescription": "Import items from a CSV or XLSX file.",
+  "catalogImportDuplicateNumber": "Duplicate number in the same file.",
+  "catalogImportExcelNoData": "The Excel file contains no data.",
+  "catalogImportExistingSkipped": "Existing items will be skipped.",
+  "catalogImportExistingUpdated": "Existing items with the same number will be updated.",
+  "catalogImportFailed": "Import failed: {error}",
+  "catalogImportFileNoData": "The file contains no data.",
+  "catalogImportFileOpenError": "The file could not be opened: {error}",
+  "catalogImportFileTooLarge": "The file is larger than the allowed 20 MB.",
+  "catalogImportFileTooltip": "Import CSV or XLSX",
+  "catalogImportItems": "Import {count, plural, one{{count} item} other{{count} items}}",
+  "catalogImportMissingName": "Name is missing.",
+  "catalogImportMissingNameColumn": "The required “name” column is missing.",
+  "catalogImportMissingNumber": "Number is missing.",
+  "catalogImportMissingNumberColumn": "The required “number” column is missing.",
+  "catalogImportNoItemsBelowHeader": "There are no items below the header row.",
+  "catalogImportPermissionDenied": "Firestore rejected the import. The signed-in user must be an administrator to import into the central catalog.",
+  "catalogImportSkipHelp": "Items with an existing number will not be changed.",
+  "catalogImportSkipped": "Skipped: {count}",
+  "catalogImportSupportedFilesOnly": "Only CSV and XLSX files are supported.",
+  "catalogImportTitle": "Catalog import",
+  "catalogImportUpdateHelp": "Items with an existing number will be updated.",
+  "catalogImportUpdated": "Updated: {count}",
+  "catalogImportXlsxReadError": "The XLSX file could not be read: {error}",
+  "catalogImporting": "Importing ...",
+  "catalogIncreaseQuantity": "Increase quantity",
+  "catalogInvalidNumber": "Invalid number.",
+  "catalogInvalidRows": "{count, plural, one{{count} invalid} other{{count} invalid}}",
+  "catalogInvalidYear": "Invalid year.",
+  "catalogInventoryLoadErrorDetails": "Inventory could not be loaded:\n{error}",
+  "catalogItemCount": "Number of items",
+  "catalogItemDefaultName": "Item {number}",
+  "catalogItemMarkedMissing": "The item was marked as missing.",
+  "catalogItemMissing": "Item is missing",
+  "catalogItemOwned": "You own this item",
+  "catalogItemStatusLoadErrorDetails": "The item status could not be loaded:\n{error}",
+  "catalogItemsCount": "{count, plural, one{{count} item} other{{count} items}}",
+  "catalogItemsLoadErrorDetails": "Items could not be loaded:\n{error}",
+  "catalogLoadErrorDetails": "The catalog could not be loaded:\n{error}",
+  "catalogMissing": "Missing",
+  "catalogMissingPlural": "Missing",
+  "catalogNewCollection": "New collection",
+  "catalogNoCollectionsFound": "No collections found.",
+  "catalogNoDuplicates": "You do not have any duplicates yet.",
+  "catalogNoFilterResults": "No items match the selected filters.",
+  "catalogNoItems": "This collection does not contain any items yet.",
+  "catalogNoOwnedItems": "You do not own any items yet.",
+  "catalogNoSearchResults": "No results match the search term and selected filters.",
+  "catalogNotOwned": "Not owned",
+  "catalogOk": "OK",
+  "catalogOpeningFile": "Opening file ...",
+  "catalogOther": "Other",
+  "catalogOwned": "Owned",
+  "catalogOwnedSurplusCount": "{count, plural, =0{You have no duplicates.} one{You have {count} duplicate.} other{You have {count} duplicates.}}",
+  "catalogPiecesCount": "{count, plural, one{{count} piece} other{{count} pieces}}",
+  "catalogPreview": "Preview",
+  "catalogPublisher": "Publisher",
+  "catalogQuantity": "Quantity",
+  "catalogQuantitySaveError": "The quantity could not be saved: {error}",
+  "catalogQuantityUpdated": "The quantity was updated to {quantity}.",
+  "catalogRarity": "Rarity",
+  "catalogRarityAll": "Rarity: all",
+  "catalogRarityCommon": "Common",
+  "catalogRarityLimitedEdition": "Limited Edition",
+  "catalogRarityRare": "Rare",
+  "catalogRaritySelected": "Rarity: {value}",
+  "catalogRarityUltraRare": "Ultra Rare",
+  "catalogRarityValue": "Rarity: {value}",
+  "catalogRemoveFromFavorites": "Remove from favorites",
+  "catalogRemovedFromFavorites": "The item was removed from favorites.",
+  "catalogResultsCount": "{count, plural, one{{count} result} other{{count} results}}",
+  "catalogSearchHint": "Search by number or name ...",
+  "catalogSelectTargetCollectionFirst": "Select the target collection first.",
+  "catalogSelectValidFileFirst": "Choose a valid file first.",
+  "catalogSelectedCollectionMissing": "The selected collection no longer exists.",
+  "catalogSheetName": "Sheet: {name}",
+  "catalogSkip": "Skip",
+  "catalogSortItems": "Sort items",
+  "catalogSortNameAscending": "Name: A–Z",
+  "catalogSortNameDescending": "Name: Z–A",
+  "catalogSortNumberAscending": "Number: ascending",
+  "catalogSortNumberDescending": "Number: descending",
+  "catalogSortRarityAscending": "Rarity: A–Z",
+  "catalogSortRarityDescending": "Rarity: Z–A",
+  "catalogSurplusCount": "{count, plural, one{+{count} duplicate} other{+{count} duplicates}}",
+  "catalogTargetCollection": "Target collection",
+  "catalogTotalPieces": "Total pieces",
+  "catalogUnnamedItem": "Unnamed item",
+  "catalogUpdate": "Update",
+  "catalogValidRows": "{count, plural, one{{count} valid} other{{count} valid}}",
+  "catalogYear": "Year",
+  "@catalogAdditionalFilterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogAdditionalFiltersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogCollectionAddError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionCreateError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionCreatedForImport": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionIdExists": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionsLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogColumnCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogFavoriteChangeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogFirstRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportConfirmRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "collectionName": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportCreated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportCsvReadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportFileOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportUpdated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportXlsxReadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogInvalidRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogInventoryLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemDefaultName": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemStatusLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogItemsLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogOwnedSurplusCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogPiecesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogQuantitySaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogQuantityUpdated": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogRaritySelected": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogRarityValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogSheetName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogSurplusCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogValidRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cancel": "Cancel",
+  "clearSearch": "Clear search",
+  "noResults": "No results",
+  "now": "Now",
+  "sending": "Sending...",
+  "tryAgain": "Try again",
+  "yesterday": "Yesterday",
+  "weekdayMondayShort": "Mon",
+  "weekdayTuesdayShort": "Tue",
+  "weekdayWednesdayShort": "Wed",
+  "weekdayThursdayShort": "Thu",
+  "weekdayFridayShort": "Fri",
+  "weekdaySaturdayShort": "Sat",
+  "weekdaySundayShort": "Sun",
+  "messageSendError": "The message could not be sent:\n{error}",
+  "@messageSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesSearchHint": "Search by user, collection, or message",
+  "messagesConversationEmptyPreview": "This conversation has no messages yet.",
+  "messagesYouPreview": "You: {message}",
+  "@messagesYouPreview": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesEmptyTitle": "You do not have any conversations yet",
+  "messagesEmptyDescription": "You can start a conversation with a user you would like to trade with.",
+  "messagesTryAnotherSearch": "Try a different search term.",
+  "messagesNoConversationsForQuery": "No conversations were found for “{query}”.",
+  "@messagesNoConversationsForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesLoadError": "Conversations could not be loaded",
+  "messagesSignInRequired": "You must sign in to view messages.",
+  "messagesGenericUser": "this user",
+  "messagesStartConversationWith": "Start a conversation with {name}",
+  "@messagesStartConversationWith": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesConversationAboutCollection": "This conversation is about the {collectionName} collection.",
+  "@messagesConversationAboutCollection": {
+    "placeholders": {
+      "collectionName": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesWriteFirstMessage": "Write the first message and arrange a trade.",
+  "messagesChatLoadError": "Messages could not be loaded.",
+  "messagesWriteMessageHint": "Write a message...",
+  "messagesSendMessage": "Send message",
+  "tradeAccept": "Accept",
+  "tradeArchiveEmpty": "The archive is empty.",
+  "tradeAutomaticProposalDescription": "SwapStash suggests a balanced trade of {offeredCount} for {requestedCount}.",
+  "@tradeAutomaticProposalDescription": {
+    "placeholders": {
+      "offeredCount": {
+        "type": "int"
+      },
+      "requestedCount": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeAutomaticProposalTitle": "Automatic trade proposal",
+  "tradeBackToResults": "Back to results",
+  "tradeCanOffer": "You can offer",
+  "tradeCanReceive": "You can receive",
+  "tradeCancelOffer": "Cancel offer",
+  "tradeCardFromCollection": "Card from the collection",
+  "tradeCardsCount": "{count, plural, one{{count} card} other{{count} cards}}",
+  "@tradeCardsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeCardsLoadError": "Cards could not be loaded:\n{error}",
+  "@tradeCardsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCollectionMissing": "The trade does not have a collection.",
+  "tradeCommentHint": "For example: quick agreement and cards in excellent condition.",
+  "tradeComparisonTitle": "Trade comparison",
+  "tradeCompletedSteps": "{completed} of {total} steps",
+  "@tradeCompletedSteps": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeConfirmHandoverButton": "Yes, confirm handover",
+  "tradeConfirmHandoverDescription": "Confirm only after you have actually handed the cards to the other party. After confirmation, the cards will be removed from your inventory. This step cannot be undone.",
+  "tradeConfirmHandoverTitle": "Confirm card handover",
+  "tradeConfirmReceiptButton": "Yes, confirm receipt",
+  "tradeConfirmReceiptDescription": "Confirm only after you have actually received the agreed cards. After confirmation, they will be added to your inventory. This step cannot be undone.",
+  "tradeConfirmReceiptTitle": "Confirm receipt of cards",
+  "tradeConversationOpenError": "The conversation could not be opened:\n{error}",
+  "@tradeConversationOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCounterOfferDescription": "Change the offer. The ratio is unrestricted, so you can change a 3-for-3 proposal to 5-for-3, for example.",
+  "tradeCounterOfferItemsUnavailable": "The selected cards are no longer available for the counteroffer.",
+  "tradeCounterOfferNeedsBothSides": "A counteroffer must contain at least one item on both sides.",
+  "tradeCounterOfferSendError": "The counteroffer could not be sent: {error}",
+  "@tradeCounterOfferSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCounterOfferTitle": "Counteroffer",
+  "tradeDirectionCounterOffer": "COUNTEROFFER",
+  "tradeDirectionReceivedOffer": "RECEIVED OFFER",
+  "tradeDirectionSentOffer": "SENT OFFER",
+  "tradeFilterCancelled": "Cancelled",
+  "tradeFilterCompleted": "Completed",
+  "tradeFilterRejected": "Rejected",
+  "tradeFindTrades": "Find trades",
+  "tradeFromTask": "Trade from task",
+  "tradeHandoverConfirmed": "Handover confirmed ✓",
+  "tradeHandoverConfirmedSuccess": "The card handover has been confirmed and the inventory updated.",
+  "tradeIAmOffering": "I am offering",
+  "tradeIWant": "I want",
+  "tradeItemSelectionNextStep": "Item selection comes in the next step.",
+  "tradeItemsNextStep": "The item list comes in the next step.",
+  "tradeLoadError": "Trades could not be loaded.",
+  "tradeLoadErrorDetails": "Trades could not be loaded:\n{error}",
+  "@tradeLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeNewTrade": "New trade",
+  "tradeNoAvailableItems": "No items are available.",
+  "tradeNoCancelledTrades": "There are no cancelled trades.",
+  "tradeNoCards": "No cards.",
+  "tradeNoCompletedTrades": "There are no completed trades.",
+  "tradeNoIncomingTrades": "There are no received trades.",
+  "tradeNoMatchesFound": "No possible trades were found at the moment.",
+  "tradeNoMatchesHint": "Check that you have marked your duplicates and that other users use the same collection.",
+  "tradeNoOutgoingTrades": "There are no sent trades.",
+  "tradeNoRejectedTrades": "There are no rejected trades.",
+  "tradeNoTradesYet": "You do not have any trades yet.",
+  "tradeNoUsersMatch": "No users match the search.",
+  "tradeOfferAcceptedSuccess": "The trade has been accepted.",
+  "tradeOfferCancelledSuccess": "The offer has been cancelled.",
+  "tradeOfferRejectedSuccess": "The offer has been rejected.",
+  "tradeOpeningConversation": "Opening conversation...",
+  "tradeOptionalComment": "Comment (optional)",
+  "tradePossibleTradesCount": "{count, plural, one{{count} possible trade} other{{count} possible trades}}",
+  "@tradePossibleTradesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeProgressAgreed": "Trade agreed",
+  "tradeProgressIHandedOver": "I handed over the cards",
+  "tradeProgressIReceived": "I received the cards",
+  "tradeProgressOtherHandedOver": "The other party handed over the cards",
+  "tradeProgressOtherReceived": "The other party received the cards",
+  "tradeProgressTitle": "Trade progress",
+  "tradeProposalSendError": "The trade proposal could not be sent:\n{error}",
+  "@tradeProposalSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeProposalSentSuccessfully": "The trade proposal was sent successfully.",
+  "tradeRateUser": "Rate user",
+  "tradeRatingQuestion": "How satisfied are you with the completed trade?",
+  "tradeRatingSubmitError": "The rating could not be submitted: {error}",
+  "@tradeRatingSubmitError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeRatingSubmitted": "Rating submitted.",
+  "tradeRatingSubmittedSuccessfully": "The rating was submitted successfully.",
+  "tradeRatingUnavailable": "Rating is currently unavailable. Check whether the new Firestore rules have been deployed.",
+  "tradeReceiptConfirmed": "Receipt confirmed ✓",
+  "tradeReceiptConfirmedSuccess": "Receipt of the cards has been confirmed and the inventory updated.",
+  "tradeRecipient": "Recipient",
+  "tradeReject": "Reject",
+  "tradeRemoveRecipient": "Remove recipient",
+  "tradeSearchUserHint": "Search for a user by name...",
+  "tradeSendCounterOffer": "Send counteroffer",
+  "tradeSendMessageToUser": "Send a message to {name}",
+  "@tradeSendMessageToUser": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeSendProposal": "Send proposal",
+  "tradeSendingProposal": "Sending proposal...",
+  "tradeStarsOutOfFive": "{value} out of 5",
+  "@tradeStarsOutOfFive": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeSubmitRating": "Submit rating",
+  "tradeSubmittingRating": "Submitting rating...",
+  "tradeSuggestAutomatically": "Suggest a trade automatically",
+  "tradeSummaryTitle": "Trade summary",
+  "tradeTabAll": "All",
+  "tradeTabArchive": "Archive",
+  "tradeTabReceived": "Received",
+  "tradeTabSent": "Sent",
+  "tradeTheirDuplicates": "Their duplicates",
+  "tradeTheirDuplicatesYouNeed": "Their duplicates that you do not have yet.",
+  "tradeUserCanOffer": "{name} can offer",
+  "@tradeUserCanOffer": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserHasNoDuplicatesYouNeed": "{name} currently has no duplicates that you need.",
+  "@tradeUserHasNoDuplicatesYouNeed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserNeedsNoneOfYourDuplicates": "{name} currently does not need any of your duplicates.",
+  "@tradeUserNeedsNoneOfYourDuplicates": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserOffers": "{name} offers:",
+  "@tradeUserOffers": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserSearchError": "Users could not be searched:\n{error}",
+  "@tradeUserSearchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeWantedItemsNextStep": "The wanted-item list comes in the next step.",
+  "tradeWith": "Trade with",
+  "tradeYouCanOffer": "You can offer",
+  "tradeYouGive": "You give",
+  "tradeYouOfferColon": "You offer:",
+  "tradeYouOfferCount": "{count} offered",
+  "@tradeYouOfferCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeYouReceive": "You receive",
+  "tradeYouReceiveCount": "{count} received",
+  "@tradeYouReceiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeYourDuplicatesTheyNeed": "Your duplicates that this user does not have yet.",
+  "tradeAllowsInternationalTrades": "Allows international trades",
+  "tradeActionExecutionError": "The action could not be completed: {error}",
+  "@tradeActionExecutionError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeActionCompletedTitle": "Trade completed",
+  "tradeActionCompletedDescription": "Both parties confirmed handover and receipt of the cards. The inventories have been updated.",
+  "tradeActionRejectedTitle": "The offer was rejected",
+  "tradeActionCancelledTitle": "The offer was cancelled",
+  "tradeActionNoActionRequired": "No further action is required for this offer.",
+  "tradeActionYourTurnTitle": "It is your turn",
+  "tradeActionReviewOfferDescription": "Review the cards and accept, reject, or send a counteroffer.",
+  "tradeActionOtherTurnTitle": "It is the other party's turn",
+  "tradeActionWaitingResponseDescription": "No action is required right now. Waiting for the other user's response.",
+  "tradeActionNoActionTitle": "No action is currently required",
+  "tradeActionStatusNoResponseDescription": "The trade status does not require your response.",
+  "tradeActionNextStepTitle": "Next step",
+  "tradeActionConfirmHandoverDescription": "After you actually hand your cards to the other party, confirm the handover. They will then be deducted from your inventory.",
+  "tradeActionConfirmReceiptDescription": "After you actually receive the agreed cards, confirm receipt. They will then be added to your inventory.",
+  "tradeActionWaitingOtherHandoverDescription": "You have already confirmed the handover. Waiting for the other party to hand over their cards.",
+  "tradeActionWaitingOtherConfirmationTitle": "Waiting for the other party's confirmation",
+  "tradeActionWaitingOtherReceiptDescription": "You have already confirmed receipt. The trade will finish when the other party confirms receipt as well.",
+  "tradeActionWaitingNextConfirmationDescription": "Waiting for the other party's next confirmation.",
+  "tradeStatusCompletedTitle": "Trade completed",
+  "tradeStatusCompletedSubtitle": "Both users confirmed handover and receipt.",
+  "tradeStatusCompletedBadge": "Completed",
+  "tradeStatusRejectedTitle": "Offer rejected",
+  "tradeStatusRejectedSubtitle": "This trade proposal was not accepted.",
+  "tradeStatusRejectedBadge": "Rejected",
+  "tradeStatusCancelledTitle": "Offer cancelled",
+  "tradeStatusCancelledSubtitle": "The sender cancelled the trade proposal.",
+  "tradeStatusCancelledBadge": "Cancelled",
+  "tradeStatusCounterOfferReceivedTitle": "You received a counteroffer",
+  "tradeStatusAwaitingYourResponseTitle": "The offer is waiting for your response",
+  "tradeStatusReviewOfferSubtitle": "Review the cards and select Accept, Reject, or Counteroffer.",
+  "tradeStatusWaitingForYouBadge": "Waiting for you",
+  "tradeStatusCounterOfferSentTitle": "Counteroffer sent",
+  "tradeStatusOfferSentTitle": "Offer sent",
+  "tradeStatusWaitingOtherUserSubtitle": "Waiting for the other user's response.",
+  "tradeStatusWaitingResponseBadge": "Waiting for response",
+  "tradeStatusReceivedTitle": "You received the package",
+  "tradeStatusReceivedSubtitle": "The received cards were added to your inventory. Waiting for the other party's confirmation.",
+  "tradeStatusReceivedBadge": "Received",
+  "tradeStatusBothOnWayTitle": "Both packages are on the way",
+  "tradeStatusPackageOnWayTitle": "A package is on its way to you",
+  "tradeStatusBothOnWaySubtitle": "Both packages have been handed over. Confirm receipt when your package arrives.",
+  "tradeStatusOtherSentSubtitle": "The other party handed over the package. Your cards are still reserved.",
+  "tradeStatusOnWayBadge": "On the way",
+  "tradeStatusSentTitle": "You sent the package",
+  "tradeStatusSentSubtitle": "The handed-over cards were removed from your inventory. Waiting for the other party.",
+  "tradeStatusSentBadge": "Sent",
+  "tradeStatusOtherReceivedTitle": "The other party received the package",
+  "tradeStatusConfirmWhenReceivedSubtitle": "Confirm receipt when your package arrives.",
+  "tradeStatusWaitingReceiptBadge": "Waiting for receipt",
+  "tradeStatusAgreedTitle": "Trade agreed",
+  "tradeStatusAgreedSubtitle": "The cards on both sides are reserved. The inventory changes only after handover or receipt is confirmed.",
+  "tradeStatusAgreedBadge": "Agreed",
+  "authLoginSubtitle": "Sign in to your account",
+  "authRegisterSubtitle": "Create a new collector account",
+  "authDisplayNameLabel": "Display name",
+  "authDisplayNameHint": "For example Alex",
+  "authDisplayNameRequired": "Enter a display name.",
+  "authDisplayNameMinLength": "The name must contain at least 2 characters.",
+  "authDisplayNameMaxLength": "The name can contain no more than 40 characters.",
+  "authEmailLabel": "Email address",
+  "authEmailRequired": "Enter your email address.",
+  "authEmailInvalid": "Enter a valid email address.",
+  "authPasswordLabel": "Password",
+  "authShowPassword": "Show password",
+  "authHidePassword": "Hide password",
+  "authPasswordRequired": "Enter your password.",
+  "authPasswordMinLength": "The password must contain at least 6 characters.",
+  "authConfirmPasswordLabel": "Confirm password",
+  "authConfirmPasswordRequired": "Enter your password again.",
+  "authPasswordsDoNotMatch": "The passwords do not match.",
+  "authLoginButton": "Sign in",
+  "authCreateAccountButton": "Create account",
+  "authNoAccountRegister": "Do not have an account? Register",
+  "authHaveAccountLogin": "Already have an account? Sign in",
+  "authInvalidData": "The entered data is not valid.",
+  "authUnexpectedError": "An unexpected error occurred: {error}",
+  "authFirebaseInvalidEmail": "The email address is not valid.",
+  "authFirebaseEmailAlreadyInUse": "An account with this email address already exists.",
+  "authFirebaseWeakPassword": "The password is too weak.",
+  "authFirebaseInvalidCredentials": "The email address or password is incorrect.",
+  "authFirebaseTooManyRequests": "Too many attempts. Try again later.",
+  "authFirebaseNetworkError": "Check your internet connection.",
+  "authFirebaseGenericError": "Sign-in or registration failed.",
+  "favoritesTitle": "My favorites",
+  "favoritesSearchHint": "Search favorites",
+  "favoritesClearSearch": "Clear",
+  "favoritesRemoved": "Removed from favorites.",
+  "favoritesNamedItemRemoved": "“{name}” was removed from favorites.",
+  "favoritesRemoveError": "Could not remove the favorite: {error}",
+  "favoritesUnnamedItem": "Unnamed item",
+  "favoritesRemoveTooltip": "Remove from favorites",
+  "favoritesEmptyTitle": "You do not have any favorites yet",
+  "favoritesEmptyDescription": "Tap the heart on an item’s details page and it will appear here.",
+  "favoritesNoResults": "No results.",
+  "favoritesNoResultsForQuery": "No favorites were found for “{query}”.",
+  "favoritesLoadError": "Favorites could not be loaded.",
+  "myCollectionsTitle": "My collections",
+  "myCollectionsAddFromCatalog": "Add a collection from the catalog",
+  "myCollectionsAddButton": "Add collection",
+  "myCollectionsRemoveTitle": "Remove collection",
+  "myCollectionsRemoveQuestion": "Do you want to remove “{name}” from your collections?",
+  "myCollectionsRemoveButton": "Remove",
+  "myCollectionsRemoved": "“{name}” was removed from your collections.",
+  "myCollectionsRemoveError": "The collection could not be removed: {error}",
+  "myCollectionsLoadError": "Your collections could not be loaded:\n{error}",
+  "myCollectionsCatalogLoadError": "The collection could not be loaded.",
+  "myCollectionsCatalogMissing": "The catalog collection does not exist.",
+  "myCollectionsStatisticsLoadError": "Collection statistics could not be loaded.",
+  "myCollectionsStatisticsUnavailable": "Collection statistics are unavailable.",
+  "myCollectionsEmptyTitle": "You have not added any collections yet.",
+  "myCollectionsEmptyDescription": "Choose a collection from the central catalog.",
+  "myCollectionsOpenCatalog": "Open catalog",
+  "myCollectionsUnnamedCollection": "Unnamed collection",
+  "myCollectionsMenuTooltip": "Collection options",
+  "myCollectionsEditMenu": "Edit",
+  "myCollectionsRemoveMenu": "Remove",
+  "myCollectionsProgressCount": "Collected: {owned} / {total}",
+  "myCollectionsDuplicateCount": "Duplicates: {count}",
+  "myCollectionsMissingCount": "Missing: {count}",
+  "@authUnexpectedError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesNamedItemRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesNoResultsForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoveQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsProgressCount": {
+    "placeholders": {
+      "owned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@myCollectionsDuplicateCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@myCollectionsMissingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectors": "Collectors",
+  "editProfileDisplayName": "Display name",
+  "editProfileCity": "City",
+  "editProfileBio": "About me",
+  "editProfilePublicTitle": "Public profile",
+  "editProfilePublicSubtitle": "Other users can find you.",
+  "editProfileInternationalTitle": "Allow international trades",
+  "editProfileInternationalSubtitle": "You can receive offers from other countries.",
+  "editProfileSave": "Save",
+  "editProfileSaving": "Saving…",
+  "editProfileSaved": "The profile was saved successfully.",
+  "editProfileSaveError": "The profile could not be saved: {error}",
+  "editProfileLoadError": "The profile could not be loaded:\n{error}",
+  "editProfileMissing": "The profile does not exist.",
+  "editProfileDisplayNameRequired": "Enter a display name.",
+  "collectorsSearchLabel": "Search collectors",
+  "collectorsSearchHint": "Enter a display name",
+  "collectorsSearchError": "Users could not be searched:\n{error}",
+  "collectorsNoResults": "No collectors were found.",
+  "collectorsSearchDescription": "Find other collectors by display name.",
+  "collectorsInternationalAllowed": "International trades allowed",
+  "collectorsLocalOnly": "Local trades only",
+  "collectorProfileTitle": "Collector profile",
+  "collectorProfileMissing": "The user profile does not exist.",
+  "collectorChatOpenError": "The conversation could not be opened:\n{error}",
+  "collectorOpeningChat": "Opening conversation…",
+  "collectorSendMessage": "Send message",
+  "collectorInternationalTrades": "International trades",
+  "collectorLocalTrades": "Local trades",
+  "collectorAbout": "About the collector",
+  "collectorPrivateTitle": "This profile is private",
+  "collectorPrivateDescription": "The location, description and rating comments are not shown publicly.",
+  "collectorProfileLoadError": "The profile could not be loaded:\n{error}",
+  "ratingUnavailable": "Rating unavailable",
+  "ratingLoading": "Loading ratings",
+  "ratingNone": "No ratings",
+  "ratingCount": "{count, plural, =1{1 rating} other{{count} ratings}}",
+  "ratingCommentsLoadError": "Rating comments could not be loaded.",
+  "ratingNoPublicComments": "This collector has no public comments yet.",
+  "ratingRecentComments": "Recent comments",
+  "@editProfileSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@editProfileLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorsSearchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorChatOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorProfileLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@ratingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogCategorySportsCards": "Sports cards",
+  "collectorsNavigation": "Collectors",
+  "tradeManualStepRecipient": "Recipient",
+  "tradeManualStepItems": "Cards",
+  "tradeManualStepSummary": "Summary",
+  "tradeManualChooseRecipientDescription": "Find the collector you want to send a trade offer to.",
+  "tradeManualChangeRecipient": "Change",
+  "tradeManualLoadingOptions": "Checking shared collections and available cards…",
+  "tradeManualOptionsError": "Trade cards could not be loaded: {error}",
+  "tradeManualNoCommonCollections": "No shared collection",
+  "tradeManualNoCommonCollectionsDescription": "Both users must have at least one of the same collections to create a manual trade.",
+  "tradeManualNoAvailableItems": "No cards are currently available",
+  "tradeManualNeedsBothDirections": "Each user must have at least one available duplicate for an offer.",
+  "tradeManualChooseCollection": "Collection",
+  "tradeManualSelectionsRemainAcrossCollections": "One offer can contain cards from only one collection. Switching collections clears the selection.",
+  "tradeManualNoOfferedItemsInCollection": "You have no available duplicates in this collection.",
+  "tradeManualNoRequestedItemsInCollection": "The other user has no available duplicates in this collection.",
+  "tradeManualSelectedItems": "Selected: {count}",
+  "tradeManualAvailableQuantity": "Available to trade: {count}",
+  "tradeManualChooseAtLeastOneEach": "Select at least one card on each side of the trade.",
+  "tradeManualReviewOffer": "Review offer",
+  "tradeManualSummaryRecipient": "Recipient",
+  "tradeManualSummaryOffering": "I offer",
+  "tradeManualSummaryRequesting": "I request",
+  "tradeManualSendOffer": "Send offer",
+  "tradeManualSendingOffer": "Sending offer…",
+  "tradeManualOfferCreated": "The trade offer was sent.",
+  "tradeManualOfferError": "The offer could not be sent: {error}",
+  "tradeManualYourInventoryUnavailable": "Card #{itemNumber} is no longer available among your duplicates.",
+  "tradeManualTheirInventoryUnavailable": "Card #{itemNumber} is no longer available from the other user.",
+  "tradeManualCatalogItemUnavailable": "Card #{itemNumber} could not be matched to the catalog.",
+  "tradeManualInvalidOffer": "The offer is not valid. Check the selected cards and quantities.",
+  "tradeManualBack": "Back",
+  "@tradeManualOptionsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualOfferError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualYourInventoryUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualTheirInventoryUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualCatalogItemUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualSelectedItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@tradeManualAvailableQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "forgotPassword": "Forgot password?",
+  "forgotPasswordTitle": "Reset password",
+  "forgotPasswordDescription": "Enter the email address for your account. We will send you a link to set a new password.",
+  "sendPasswordResetEmail": "Send reset link",
+  "sendingEmail": "Sending…",
+  "passwordResetEmailSentTitle": "Check your email",
+  "passwordResetEmailSentDescription": "If an account with this email address exists, you will receive a password reset link.",
+  "backToSignIn": "Back to sign in",
+  "passwordResetError": "The password reset link could not be sent: {error}",
+  "verifyEmailTitle": "Verify your email address",
+  "verifyEmailDescription": "We sent a verification message to {email}. Open the link in the message and then check the status.",
+  "checkVerificationStatus": "Check status",
+  "checkingVerification": "Checking…",
+  "resendVerificationEmail": "Resend verification email",
+  "verificationEmailSent": "The verification email was sent.",
+  "verificationEmailSendError": "The verification email could not be sent: {error}",
+  "emailVerificationConfirmed": "The email address is verified.",
+  "emailStillNotVerified": "The email address has not been verified yet.",
+  "continueWithoutVerification": "Continue without verification for now",
+  "emailVerified": "Email verified",
+  "emailNotVerified": "Email not verified",
+  "emailVerificationReminder": "The email address has not been verified",
+  "accountSecurityTitle": "Account and security",
+  "accountSecuritySubtitle": "Email, password and account deletion",
+  "changePasswordTitle": "Change password",
+  "changePasswordSubtitle": "Set a new sign-in password",
+  "changePasswordDescription": "For security, enter your current password first and then choose a new one.",
+  "currentPassword": "Current password",
+  "currentPasswordRequired": "Enter your current password.",
+  "newPassword": "New password",
+  "newPasswordRequired": "Enter a new password.",
+  "newPasswordMustDiffer": "The new password must be different from the current one.",
+  "confirmNewPassword": "Confirm new password",
+  "confirmNewPasswordRequired": "Enter the new password again.",
+  "changePasswordButton": "Change password",
+  "changingPassword": "Changing…",
+  "passwordChanged": "The password was changed successfully.",
+  "passwordChangeError": "The password could not be changed: {error}",
+  "deleteAccountTitle": "Delete account",
+  "deleteAccountSubtitle": "Permanently remove your profile, collections and favorites",
+  "deleteAccountWarningTitle": "This action cannot be undone",
+  "deleteAccountWarning": "Your profile, inventory, collections, favorites and sign-in account will be deleted.",
+  "deleteAccountHistoryNotice": "To preserve other participants' history, completed trades, messages and submitted ratings remain stored without your public profile.",
+  "deleteAccountConfirmationWord": "DELETE",
+  "deleteAccountConfirmationLabel": "Type {word} to confirm",
+  "deleteAccountConfirmationInvalid": "Enter {word}.",
+  "deleteAccountButton": "Permanently delete account",
+  "deletingAccount": "Deleting account…",
+  "deleteAccountConfirmationTitle": "Delete this account?",
+  "deleteAccountConfirmationMessage": "The account and your personal profile data will be permanently removed.",
+  "accountDeleteError": "The account could not be deleted: {error}",
+  "signOutConfirmationTitle": "Sign out",
+  "signOutConfirmationMessage": "Do you want to sign out of this account?",
+  "authFirebaseRequiresRecentLogin": "For security, sign in again before continuing.",
+  "authFirebaseUserDisabled": "This user account has been disabled.",
+  "authFirebaseOperationNotAllowed": "This sign-in method is currently disabled.",
+  "@passwordResetError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@verifyEmailDescription": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "@verificationEmailSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@passwordChangeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleteAccountConfirmationLabel": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleteAccountConfirmationInvalid": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "@accountDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteActiveTrades": "The account cannot be deleted while you have active or incomplete trades.",
+  "tradeManualShowAllSurpluses": "Show all duplicates",
+  "tradeManualSuggestedSurplusesDescription": "Only duplicates that help complete the other user's collection are shown first.",
+  "tradeManualAllSurplusesDescription": "All available duplicates from both users are shown.",
+  "tradeManualNoSuggestedOfferedItemsInCollection": "You have no duplicates that would help complete this user's collection.",
+  "tradeManualNoSuggestedRequestedItemsInCollection": "This user has no duplicates that would help complete your collection.",
+  "tradeRatingTitle": "Trade rating",
+  "tradeRatingYourRating": "Your rating",
+  "tradeRatingEdit": "Edit rating",
+  "tradeRatingCommentHint": "Short comment (optional)",
+  "tradeRatingSaveChanges": "Save changes",
+  "tradeRatingUpdating": "Saving changes...",
+  "tradeRatingUpdatedSuccessfully": "The rating was updated successfully.",
+  "tradeRatingSelectStars": "Select from 1 to 5 stars.",
+  "ratingReviewsTitle": "Received ratings",
+  "ratingNoReviews": "This collector has no ratings yet.",
+  "safetySettingsTitle": "Safety and privacy",
+  "safetyMenu": "Safety options",
+  "safetyBlockUser": "Block user",
+  "safetyBlockUserTitle": "Block user",
+  "safetyBlockUserConfirmation": "This user will not be able to send you messages or new trade offers. You will also be unable to message them or send a new offer.",
+  "safetyUserBlocked": "The user has been blocked.",
+  "safetyUnblockUser": "Unblock",
+  "safetyUnblockUserTitle": "Unblock user",
+  "safetyUnblockUserConfirmation": "Allow messages and new trade offers with this user again?",
+  "safetyUserUnblocked": "The user has been unblocked.",
+  "safetyReportUser": "Report user",
+  "safetyReportTrade": "Report trade",
+  "safetyReportMessage": "Report message",
+  "safetyReportTitle": "Submit a report",
+  "safetyReportDescription": "Choose a reason and optionally add details. Only an administrator can review the report.",
+  "safetyReportReason": "Reason",
+  "safetyReportReasonSpam": "Spam or unwanted content",
+  "safetyReportReasonHarassment": "Harassment or abuse",
+  "safetyReportReasonFraud": "Suspected fraud",
+  "safetyReportReasonInappropriate": "Inappropriate content",
+  "safetyReportReasonOther": "Other",
+  "safetyReportDetails": "Details (optional)",
+  "safetyReportDetailsHint": "Briefly describe what happened.",
+  "safetyReportSubmit": "Submit report",
+  "safetyReportSubmitting": "Submitting...",
+  "safetyReportSubmitted": "The report was submitted.",
+  "safetyReportError": "The report could not be submitted",
+  "safetyActionError": "The action could not be completed",
+  "safetyBlockedUsers": "Blocked users",
+  "safetyBlockedUsersDescription": "Review and unblock users.",
+  "safetyBlockedUsersLoadError": "Blocked users could not be loaded.",
+  "safetyNoBlockedUsers": "You have no blocked users.",
+  "safetyConversationBlockedByYou": "You blocked this user. The conversation remains visible, but new messages cannot be sent.",
+  "safetyConversationBlockedByOther": "Sending new messages in this conversation is unavailable.",
+  "safetyProfileBlockedByYou": "You blocked this user.",
+  "safetyProfileBlockedByOther": "Communication with this user is unavailable.",
+  "safetyAdminReports": "Review reports",
+  "safetyAdminReportsDescription": "Administrative review of reported users and content.",
+  "safetyReportsLoadError": "Reports could not be loaded.",
+  "safetyNoReports": "There are no reports for the selected filter.",
+  "safetyReportTypeUser": "User",
+  "safetyReportTypeMessage": "Message",
+  "safetyReportTypeTrade": "Trade",
+  "safetyReportStatusOpen": "Open",
+  "safetyReportStatusReviewing": "Reviewing",
+  "safetyReportStatusResolved": "Resolved",
+  "safetyReportStatusDismissed": "Dismissed",
+  "safetyReportStatusUpdated": "The report status was updated.",
+  "safetyReporterId": "Reporter",
+  "safetyReportedUserId": "Reported user",
+  "safetyTargetId": "Reported content",
+  "safetyConversationId": "Conversation",
+  "tradeDeliverySectionTitle": "Handover and shipping",
+  "tradeDeliverySectionDescription": "Choose a handover method and share the required private details with your trade partner.",
+  "tradeDeliveryYourDetails": "Your details",
+  "tradeDeliveryPartnerDetails": "Partner's details",
+  "tradeDeliveryYourDetailsMissing": "You have not added handover or shipping details yet.",
+  "tradeDeliveryPartnerDetailsMissing": "Your partner has not added handover or shipping details yet.",
+  "tradeDeliveryAdd": "Add",
+  "tradeDeliveryEdit": "Edit",
+  "tradeDeliveryFormTitle": "Handover details",
+  "tradeDeliveryChooseMethod": "Handover method",
+  "tradeDeliveryByMail": "By mail",
+  "tradeDeliveryInPerson": "In person",
+  "tradeDeliveryFullName": "Full name",
+  "tradeDeliveryAddressLine1": "Address",
+  "tradeDeliveryAddressLine2": "Additional address line (optional)",
+  "tradeDeliveryPostalCode": "Postal code",
+  "tradeDeliveryCity": "City",
+  "tradeDeliveryCountry": "Country",
+  "tradeDeliveryPhone": "Phone number (optional)",
+  "tradeDeliveryMeetingDetails": "In-person handover details",
+  "tradeDeliveryMeetingDetailsHint": "Suggest a place, time, or way to arrange the handover.",
+  "tradeDeliveryCarrier": "Delivery company (optional)",
+  "tradeDeliveryCarrierHint": "For example national post, GLS, or DPD",
+  "tradeDeliveryTrackingNumber": "Tracking number (optional)",
+  "tradeDeliveryNotes": "Note (optional)",
+  "tradeDeliveryNotesHint": "Add important instructions for your partner.",
+  "tradeDeliveryPrivateTitle": "Private details",
+  "tradeDeliveryPrivateDescription": "These details are not public. Only the other participant in the accepted trade can see them.",
+  "tradeDeliveryPrivateShortDescription": "These details are visible only to the two participants in this accepted or completed trade.",
+  "tradeDeliveryRequiredField": "This field is required.",
+  "tradeDeliverySave": "Save details",
+  "tradeDeliverySaving": "Saving...",
+  "tradeDeliverySaved": "Handover details were saved.",
+  "tradeDeliverySaveError": "The details could not be saved: {error}",
+  "@tradeDeliverySaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeDeliveryLoadError": "Handover details could not be loaded.",
+  "tradeDeliveryAddress": "Shipping address",
+  "tradeDeliveryTrackingMissing": "A tracking number has not been added yet.",
+  "tradeDeliveryCopyAddress": "Copy address",
+  "tradeDeliveryCopyPhone": "Copy phone number",
+  "tradeDeliveryCopyTracking": "Copy tracking number",
+  "tradeDeliveryCopied": "The information was copied.",
+  "continueLabel": "Continue",
+  "done": "Done",
+  "betaOnboardingTitle": "App introduction",
+  "betaOnboardingSkip": "Skip",
+  "betaOnboardingStart": "Get started",
+  "betaOnboardingCollectionsTitle": "Your collections in one place",
+  "betaOnboardingCollectionsDescription": "Mark the cards you own, the ones you are missing, and your duplicates. Your collection overview updates as you go.",
+  "betaOnboardingTradesTitle": "Find meaningful swaps",
+  "betaOnboardingTradesDescription": "SwapStash compares duplicates and missing cards and suggests collectors with whom a mutually useful swap may be possible.",
+  "betaOnboardingCompleteTradeTitle": "Agree, hand over, and rate",
+  "betaOnboardingCompleteTradeDescription": "Send an offer, chat, privately share handover or shipping details, and rate your partner after the swap is completed.",
+  "betaOnboardingSafetyTitle": "Safety and control",
+  "betaOnboardingSafetyDescription": "Block a user, report inappropriate content, and control which information is public and which is visible only to a trade partner.",
+  "betaOnboardingShowAgain": "Show the introduction again",
+  "betaOnboardingShowAgainDescription": "Review the app's main features again.",
+  "legalAcceptanceTitle": "Terms and privacy",
+  "legalAcceptanceHeading": "Before you continue",
+  "legalAcceptanceDescription": "Please review the basic usage rules and information about personal data processing.",
+  "legalAgeConfirmation": "I confirm that I am at least 13 years old. If I am under 15 in Slovenia, I have permission from a parent or guardian.",
+  "legalDocumentsConfirmation": "I have read and accept the Terms of Use and Privacy Policy.",
+  "legalAcceptAndContinue": "Accept and continue",
+  "legalAcceptanceSaving": "Saving acceptance...",
+  "legalBetaNoticeTitle": "Closed beta version",
+  "legalBetaNoticeDescription": "The app is still being tested. Features may change and occasional errors or interruptions may occur.",
+  "legalTermsTitle": "Terms of Use",
+  "legalPrivacyTitle": "Privacy Policy",
+  "legalEffectiveDate": "Effective date: 24 July 2026",
+  "legalContactFooter": "Controller: SwapStash · Contact: uros2004@gmail.com",
+  "legalTermsIntro": "These terms govern the use of the SwapStash application. By using the app, you agree to them.",
+  "legalTermsEligibilityTitle": "1. Age and user account",
+  "legalTermsEligibilityBody": "The app may be used by a person aged at least 13. Where applicable law requires a higher age for independent consent, a minor must obtain permission from a parent or guardian. In Slovenia, a user under 15 needs such permission. Users must provide accurate information, protect their login credentials, and are responsible for activity on their accounts.",
+  "legalTermsServiceTitle": "2. Purpose of the service and beta version",
+  "legalTermsServiceBody": "SwapStash enables collection tracking, discovery of possible swaps, offers, messaging, handover arrangements, and ratings after completed swaps. SwapStash is not the seller, buyer, broker, carrier, or party to an agreement between users. During beta, features may change or temporarily be unavailable.",
+  "legalTermsConductTitle": "3. Permitted use",
+  "legalTermsConductBody": "Harassment, threats, hate speech, spam, deception, fraud, impersonation, unlawful content, interference with the app, and unauthorized automated use are prohibited. A user must not publish another person's information without an appropriate legal basis.",
+  "legalTermsTradesTitle": "4. Swaps and delivery",
+  "legalTermsTradesBody": "Users are responsible for checking the condition, authenticity, and value of items and agreeing on handover, costs, and shipment tracking. SwapStash does not guarantee that another user will perform an agreement and does not provide reimbursement for lost, damaged, or disputed shipments. Choose a safe public place for in-person handovers; minors should involve a parent or guardian.",
+  "legalTermsContentTitle": "5. Messages and user content",
+  "legalTermsContentBody": "Users remain responsible for content they enter or send. For safety, reports, abuse prevention, or legal compliance, SwapStash may restrict access, remove content, or disclose information to competent authorities where necessary and lawful.",
+  "legalTermsSuspensionTitle": "6. Blocking and enforcement",
+  "legalTermsSuspensionBody": "Users may block or report other users. SwapStash may restrict or close an account where there is a reasonable suspicion of a breach of these terms, abuse, a security risk, or unlawful conduct. Where possible, the user will be informed of the reason.",
+  "legalTermsLiabilityTitle": "7. Availability and liability",
+  "legalTermsLiabilityBody": "The service is provided on an “as is” basis. SwapStash aims to operate safely and reliably but does not guarantee uninterrupted availability, complete accuracy, or the success of a particular swap. Liability limitations apply only to the extent permitted by law and do not exclude rights that cannot lawfully be limited.",
+  "legalTermsChangesTitle": "8. Changes, governing law, and contact",
+  "legalTermsChangesBody": "The terms may be updated due to new features, security requirements, or legislation. The app will request renewed acceptance for material changes. Slovenian law applies, subject to mandatory consumer rights under the law of the user's country. Questions may be sent to uros2004@gmail.com.",
+  "legalPrivacyIntro": "This policy explains which personal data SwapStash processes, why it is used, and the rights available to users.",
+  "legalPrivacyControllerTitle": "1. Controller and contact",
+  "legalPrivacyControllerBody": "The personal data controller is SwapStash. Send privacy questions, requests, or objections to uros2004@gmail.com.",
+  "legalPrivacyDataTitle": "2. Data we process",
+  "legalPrivacyDataBody": "We process account and sign-in information, email address, display name, country, city, language, profile photo and bio; collection, card, and duplicate data; offers, trade status, ratings, messages, and reports; handover or shipping information voluntarily entered by a user; push-notification tokens; and basic technical and security information required to operate the service.",
+  "legalPrivacyPurposeTitle": "3. Purposes and legal bases",
+  "legalPrivacyPurposeBody": "We use data to create and manage accounts, provide collection and trade features, enable communication, deliver notifications, prevent abuse, handle reports, protect security, provide support, and comply with legal obligations. Legal bases include performance of the user agreement, consent, legitimate interests in security and service improvement, and legal obligations.",
+  "legalPrivacyVisibilityTitle": "4. Visibility and disclosure to other users",
+  "legalPrivacyVisibilityBody": "A public profile may show the selected name, photo, location, bio, ratings, and trade statistics. Messages are visible to conversation participants. Addresses, phone numbers, in-person handover details, and shipment tracking are visible only to participants in an accepted or completed trade. Reports are visible to the reporter where permitted and to administrators.",
+  "legalPrivacyRetentionTitle": "5. Retention and deletion",
+  "legalPrivacyRetentionBody": "We retain data for as long as needed to operate the account, maintain safety, resolve disputes, and meet legal obligations. Users may request account deletion. Some records may be retained for a limited period where necessary to prevent abuse, establish legal claims, or comply with law. Local acceptance of legal documents is stored on the device.",
+  "legalPrivacyProcessorsTitle": "6. Service providers and transfers",
+  "legalPrivacyProcessorsBody": "We use Firebase or Google Cloud and other technical providers for hosting, authentication, databases, photo storage, and push notifications. They process data under instructions and contractual obligations. Where processing occurs outside the European Economic Area, appropriate safeguards such as adequacy decisions or standard contractual clauses are used.",
+  "legalPrivacyRightsTitle": "7. User rights",
+  "legalPrivacyRightsBody": "Depending on the circumstances, you may request access, correction, deletion, restriction, data portability, or object to processing. Consent may be withdrawn for the future. Send requests to uros2004@gmail.com. You may also complain to the Slovenian Information Commissioner or the competent supervisory authority.",
+  "legalPrivacyChildrenTitle": "8. Children and young people",
+  "legalPrivacyChildrenBody": "SwapStash is not intended for children under 13. A user aged 13 or 14 in Slovenia must have permission from a parent or guardian. Parents or guardians may request review or deletion of a minor's data. Minors should not publish a home address publicly and should attend in-person handovers with an adult.",
+  "legalPrivacySecurityTitle": "9. Security and policy changes",
+  "legalPrivacySecurityBody": "We use technical and organizational measures such as access checks, private subcollections, database security rules, blocking, reports, and secure authentication. No system is completely secure. Material changes to this policy will be announced in the app and may require renewed acceptance.",
+  "aboutAppTitle": "About the app",
+  "aboutAppDescription": "SwapStash helps collectors organize collections, find suitable partners, and complete swaps more safely.",
+  "aboutVersion": "App version",
+  "aboutVersionLoading": "Loading version...",
+  "aboutOperator": "Controller",
+  "aboutContact": "Contact and support",
+  "aboutLegalSection": "Legal information",
+  "aboutSendFeedback": "Send feedback",
+  "aboutFeedbackEmailSubject": "SwapStash beta feedback",
+  "aboutFeedbackOpenError": "The email application could not be opened.",
+  "aboutBetaFooter": "Closed beta version · data and features may change before public release.",
+  "settingsAboutAndLegalTitle": "About and legal information",
+  "settingsAboutAppSubtitle": "Version, contact, feedback, and documents"
 }

@@ -4,6 +4,8 @@ import 'package:swapstash/core/models/catalog_collection.dart';
 import 'package:swapstash/core/models/user_collection.dart';
 import 'package:swapstash/core/services/catalog_service.dart';
 import 'package:swapstash/core/services/firestore_service.dart';
+import 'package:swapstash/features/catalog/import/catalog_import_page.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class CatalogCollectionsPage extends StatefulWidget {
   const CatalogCollectionsPage({super.key});
@@ -35,18 +37,30 @@ class _CatalogCollectionsPageState extends State<CatalogCollectionsPage> {
         ),
       );
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
+
+      final localizations = AppLocalizations.of(context)!;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${collection.name} je bila dodana med tvoje zbirke.'),
+          content: Text(localizations.catalogCollectionAdded(collection.name)),
         ),
       );
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
+
+      final localizations = AppLocalizations.of(context)!;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Zbirke ni bilo mogoče dodati: $error')),
+        SnackBar(
+          content: Text(
+            localizations.catalogCollectionAddError(error.toString()),
+          ),
+        ),
       );
     } finally {
       if (mounted) {
@@ -59,8 +73,23 @@ class _CatalogCollectionsPageState extends State<CatalogCollectionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Katalog zbirk')),
+      appBar: AppBar(
+        title: Text(localizations.catalogCollectionsTitle),
+        actions: [
+          IconButton(
+            tooltip: localizations.catalogImportFileTooltip,
+            icon: const Icon(Icons.upload_file_outlined),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const CatalogImportPage()),
+              );
+            },
+          ),
+        ],
+      ),
       body: StreamBuilder<List<CatalogCollection>>(
         stream: _catalogService.watchActiveCollections(),
         builder: (context, snapshot) {
@@ -74,8 +103,9 @@ class _CatalogCollectionsPageState extends State<CatalogCollectionsPage> {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Kataloga ni bilo mogoče naložiti:\n'
-                  '${snapshot.error}',
+                  localizations.catalogLoadErrorDetails(
+                    snapshot.error.toString(),
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -85,7 +115,7 @@ class _CatalogCollectionsPageState extends State<CatalogCollectionsPage> {
           final collections = snapshot.data ?? [];
 
           if (collections.isEmpty) {
-            return const Center(child: Text('Ni najdenih zbirk.'));
+            return Center(child: Text(localizations.catalogNoCollectionsFound));
           }
 
           return ListView.separated(
@@ -106,7 +136,7 @@ class _CatalogCollectionsPageState extends State<CatalogCollectionsPage> {
                 subtitle: Text(
                   '${collection.publisher} • '
                   '${collection.year} • '
-                  '${collection.totalItems} predmetov',
+                  '${localizations.catalogItemsCount(collection.totalItems)}',
                 ),
                 trailing: isSaving
                     ? const SizedBox(

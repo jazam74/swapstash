@@ -1,0 +1,55 @@
+SWAPSTASH – RELEASE PODPIS IN AAB
+
+NAMEN
+
+Ta paket:
+- ustvari trajni Android upload kljuc samo na tvojem racunalniku;
+- shrani kljuc zunaj projektne mape;
+- pripravi release signing konfiguracijo;
+- zgradi podpisani Android App Bundle (.aab).
+
+KLJUC IN GESLO
+
+Upload kljuc bo ustvarjen tukaj:
+
+C:\Users\<uporabnik>\.swapstash\swapstash-upload-keystore.jks
+
+Geslo in android/key.properties ostaneta samo na tvojem racunalniku.
+
+NE NALAGAJ V POGOVOR:
+- swapstash-upload-keystore.jks
+- android/key.properties
+- gesla za podpis
+
+NAMESTITEV
+
+1. ZIP razsiri neposredno v:
+
+C:\Users\urosm\Documents\swapstash
+
+2. V PowerShellu v korenski mapi projekta zazeni:
+
+Set-ExecutionPolicy -Scope Process Bypass
+.\PRIPRAVI_RELEASE_PODPIS.ps1
+
+3. Izberi mocno in trajno geslo z najmanj 8 znaki.
+   Isto geslo se uporabi za keystore in kljuc.
+
+4. Po uspesni pripravi zazeni:
+
+.\ZGRADI_RELEASE_AAB.ps1
+
+REZULTAT
+
+Podpisani AAB bo tukaj:
+
+build\app\outputs\bundle\release\app-release.aab
+
+POMEMBNO
+
+- .jks varnostno kopiraj na vsaj eno dodatno varno lokacijo.
+- Geslo shrani v upravljalnik gesel.
+- Pred prvo nalozitvijo v Google Play uredimo se koncno ikono.
+- Trenutna razlicica aplikacije je 0.9.0+2.
+- Vsak naslednji Play upload potrebuje visjo build stevilko.
+- Pri Google Play uporabi Play App Signing; ta .jks je upload kljuc.

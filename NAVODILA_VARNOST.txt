@@ -1,0 +1,81 @@
+SWAPSTASH – BLOKIRANJE IN PRIJAVE
+
+DODANO
+
+1. BLOKIRANJE
+- blokiranje in odblokiranje na javnem profilu in v pogovoru;
+- blokirani uporabniki ne morejo pošiljati novih sporočil;
+- blokirani uporabniki si ne morejo poslati nove ponudbe ali protiponudbe;
+- obstoječi pogovori, zaključene menjave in logistični koraki ostanejo vidni;
+- blokirani uporabniki se ne prikažejo pri ročnem ali samodejnem iskanju menjav;
+- seznam blokiranih uporabnikov je v Nastavitvah;
+- push obvestila med blokiranima uporabnikoma se ne pošljejo.
+
+2. PRIJAVE
+- prijava uporabnika;
+- prijava posameznega sporočila z dolgim pritiskom na sporočilo;
+- prijava menjave na kartici menjave;
+- razlogi: spam, nadlegovanje, sum prevare, neprimerna vsebina, drugo;
+- neobvezen opis do 1000 znakov.
+
+3. ADMINISTRACIJA
+Administratorski račun vidi v Nastavitvah možnost »Pregled prijav«.
+Možna stanja:
+- odprto;
+- v pregledu;
+- rešeno;
+- zavrnjeno.
+
+VARNOST
+Zaščita je izvedena v:
+- Flutter storitvah;
+- Firestore pravilih;
+- Cloud Functions za push obvestila.
+
+NAMESTITEV
+
+ZIP razširi v:
+
+C:\Users\urosm\Documents\swapstash
+
+Nato zaženi:
+
+flutter gen-l10n
+
+dart format lib/core/models/blocked_user.dart lib/core/models/safety_report.dart lib/core/services/block_service.dart lib/core/services/report_service.dart lib/core/services/chat_service.dart lib/core/services/trade_service.dart lib/core/services/firestore_service.dart lib/core/services/trade_finder_service.dart lib/features/safety/report_dialog.dart lib/features/safety/user_safety_menu.dart lib/features/settings/blocked_users_page.dart lib/features/admin/admin_reports_page.dart lib/features/messages/chat_page.dart lib/features/users/public_user_profile_page.dart lib/features/settings/settings_page.dart lib/features/trades/trades_page.dart
+
+flutter analyze
+
+Nato objavi Firestore pravila in Functions:
+
+firebase deploy --only firestore:rules
+
+cd functions
+npm install
+npm run check
+cd ..
+
+firebase deploy --only functions
+
+Po uspešnem deployu aplikacijo popolnoma ponovno zaženi na obeh emulatorjih.
+
+PREDLAGANI TEST
+
+A. BLOKIRANJE
+1. Z računom urosm odpri Janov profil.
+2. V meniju s tremi pikami izberi »Blokiraj uporabnika«.
+3. Preveri, da je gumb za sporočilo onemogočen.
+4. Odpri stari pogovor: zgodovina mora ostati vidna, polje za pisanje pa izgine.
+5. Z Janovim računom poskusi poslati sporočilo ali novo ponudbo.
+6. V Nastavitvah -> Blokirani uporabniki odblokiraj Jana.
+
+B. PRIJAVA SPOROČILA
+1. Dolgo pritisni na prejeto sporočilo.
+2. Izberi razlog in pošlji prijavo.
+3. Z administratorskim računom odpri:
+   Nastavitve -> Pregled prijav.
+4. Spremeni stanje v »V pregledu« ali »Rešeno«.
+
+C. PRIJAVA MENJAVE
+1. Na kartici menjave pritisni »Prijavi menjavo«.
+2. Preveri novo prijavo v administratorskem pregledu.

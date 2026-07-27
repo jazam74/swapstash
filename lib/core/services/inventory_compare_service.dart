@@ -1,5 +1,6 @@
 import 'package:swapstash/core/models/catalog_item.dart';
 import 'package:swapstash/core/models/inventory_comparison.dart';
+import 'package:swapstash/core/models/user_item.dart';
 import 'package:swapstash/core/services/catalog_item_service.dart';
 import 'package:swapstash/core/services/trade_service.dart';
 import 'package:swapstash/core/services/user_item_service.dart';
@@ -57,16 +58,52 @@ class InventoryCompareService {
     ]);
 
     final catalogItems = results[0] as List<CatalogItem>;
-    final myItems = results[1] as Map<String, dynamic>;
-    final otherItems = results[2] as Map<String, dynamic>;
+    final myItems = results[1] as Map<String, UserItem>;
+    final otherItems = results[2] as Map<String, UserItem>;
     final myReservations = results[3] as TradeReservations;
     final otherReservations = results[4] as TradeReservations;
 
     final List<CatalogItem> canOffer = [];
     final List<CatalogItem> needs = [];
 
+    String normalizeItemIdentity(String value) {
+      final normalized = value.trim().toLowerCase();
+      final numericValue = int.tryParse(normalized);
+
+      return numericValue?.toString() ?? normalized;
+    }
+
+    int storedQuantity(Map<String, UserItem> inventory, CatalogItem item) {
+      final directMatch =
+          inventory[item.id] ??
+          inventory[item.number] ??
+          inventory[item.id.trim()] ??
+          inventory[item.number.trim()];
+
+      if (directMatch != null) {
+        return directMatch.quantity;
+      }
+
+      final identities = {
+        normalizeItemIdentity(item.id),
+        normalizeItemIdentity(item.number),
+      };
+
+      for (final entry in inventory.entries) {
+        final documentIdentity = normalizeItemIdentity(entry.key);
+        final storedIdentity = normalizeItemIdentity(entry.value.itemId);
+
+        if (identities.contains(documentIdentity) ||
+            identities.contains(storedIdentity)) {
+          return entry.value.quantity;
+        }
+      }
+
+      return 0;
+    }
+
     int myAvailableSurplus(CatalogItem item) {
-      final quantity = (myItems[item.id]?.quantity ?? 0) as int;
+      final quantity = storedQuantity(myItems, item);
       final reservedOutgoing = myReservations.outgoingQuantity(
         collectionId: catalogCollectionId,
         itemNumber: item.number,
@@ -78,7 +115,7 @@ class InventoryCompareService {
     }
 
     int otherAvailableSurplus(CatalogItem item) {
-      final quantity = (otherItems[item.id]?.quantity ?? 0) as int;
+      final quantity = storedQuantity(otherItems, item);
       final reservedOutgoing = otherReservations.outgoingQuantity(
         collectionId: catalogCollectionId,
         itemNumber: item.number,
@@ -89,7 +126,7 @@ class InventoryCompareService {
     }
 
     bool iStillNeed(CatalogItem item) {
-      final quantity = (myItems[item.id]?.quantity ?? 0) as int;
+      final quantity = storedQuantity(myItems, item);
 
       if (quantity > 0) {
         return false;
@@ -105,7 +142,7 @@ class InventoryCompareService {
     }
 
     bool otherStillNeeds(CatalogItem item) {
-      final quantity = (otherItems[item.id]?.quantity ?? 0) as int;
+      final quantity = storedQuantity(otherItems, item);
 
       if (quantity > 0) {
         return false;

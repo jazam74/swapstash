@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/trade.dart';
+import 'package:swapstash/core/models/safety_report.dart';
+import 'package:swapstash/core/models/user_profile.dart';
+import 'package:swapstash/core/services/firestore_service.dart';
 import 'package:swapstash/core/services/trade_service.dart';
+import 'package:swapstash/core/services/block_service.dart';
 import 'package:swapstash/core/theme/app_radius.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/features/trades/counter_offer_page.dart';
@@ -11,9 +15,12 @@ import 'package:swapstash/features/trades/widgets/trade_action_card.dart';
 import 'package:swapstash/features/trades/widgets/trade_confirm_dialog.dart';
 import 'package:swapstash/features/trades/widgets/trade_header.dart';
 import 'package:swapstash/features/trades/widgets/trade_progress_card.dart';
+import 'package:swapstash/features/trades/widgets/trade_delivery_section.dart';
 import 'package:swapstash/features/trades/widgets/trade_rating_section.dart';
 import 'package:swapstash/features/trades/widgets/trade_summary_card.dart';
+import 'package:swapstash/features/safety/report_dialog.dart';
 import 'package:swapstash/features/trades/widgets/trade_items_card.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class TradesPage extends StatelessWidget {
   final int initialTabIndex;
@@ -27,6 +34,7 @@ class TradesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final tradeService = TradeService();
 
     final selectedTabIndex = initialTabIndex < 0
@@ -40,45 +48,74 @@ class TradesPage extends StatelessWidget {
       initialIndex: selectedTabIndex,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Menjave'),
-          bottom: const TabBar(
+          title: Text(localizations.trades),
+          bottom: TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.view_list_outlined), text: 'Vse'),
-              Tab(icon: Icon(Icons.inbox_outlined), text: 'Prejete'),
-              Tab(icon: Icon(Icons.send_outlined), text: 'Poslane'),
-              Tab(icon: Icon(Icons.archive_outlined), text: 'Arhiv'),
+              Tab(
+                icon: const Icon(Icons.view_list_outlined),
+                text: localizations.tradeTabAll,
+              ),
+              Tab(
+                icon: const Icon(Icons.inbox_outlined),
+                text: localizations.tradeTabReceived,
+              ),
+              Tab(
+                icon: const Icon(Icons.send_outlined),
+                text: localizations.tradeTabSent,
+              ),
+              Tab(
+                icon: const Icon(Icons.archive_outlined),
+                text: localizations.tradeTabArchive,
+              ),
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            _AllTradesView(
-              tradeService: tradeService,
-              currentUserId: tradeService.currentUserId,
-              highlightedTradeId: highlightedTradeId,
-            ),
-            _TradesStreamView(
-              stream: tradeService.watchIncomingTrades(),
-              tradeService: tradeService,
-              currentUserId: tradeService.currentUserId,
-              direction: _TradeDirection.incoming,
-              emptyMessage: 'Ni prejetih menjav.',
-              highlightedTradeId: highlightedTradeId,
-            ),
-            _TradesStreamView(
-              stream: tradeService.watchOutgoingTrades(),
-              tradeService: tradeService,
-              currentUserId: tradeService.currentUserId,
-              direction: _TradeDirection.outgoing,
-              emptyMessage: 'Ni poslanih menjav.',
-              highlightedTradeId: highlightedTradeId,
-            ),
-            _ArchivedTradesView(
-              tradeService: tradeService,
-              currentUserId: tradeService.currentUserId,
-              highlightedTradeId: highlightedTradeId,
-            ),
-          ],
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            const maxContentWidth = 1100.0;
+
+            final contentWidth = constraints.maxWidth > maxContentWidth
+                ? maxContentWidth
+                : constraints.maxWidth;
+
+            return Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                width: contentWidth,
+                height: constraints.maxHeight,
+                child: TabBarView(
+                  children: [
+                    _AllTradesView(
+                      tradeService: tradeService,
+                      currentUserId: tradeService.currentUserId,
+                      highlightedTradeId: highlightedTradeId,
+                    ),
+                    _TradesStreamView(
+                      stream: tradeService.watchIncomingTrades(),
+                      tradeService: tradeService,
+                      currentUserId: tradeService.currentUserId,
+                      direction: _TradeDirection.incoming,
+                      emptyMessage: localizations.tradeNoIncomingTrades,
+                      highlightedTradeId: highlightedTradeId,
+                    ),
+                    _TradesStreamView(
+                      stream: tradeService.watchOutgoingTrades(),
+                      tradeService: tradeService,
+                      currentUserId: tradeService.currentUserId,
+                      direction: _TradeDirection.outgoing,
+                      emptyMessage: localizations.tradeNoOutgoingTrades,
+                      highlightedTradeId: highlightedTradeId,
+                    ),
+                    _ArchivedTradesView(
+                      tradeService: tradeService,
+                      currentUserId: tradeService.currentUserId,
+                      highlightedTradeId: highlightedTradeId,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
         floatingActionButton: FloatingActionButton.extended(
           heroTag: 'trades_fab',
@@ -88,7 +125,7 @@ class TradesPage extends StatelessWidget {
             ).push(MaterialPageRoute(builder: (_) => const CreateTradePage()));
           },
           icon: const Icon(Icons.add),
-          label: const Text('Nova menjava'),
+          label: Text(localizations.tradeNewTrade),
         ),
       ),
     );
@@ -108,6 +145,8 @@ class _AllTradesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return StreamBuilder<List<Trade>>(
       stream: tradeService.watchIncomingTrades(),
       builder: (context, incomingSnapshot) {
@@ -155,9 +194,9 @@ class _AllTradesView extends StatelessWidget {
             );
 
             if (trades.isEmpty) {
-              return const _EmptyTrades(
+              return _EmptyTrades(
                 icon: Icons.view_list_outlined,
-                text: 'Še nimaš nobene menjave.',
+                text: localizations.tradeNoTradesYet,
               );
             }
 
@@ -292,21 +331,23 @@ class _ArchivedTradesViewState extends State<_ArchivedTradesView> {
     }
   }
 
-  String get _emptyMessage {
+  String _emptyMessage(AppLocalizations localizations) {
     switch (_selectedFilter) {
       case _ArchiveFilter.all:
-        return 'Arhiv je prazen.';
+        return localizations.tradeArchiveEmpty;
       case _ArchiveFilter.completed:
-        return 'Ni zaključenih menjav.';
+        return localizations.tradeNoCompletedTrades;
       case _ArchiveFilter.rejected:
-        return 'Ni zavrnjenih menjav.';
+        return localizations.tradeNoRejectedTrades;
       case _ArchiveFilter.cancelled:
-        return 'Ni preklicanih menjav.';
+        return localizations.tradeNoCancelledTrades;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return StreamBuilder<List<Trade>>(
       stream: widget.tradeService.watchIncomingTrades(),
       builder: (context, incomingSnapshot) {
@@ -369,7 +410,7 @@ class _ArchivedTradesViewState extends State<_ArchivedTradesView> {
                   child: Row(
                     children: [
                       _ArchiveFilterChip(
-                        label: 'Vse',
+                        label: localizations.tradeTabAll,
                         selected: _selectedFilter == _ArchiveFilter.all,
                         onSelected: () {
                           setState(() {
@@ -379,7 +420,7 @@ class _ArchivedTradesViewState extends State<_ArchivedTradesView> {
                       ),
                       const SizedBox(width: AppSpacing.xs),
                       _ArchiveFilterChip(
-                        label: 'Zaključene',
+                        label: localizations.tradeFilterCompleted,
                         selected: _selectedFilter == _ArchiveFilter.completed,
                         onSelected: () {
                           setState(() {
@@ -389,7 +430,7 @@ class _ArchivedTradesViewState extends State<_ArchivedTradesView> {
                       ),
                       const SizedBox(width: AppSpacing.xs),
                       _ArchiveFilterChip(
-                        label: 'Zavrnjene',
+                        label: localizations.tradeFilterRejected,
                         selected: _selectedFilter == _ArchiveFilter.rejected,
                         onSelected: () {
                           setState(() {
@@ -399,7 +440,7 @@ class _ArchivedTradesViewState extends State<_ArchivedTradesView> {
                       ),
                       const SizedBox(width: AppSpacing.xs),
                       _ArchiveFilterChip(
-                        label: 'Preklicane',
+                        label: localizations.tradeFilterCancelled,
                         selected: _selectedFilter == _ArchiveFilter.cancelled,
                         onSelected: () {
                           setState(() {
@@ -414,7 +455,7 @@ class _ArchivedTradesViewState extends State<_ArchivedTradesView> {
                   child: trades.isEmpty
                       ? _EmptyTrades(
                           icon: Icons.archive_outlined,
-                          text: _emptyMessage,
+                          text: _emptyMessage(localizations),
                         )
                       : ListView.builder(
                           padding: const EdgeInsets.fromLTRB(
@@ -493,7 +534,20 @@ class _TradeCard extends StatefulWidget {
 }
 
 class _TradeCardState extends State<_TradeCard> {
+  final FirestoreService _firestoreService = FirestoreService();
+
   bool _isUpdating = false;
+  String? _otherUserProfileId;
+  Stream<UserProfile?>? _otherUserProfileStream;
+
+  Stream<UserProfile?> _watchOtherUserProfile(String userId) {
+    if (_otherUserProfileId != userId || _otherUserProfileStream == null) {
+      _otherUserProfileId = userId;
+      _otherUserProfileStream = _firestoreService.watchUserProfile(userId);
+    }
+
+    return _otherUserProfileStream!;
+  }
 
   Future<void> _runAction(
     Future<void> Function() action,
@@ -517,7 +571,13 @@ class _TradeCardState extends State<_TradeCard> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Dejanja ni bilo mogoče izvesti: $error')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(
+              context,
+            )!.tradeActionExecutionError(error.toString()),
+          ),
+        ),
       );
     } finally {
       if (mounted) {
@@ -536,6 +596,7 @@ class _TradeCardState extends State<_TradeCard> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final trade = widget.trade;
     final isIncoming = widget.direction == _TradeDirection.incoming;
     final otherUserId = isIncoming ? trade.senderId : trade.receiverId;
@@ -577,7 +638,7 @@ class _TradeCardState extends State<_TradeCard> {
                   ),
                   const SizedBox(width: AppSpacing.xs),
                   Text(
-                    'Menjava iz opravila',
+                    localizations.tradeFromTask,
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.w700,
@@ -590,12 +651,13 @@ class _TradeCardState extends State<_TradeCard> {
             status: TradeStatusDisplayService.build(
               trade: trade,
               currentUserId: widget.currentUserId,
+              localizations: localizations,
             ),
             directionLabel: trade.status == TradeStatus.countered
-                ? 'PROTIPONUDBA'
+                ? localizations.tradeDirectionCounterOffer
                 : isIncoming
-                ? 'PREJETA PONUDBA'
-                : 'POSLANA PONUDBA',
+                ? localizations.tradeDirectionReceivedOffer
+                : localizations.tradeDirectionSentOffer,
           ),
           Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
@@ -606,24 +668,34 @@ class _TradeCardState extends State<_TradeCard> {
                   action: TradeActionService.build(
                     trade: trade,
                     currentUserId: widget.currentUserId,
+                    localizations: localizations,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                TradeSummaryCard(
-                  trade: trade,
-                  currentUserId: widget.currentUserId,
-                  otherUserLabel: _shortUserId(otherUserId),
+                StreamBuilder<UserProfile?>(
+                  stream: _watchOtherUserProfile(otherUserId),
+                  builder: (context, snapshot) {
+                    final displayName = snapshot.data?.displayName.trim() ?? '';
+
+                    return TradeSummaryCard(
+                      trade: trade,
+                      currentUserId: widget.currentUserId,
+                      otherUserLabel: displayName.isEmpty
+                          ? localizations.unknownUser
+                          : displayName,
+                    );
+                  },
                 ),
                 const SizedBox(height: AppSpacing.md),
                 TradeItemsCard(
-                  title: 'Oddaš',
+                  title: localizations.tradeYouGive,
                   icon: Icons.upload_rounded,
                   accentColor: Theme.of(context).colorScheme.primary,
                   items: offeredItems,
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 TradeItemsCard(
-                  title: 'Prejmeš',
+                  title: localizations.tradeYouReceive,
                   icon: Icons.download_rounded,
                   accentColor: Theme.of(context).colorScheme.tertiary,
                   items: receivedItems,
@@ -635,14 +707,58 @@ class _TradeCardState extends State<_TradeCard> {
                     currentUserId: widget.currentUserId,
                   ),
                 ],
-                if (_buildActions() case final actions?) ...[
+                if (trade.status == TradeStatus.accepted ||
+                    trade.status == TradeStatus.completed) ...[
                   const SizedBox(height: AppSpacing.md),
-                  actions,
+                  TradeDeliverySection(
+                    trade: trade,
+                    currentUserId: widget.currentUserId,
+                  ),
                 ],
+                StreamBuilder<BlockRelationship>(
+                  stream: BlockService().watchRelationship(
+                    otherUserId: otherUserId,
+                  ),
+                  initialData: const BlockRelationship.none(),
+                  builder: (context, relationshipSnapshot) {
+                    final relationship =
+                        relationshipSnapshot.data ??
+                        const BlockRelationship.none();
+                    final actions = _buildActions(
+                      localizations,
+                      interactionBlocked: relationship.isBlocked,
+                    );
+
+                    if (actions == null) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.only(top: AppSpacing.md),
+                      child: actions,
+                    );
+                  },
+                ),
                 if (trade.status == TradeStatus.completed) ...[
                   const SizedBox(height: AppSpacing.md),
                   TradeRatingSection(trade: trade),
                 ],
+                const SizedBox(height: AppSpacing.sm),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    onPressed: () {
+                      showSafetyReportDialog(
+                        context: context,
+                        reportedUserId: otherUserId,
+                        targetType: SafetyReportType.trade,
+                        targetId: trade.id,
+                      );
+                    },
+                    icon: const Icon(Icons.flag_outlined),
+                    label: Text(localizations.safetyReportTrade),
+                  ),
+                ),
               ],
             ),
           ),
@@ -660,7 +776,7 @@ class _TradeCardState extends State<_TradeCard> {
 
     await _runAction(
       () => widget.tradeService.markShipped(tradeId: widget.trade.id),
-      'Predaja kartic je potrjena in inventar je posodobljen.',
+      AppLocalizations.of(context)!.tradeHandoverConfirmedSuccess,
     );
   }
 
@@ -673,11 +789,14 @@ class _TradeCardState extends State<_TradeCard> {
 
     await _runAction(
       () => widget.tradeService.markReceived(tradeId: widget.trade.id),
-      'Prejem kartic je potrjen in inventar je posodobljen.',
+      AppLocalizations.of(context)!.tradeReceiptConfirmedSuccess,
     );
   }
 
-  Widget? _buildActions() {
+  Widget? _buildActions(
+    AppLocalizations localizations, {
+    required bool interactionBlocked,
+  }) {
     final trade = widget.trade;
 
     if (_isUpdating) {
@@ -706,11 +825,11 @@ class _TradeCardState extends State<_TradeCard> {
                       _runAction(
                         () =>
                             widget.tradeService.rejectTrade(tradeId: trade.id),
-                        'Ponudba je bila zavrnjena.',
+                        localizations.tradeOfferRejectedSuccess,
                       );
                     },
                     icon: const Icon(Icons.close),
-                    label: const Text('Zavrni'),
+                    label: Text(localizations.tradeReject),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -720,20 +839,20 @@ class _TradeCardState extends State<_TradeCard> {
                       _runAction(
                         () =>
                             widget.tradeService.acceptTrade(tradeId: trade.id),
-                        'Menjava je bila sprejeta.',
+                        localizations.tradeOfferAcceptedSuccess,
                       );
                     },
                     icon: const Icon(Icons.check),
-                    label: const Text('Sprejmi'),
+                    label: Text(localizations.tradeAccept),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
-              onPressed: _openCounterOffer,
+              onPressed: interactionBlocked ? null : _openCounterOffer,
               icon: const Icon(Icons.swap_horiz),
-              label: const Text('Pošlji protiponudbo'),
+              label: Text(localizations.tradeSendCounterOffer),
             ),
           ],
         );
@@ -744,11 +863,11 @@ class _TradeCardState extends State<_TradeCard> {
           onPressed: () {
             _runAction(
               () => widget.tradeService.cancelTrade(tradeId: trade.id),
-              'Ponudba je bila preklicana.',
+              localizations.tradeOfferCancelledSuccess,
             );
           },
           icon: const Icon(Icons.cancel_outlined),
-          label: const Text('Prekliči ponudbo'),
+          label: Text(localizations.tradeCancelOffer),
         );
       }
 
@@ -770,7 +889,9 @@ class _TradeCardState extends State<_TradeCard> {
               shipped ? Icons.check_circle : Icons.how_to_reg_outlined,
             ),
             label: Text(
-              shipped ? 'Predaja potrjena ✓' : 'Potrdi predajo kartic',
+              shipped
+                  ? localizations.tradeHandoverConfirmed
+                  : localizations.tradeConfirmHandoverTitle,
             ),
           ),
           const SizedBox(height: 8),
@@ -779,18 +900,17 @@ class _TradeCardState extends State<_TradeCard> {
             icon: Icon(
               received ? Icons.check_circle : Icons.inventory_outlined,
             ),
-            label: Text(received ? 'Prejem potrjen ✓' : 'Potrdi prejem kartic'),
+            label: Text(
+              received
+                  ? localizations.tradeReceiptConfirmed
+                  : localizations.tradeConfirmReceiptTitle,
+            ),
           ),
         ],
       );
     }
 
     return null;
-  }
-
-  String _shortUserId(String userId) {
-    if (userId.length <= 10) return userId;
-    return '${userId.substring(0, 10)}…';
   }
 }
 
@@ -861,11 +981,13 @@ class _TradeErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Text(
-          'Menjav ni bilo mogoče naložiti:\n$error',
+          localizations.tradeLoadErrorDetails(error.toString()),
           textAlign: TextAlign.center,
         ),
       ),

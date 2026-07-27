@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/conversation.dart';
 import 'package:swapstash/core/theme/app_colors.dart';
 import 'package:swapstash/features/dashboard/models/dashboard_action.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 abstract final class DashboardMessageActionMapper {
   static List<DashboardAction> build({
     required List<Conversation> conversations,
     required String currentUserId,
+    required AppLocalizations localizations,
     int limit = 50,
   }) {
     final actions = <DashboardAction>[];
@@ -31,15 +33,13 @@ abstract final class DashboardMessageActionMapper {
           ? details.join(' • ')
           : lastMessage.isNotEmpty
           ? lastMessage
-          : 'Odpri pogovor in preberi nova sporočila.';
+          : localizations.dashboardOpenConversation;
 
       actions.add(
         DashboardAction(
           icon: Icons.mark_chat_unread_outlined,
           color: AppColors.primary,
-          title: unreadCount == 1
-              ? '1 neprebrano sporočilo'
-              : '$unreadCount neprebranih sporočil',
+          title: localizations.dashboardUnreadMessages(unreadCount),
           subtitle: subtitle,
           conversationId: conversation.id,
           priority: 1,

@@ -1,0 +1,75 @@
+SWAPSTASH – BETA OSNOVNI PAKET
+
+PODATKI
+
+Upravljavec: SwapStash
+Kontakt: uros2004@gmail.com
+Najnižja starost: 13 let
+
+Ker je v Sloveniji starost za samostojno privolitev pri storitvah
+informacijske družbe 15 let, uporabnik, star 13 ali 14 let, potrdi,
+da ima dovoljenje starša ali skrbnika.
+
+DODANO
+
+- štiristranski uvodni vodič;
+- sprejem starostnega pogoja;
+- sprejem Pogojev uporabe in Politike zasebnosti;
+- ponoven sprejem ob prihodnji spremembi različice dokumentov;
+- strani Pogoji uporabe, Politika zasebnosti in O aplikaciji;
+- prikaz različice in build številke;
+- pošiljanje beta povratnih informacij po e-pošti;
+- ponovni ogled uvodnega vodiča iz Nastavitev;
+- Android prikazno ime SwapStash;
+- lokalizacija sl/en/de/hr.
+
+POMEMBNO
+
+- Sprejem dokumentov se v tem beta koraku shrani lokalno na napravo.
+- Glavna različica pravnih dokumentov je:
+  2026-07-24-v1
+- Android applicationId/namespace ostaja nespremenjen, ker bo končna
+  sprememba zahtevala tudi novo Firebase Android aplikacijo.
+- Besedili sta praktičen beta osnutek. Pred javno objavo in večjim
+  številom uporabnikov je priporočljiv pravni pregled.
+
+NAMESTITEV
+
+ZIP razširi v:
+
+C:\Users\urosm\Documents\swapstash
+
+Nato zaženi:
+
+flutter pub get
+flutter gen-l10n
+
+dart format lib/core/services/beta_setup_service.dart lib/features/onboarding/onboarding_page.dart lib/features/legal/legal_document_page.dart lib/features/legal/legal_acceptance_page.dart lib/features/about/about_app_page.dart lib/features/settings/settings_page.dart lib/app.dart
+
+flutter analyze
+
+Aplikacijo popolnoma ustavi in ponovno zaženi. Hot reload ni dovolj.
+
+TEST
+
+1. Ob prvem zagonu po namestitvi se mora po izbiri jezika prikazati
+   uvodni vodič.
+2. Nato se mora prikazati sprejem starosti, pogojev in zasebnosti.
+3. Brez obeh kljukic gumb za nadaljevanje ne sme biti aktiven.
+4. Po sprejemu se mora odpreti običajna prijava oziroma aplikacija.
+5. Odpri Profil -> Nastavitve:
+   - O aplikaciji;
+   - Pogoji uporabe;
+   - Politika zasebnosti;
+   - Ponovno pokaži predstavitev.
+6. Na strani O aplikaciji preveri:
+   - različico 0.9.0 (2);
+   - kontakt;
+   - odpiranje e-poštne aplikacije.
+
+PONOVNI TEST PRVEGA ZAGONA
+
+Najlažje:
+- odstrani aplikacijo z emulatorja in jo znova namesti;
+ali
+- izbriši podatke aplikacije v Android nastavitvah.

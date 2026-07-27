@@ -1,0 +1,116 @@
+SWAPSTASH – PUSH OBVESTILA ZA SPOROČILA IN MENJAVE
+
+PAKET DODA
+
+1. OBVESTILA ZA SPOROČILA
+- novo sporočilo
+- naslov vsebuje ime pošiljatelja
+- vsebina vsebuje predogled sporočila
+- klik odpre pravi pogovor
+
+2. OBVESTILA ZA MENJAVE
+- nova ponudba
+- protiponudba
+- sprejeta ponudba
+- zavrnjena ponudba
+- potrjeno pošiljanje
+- potrjen prejem
+- zaključena menjava
+- klik odpre zavihek Menjave in označi pravo menjavo
+
+3. JEZIKI OBVESTIL
+- slovenščina
+- angleščina
+- nemščina
+- hrvaščina
+
+Aplikacija ob izbranem jeziku v uporabnikov profil shrani polje
+notificationLanguage. Cloud Function nato vsakemu prejemniku sestavi
+obvestilo v njegovem jeziku.
+
+4. ZAŠČITA
+- obvestila se pošiljajo iz Cloud Functions, ne iz telefona
+- neveljavni FCM žetoni se samodejno odstranijo
+- podvojeni Firestore dogodki so zaščiteni z evidenco _notificationEvents
+- evidenca vsebuje expireAt; pozneje lahko zanjo vklopiš Firestore TTL
+
+PREDPOGOJI
+
+- Node.js 22
+- Firebase CLI
+- projekt swapstash-49199
+- Firebase projekt mora biti na paketu Blaze za produkcijski deploy Functions
+- Cloud Messaging API mora biti omogočen
+
+NAMESTITEV
+
+1. ZIP razširi v:
+C:\Users\urosm\Documents\swapstash
+
+2. Preveri Node.js:
+
+node -v
+npm -v
+
+3. Namesti oziroma posodobi Firebase CLI:
+
+npm install -g firebase-tools
+
+4. Prijava in izbor projekta:
+
+firebase login
+firebase use swapstash-49199
+
+Datoteka .firebaserc je v paketu že nastavljena na ta projekt.
+
+5. Namesti odvisnosti Functions:
+
+cd functions
+npm install
+npm run check
+cd ..
+
+6. Deploy:
+
+firebase deploy --only functions
+
+Ob prvem deployu Firebase lahko vpraša za omogočanje Cloud Functions,
+Cloud Build, Artifact Registry in Eventarc API-jev. Potrdi omogočanje.
+
+7. Preveri Flutter:
+
+dart format lib/core/services/notification_service.dart lib/app.dart
+flutter analyze
+
+8. Popolnoma ponovno zaženi aplikacijo na obeh emulatorjih:
+
+flutter run -d emulator-5554
+
+v drugem PowerShellu:
+
+flutter run -d emulator-5556
+
+POMEMBNO ZA EMULATOR
+
+Uporabi Android sistemsko sliko z Google Play oziroma Google APIs.
+Na obeh emulatorjih dovoli obvestila. Po deployu aplikacijo ponovno zaženi,
+da se trenutni FCM žeton in jezik zapišeta v users/{uid}.
+
+TEST 1 – SPOROČILO
+
+- Na emulatorju B daj aplikacijo v ozadje.
+- Na emulatorju A pošlji sporočilo uporabniku B.
+- Na B se mora prikazati push obvestilo.
+- Klik nanj mora odpreti pravi pogovor.
+
+TEST 2 – MENJAVA
+
+- Na A ustvari ponudbo za B.
+- Na B se mora prikazati »Nova ponudba za menjavo«.
+- Klik odpre Menjave in označi pravo ponudbo.
+- Preizkusi še protiponudbo, sprejem, pošiljanje, prejem in zaključek.
+
+OPOMBA ZA iOS
+
+Android je s tem paketom pripravljen. Za iPhone bo treba pozneje v Firebase
+dodati APNs ključ ter v Xcode vključiti Push Notifications in Background Modes.

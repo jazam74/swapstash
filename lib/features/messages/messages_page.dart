@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/conversation.dart';
 import 'package:swapstash/core/services/chat_service.dart';
 import 'package:swapstash/features/messages/chat_page.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class MessagesPage extends StatefulWidget {
   final String? initialConversationId;
@@ -141,57 +142,77 @@ class _MessagesPageState extends State<MessagesPage> {
   @override
   Widget build(BuildContext context) {
     final currentUserId = _currentUserId;
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sporočila'), centerTitle: false),
-      body: currentUserId == null
-          ? const _NotSignedInView()
-          : StreamBuilder<List<Conversation>>(
-              stream: _chatService.watchConversations(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting &&
-                    !snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+      appBar: AppBar(title: Text(localizations.messages), centerTitle: false),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (currentUserId == null) {
+            return const _NotSignedInView();
+          }
 
-                if (snapshot.hasError) {
-                  return _MessagesErrorView(
-                    error: snapshot.error,
-                    onRetry: _refreshConversations,
+          const maxContentWidth = 920.0;
+          final contentWidth = constraints.maxWidth > maxContentWidth
+              ? maxContentWidth
+              : constraints.maxWidth;
+
+          return Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: contentWidth,
+              height: constraints.maxHeight,
+              child: StreamBuilder<List<Conversation>>(
+                stream: _chatService.watchConversations(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      !snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return _MessagesErrorView(
+                      error: snapshot.error,
+                      onRetry: _refreshConversations,
+                    );
+                  }
+
+                  final conversations =
+                      snapshot.data ?? const <Conversation>[];
+
+                  _scheduleInitialConversationOpen(conversations);
+
+                  final filteredConversations = _filterConversations(
+                    conversations,
+                    currentUserId,
                   );
-                }
 
-                final conversations = snapshot.data ?? const <Conversation>[];
-
-                _scheduleInitialConversationOpen(conversations);
-
-                final filteredConversations = _filterConversations(
-                  conversations,
-                  currentUserId,
-                );
-
-                return Column(
-                  children: [
-                    _SearchField(
-                      controller: _searchController,
-                      focusNode: _searchFocusNode,
-                      onChanged: _updateSearchQuery,
-                      onClear: _clearSearch,
-                    ),
-                    Expanded(
-                      child: RefreshIndicator(
-                        onRefresh: _refreshConversations,
-                        child: _buildConversationContent(
-                          conversations: conversations,
-                          filteredConversations: filteredConversations,
-                          currentUserId: currentUserId,
+                  return Column(
+                    children: [
+                      _SearchField(
+                        controller: _searchController,
+                        focusNode: _searchFocusNode,
+                        onChanged: _updateSearchQuery,
+                        onClear: _clearSearch,
+                      ),
+                      Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: _refreshConversations,
+                          child: _buildConversationContent(
+                            conversations: conversations,
+                            filteredConversations: filteredConversations,
+                            currentUserId: currentUserId,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                );
-              },
+                    ],
+                  );
+                },
+              ),
             ),
+          );
+        },
+      ),
     );
   }
 
@@ -258,6 +279,7 @@ class _SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final localizations = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
@@ -270,12 +292,12 @@ class _SearchField extends StatelessWidget {
             onChanged: onChanged,
             textInputAction: TextInputAction.search,
             decoration: InputDecoration(
-              hintText: 'Išči po uporabniku, zbirki ali sporočilu',
+              hintText: localizations.messagesSearchHint,
               prefixIcon: const Icon(Icons.search_rounded),
               suffixIcon: value.text.isEmpty
                   ? null
                   : IconButton(
-                      tooltip: 'Počisti iskanje',
+                      tooltip: localizations.clearSearch,
                       onPressed: onClear,
                       icon: const Icon(Icons.close_rounded),
                     ),
@@ -319,10 +341,11 @@ class _ConversationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final localizations = AppLocalizations.of(context)!;
 
     final otherUserName = conversation.otherUserName(currentUserId).trim();
     final displayName = otherUserName.isEmpty
-        ? 'Neznan uporabnik'
+        ? localizations.unknownUser
         : otherUserName;
     final otherUserPhotoUrl = conversation
         .otherUserPhotoUrl(currentUserId)
@@ -336,9 +359,9 @@ class _ConversationCard extends StatelessWidget {
         : conversation.collectionName.trim();
 
     final messagePreview = lastMessage.isEmpty
-        ? 'Pogovor še nima sporočil.'
+        ? localizations.messagesConversationEmptyPreview
         : isCurrentUserLastSender
-        ? 'Ti: $lastMessage'
+        ? localizations.messagesYouPreview(lastMessage)
         : lastMessage;
 
     return Material(
@@ -379,7 +402,7 @@ class _ConversationCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          _formatConversationTime(conversation),
+                          _formatConversationTime(conversation, localizations),
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: isUnread
                                 ? colorScheme.primary
@@ -523,15 +546,17 @@ class _EmptyMessagesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(32),
       children: [
         const SizedBox(height: 96),
-        _StateIcon(icon: Icons.forum_outlined),
+        const _StateIcon(icon: Icons.forum_outlined),
         const SizedBox(height: 22),
         Text(
-          'Še nimaš pogovorov',
+          localizations.messagesEmptyTitle,
           textAlign: TextAlign.center,
           style: Theme.of(
             context,
@@ -539,7 +564,7 @@ class _EmptyMessagesView extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          'Pogovor lahko začneš pri uporabniku, s katerim želiš opraviti menjavo.',
+          localizations.messagesEmptyDescription,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -557,6 +582,8 @@ class _NoSearchResultsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(32),
@@ -565,7 +592,7 @@ class _NoSearchResultsView extends StatelessWidget {
         const _StateIcon(icon: Icons.search_off_rounded),
         const SizedBox(height: 22),
         Text(
-          'Ni zadetkov',
+          localizations.noResults,
           textAlign: TextAlign.center,
           style: Theme.of(
             context,
@@ -574,8 +601,8 @@ class _NoSearchResultsView extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           query.isEmpty
-              ? 'Poskusi z drugim iskalnim izrazom.'
-              : 'Za »$query« ni bilo najdenih pogovorov.',
+              ? localizations.messagesTryAnotherSearch
+              : localizations.messagesNoConversationsForQuery(query),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -594,6 +621,8 @@ class _MessagesErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(32),
@@ -603,7 +632,7 @@ class _MessagesErrorView extends StatelessWidget {
             const _StateIcon(icon: Icons.error_outline_rounded),
             const SizedBox(height: 22),
             Text(
-              'Pogovorov ni bilo mogoče naložiti',
+              localizations.messagesLoadError,
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,
@@ -621,7 +650,7 @@ class _MessagesErrorView extends StatelessWidget {
             FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Poskusi znova'),
+              label: Text(localizations.tryAgain),
             ),
           ],
         ),
@@ -635,6 +664,8 @@ class _NotSignedInView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -644,7 +675,7 @@ class _NotSignedInView extends StatelessWidget {
             const _StateIcon(icon: Icons.lock_outline_rounded),
             const SizedBox(height: 20),
             Text(
-              'Za ogled sporočil se moraš prijaviti.',
+              localizations.messagesSignInRequired,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleMedium,
             ),
@@ -677,14 +708,17 @@ class _StateIcon extends StatelessWidget {
   }
 }
 
-String _formatConversationTime(Conversation conversation) {
+String _formatConversationTime(
+  Conversation conversation,
+  AppLocalizations localizations,
+) {
   final timestamp = conversation.lastMessageAt ?? conversation.createdAt;
   final dateTime = timestamp.toDate().toLocal();
   final now = DateTime.now();
   final difference = now.difference(dateTime);
 
   if (!difference.isNegative && difference.inMinutes < 1) {
-    return 'Zdaj';
+    return localizations.now;
   }
 
   if (!difference.isNegative && difference.inMinutes < 60) {
@@ -704,11 +738,11 @@ String _formatConversationTime(Conversation conversation) {
   }
 
   if (dayDifference == 1) {
-    return 'Včeraj';
+    return localizations.yesterday;
   }
 
   if (dayDifference > 1 && dayDifference < 7) {
-    return _weekdayName(dateTime.weekday);
+    return _weekdayName(dateTime.weekday, localizations);
   }
 
   if (dateTime.year == now.year) {
@@ -720,22 +754,22 @@ String _formatConversationTime(Conversation conversation) {
 
 String _twoDigits(int value) => value.toString().padLeft(2, '0');
 
-String _weekdayName(int weekday) {
+String _weekdayName(int weekday, AppLocalizations localizations) {
   switch (weekday) {
     case DateTime.monday:
-      return 'Pon';
+      return localizations.weekdayMondayShort;
     case DateTime.tuesday:
-      return 'Tor';
+      return localizations.weekdayTuesdayShort;
     case DateTime.wednesday:
-      return 'Sre';
+      return localizations.weekdayWednesdayShort;
     case DateTime.thursday:
-      return 'Čet';
+      return localizations.weekdayThursdayShort;
     case DateTime.friday:
-      return 'Pet';
+      return localizations.weekdayFridayShort;
     case DateTime.saturday:
-      return 'Sob';
+      return localizations.weekdaySaturdayShort;
     case DateTime.sunday:
-      return 'Ned';
+      return localizations.weekdaySundayShort;
     default:
       return '';
   }

@@ -19,5 +19,1481 @@
   "language": "Jezik",
   "internationalTrades": "Mednarodne menjave",
   "allowed": "Dovoljene",
-  "successfulTrades": "Uspešne menjave"
+  "successfulTrades": "Uspešne menjave",
+  "chooseLanguage": "Izberi jezik",
+  "chooseLanguageDescription": "Izberi jezik, ki ga želiš uporabljati v aplikaciji SwapStash. Pozneje ga lahko spremeniš v nastavitvah.",
+  "automaticLanguage": "Samodejno – jezik naprave",
+  "automaticLanguageDescription": "Samodejno uporabi podprti jezik telefona.",
+  "englishFallbackDescription": "Če jezik naprave ni podprt, bo uporabljena angleščina.",
+  "continueButton": "Nadaljuj",
+  "saving": "Shranjujem…",
+  "settings": "Nastavitve",
+  "applicationSettings": "Nastavitve aplikacije",
+  "languageSettingsDescription": "Izberi jezik aplikacije. Sprememba se uporabi takoj in shrani za naslednje zagone.",
+  "languageChanged": "Jezik je bil spremenjen.",
+  "profileLoadError": "Profila ni bilo mogoče naložiti:",
+  "profileMissing": "Profil ne obstaja.",
+  "unnamedUser": "Neimenovan uporabnik",
+  "unknownUser": "Neznan uporabnik",
+  "rating": "Ocena",
+  "completedTrades": "Zaključene menjave",
+  "profileVisibility": "Vidnost profila",
+  "publicProfile": "Javen",
+  "privateProfile": "Zaseben",
+  "notAllowed": "Niso dovoljene",
+  "editProfile": "Uredi profil",
+  "editProfileSubtitle": "Ime, mesto, opis in zasebnost",
+  "signOut": "Odjava",
+  "dashboardCatalogTooltip": "Katalog zbirk",
+  "dashboardFavoritesTooltip": "Moji favoriti",
+  "dashboardLoadError": "Dashboarda ni bilo mogoče naložiti",
+  "dashboardMyCollections": "Moje zbirke",
+  "dashboardShowAll": "Prikaži vse",
+  "dashboardOverview": "Pregled",
+  "dashboardYourCollections": "Tvoje zbirke",
+  "dashboardWelcomeTitle": "Dobrodošel!",
+  "dashboardWelcomeSubtitle": "Pregled tvojih zbirk in aktivnosti.",
+  "dashboardTodayTasks": "Danes te čaka",
+  "dashboardAllDone": "Vse je urejeno",
+  "dashboardNoOpenTasks": "Trenutno nimaš odprtih opravil.",
+  "dashboardNoCollectionsTitle": "Še nimaš nobene zbirke",
+  "dashboardNoCollectionsDescription": "Odpri zavihek Zbirke in dodaj svojo prvo zbirko.",
+  "dashboardCollected": "Zbranih",
+  "dashboardDuplicates": "Viški",
+  "dashboardMissing": "Manjka",
+  "dashboardCollectionOpenError": "Zbirke ni bilo mogoče odpreti.",
+  "dashboardCollectionNotFound": "Zbirke ni bilo mogoče najti.",
+  "dashboardCollectionOpenErrorDetails": "Zbirke ni bilo mogoče odpreti: {error}",
+  "dashboardUnreadMessages": "{count, plural, =1{1 neprebrano sporočilo} =2{2 neprebrani sporočili} other{{count} neprebranih sporočil}}",
+  "dashboardOpenConversation": "Odpri pogovor in preberi nova sporočila.",
+  "dashboardRespondToCounterOffer": "Odgovori na protiponudbo",
+  "dashboardRespondToOffer": "Odgovori na ponudbo",
+  "dashboardConfirmHandover": "Potrdi predajo kartic",
+  "dashboardConfirmReceipt": "Potrdi prejem kartic",
+  "dashboardOpenTrade": "Odpri menjavo",
+  "dashboardOpenTradeAndContinue": "Odpri menjavo in nadaljuj postopek.",
+  "dashboardTradeWithUser": "Menjava z uporabnikom {userId}",
+  "@dashboardCollectionOpenErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@dashboardUnreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardTradeWithUser": {
+    "placeholders": {
+      "userId": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogAddToFavorites": "Dodaj med priljubljene",
+  "catalogAddedToFavorites": "Predmet je dodan med priljubljene.",
+  "catalogAdditionalFilterCount": "{count, plural, one{{count} dodatni filter} two{{count} dodatna filtra} few{{count} dodatni filtri} other{{count} dodatnih filtrov}}",
+  "catalogAdditionalFilters": "Dodatni filtri",
+  "catalogAdditionalFiltersCount": "Dodatni filtri ({count})",
+  "catalogAll": "Vse",
+  "catalogAllRarities": "Vse redkosti",
+  "catalogApply": "Uporabi",
+  "catalogAttributeBrand": "Znamka",
+  "catalogAttributeCharacter": "Lik",
+  "catalogAttributeCountry": "Država",
+  "catalogAttributeDenomination": "Nominala",
+  "catalogAttributeFranchise": "Franšiza",
+  "catalogAttributeManufacturer": "Proizvajalec",
+  "catalogAttributeMaterial": "Material",
+  "catalogAttributeSeries": "Serija",
+  "catalogAttributeSet": "Set",
+  "catalogAttributeTeam": "Ekipa",
+  "catalogAttributeTheme": "Tema",
+  "catalogAttributeType": "Tip",
+  "catalogAttributeYear": "Leto",
+  "catalogCancel": "Prekliči",
+  "catalogCategory": "Kategorija",
+  "catalogChooseCsvOrXlsx": "Izberi CSV ali XLSX",
+  "catalogClear": "Počisti",
+  "catalogClose": "Zapri",
+  "catalogCollectionAddError": "Zbirke ni bilo mogoče dodati: {error}",
+  "catalogCollectionAdded": "Zbirka »{name}« je bila dodana med tvoje zbirke.",
+  "catalogCollectionComplete": "Zbirka je popolna. Ni manjkajočih predmetov.",
+  "catalogCollectionCreateError": "Zbirke ni bilo mogoče ustvariti: {error}",
+  "catalogCollectionCreatePermissionDenied": "Firestore je ustvarjanje zbirke zavrnil. Prijavljeni uporabnik potrebuje administratorsko dovoljenje.",
+  "catalogCollectionCreatedForImport": "Zbirka »{name}« je ustvarjena in izbrana za uvoz.",
+  "catalogCollectionId": "ID zbirke",
+  "catalogCollectionIdExists": "Zbirka z ID-jem »{id}« že obstaja.",
+  "catalogCollectionIdHelp": "Male črke, številke in vezaji. Pozneje ga ne spreminjaj.",
+  "catalogCollectionIdInvalid": "Uporabi samo male črke, številke in vezaje.",
+  "catalogCollectionName": "Ime zbirke",
+  "catalogCollectionProgress": "📊 Napredek zbirke",
+  "catalogCollectionsLoadErrorDetails": "Zbirk ni bilo mogoče naložiti:\n{error}",
+  "catalogCollectionsTitle": "Katalog zbirk",
+  "catalogColumnCount": "{count, plural, one{{count} stolpec} two{{count} stolpca} few{{count} stolpci} other{{count} stolpcev}}",
+  "catalogConfirmImport": "Potrdi uvoz",
+  "catalogCreate": "Ustvari",
+  "catalogCreateNewCollection": "Ustvari novo zbirko",
+  "catalogCreatingCollection": "Ustvarjam zbirko ...",
+  "catalogDecreaseQuantity": "Zmanjšaj količino",
+  "catalogDisableQuickEntry": "Izključi hitri vnos",
+  "catalogDuplicates": "Viški",
+  "catalogEnableQuickEntry": "Vključi hitri vnos",
+  "catalogEnterCollectionId": "Vpiši ID zbirke.",
+  "catalogEnterCollectionName": "Vpiši ime zbirke.",
+  "catalogFavoriteChangeError": "Priljubljenega stanja ni bilo mogoče spremeniti: {error}",
+  "catalogFileErrors": "Napake v datoteki",
+  "catalogFilterByRarity": "Filtriraj po redkosti",
+  "catalogFindTrades": "Najdi menjave",
+  "catalogFirstRows": "Prvih {count}",
+  "catalogImageNotAdded": "Slika še ni dodana",
+  "catalogImportAction": "Uvozi",
+  "catalogImportColumnHelp": "Obvezna stolpca sta number/številka in name/ime. Stolpci rarity/redkost in imageUrl/slika so neobvezni. Ostali stolpci se samodejno uvozijo kot dodatne lastnosti.",
+  "catalogImportCompleted": "Uvoz je končan",
+  "catalogImportConfirmRows": "V zbirki »{collectionName}« bo obdelanih {count, plural, one{{count} veljavna vrstica} two{{count} veljavni vrstici} few{{count} veljavne vrstice} other{{count} veljavnih vrstic}}.",
+  "catalogImportCreated": "Dodano: {count}",
+  "catalogImportCsvAndExcel": "CSV in Excel",
+  "catalogImportCsvReadError": "Datoteke CSV ni bilo mogoče prebrati: {error}",
+  "catalogImportDescription": "Uvozi predmete iz CSV ali XLSX datoteke.",
+  "catalogImportDuplicateNumber": "Podvojena številka v isti datoteki.",
+  "catalogImportExcelNoData": "Excelova datoteka nima podatkov.",
+  "catalogImportExistingSkipped": "Obstoječi predmeti bodo preskočeni.",
+  "catalogImportExistingUpdated": "Obstoječi predmeti z isto številko bodo posodobljeni.",
+  "catalogImportFailed": "Uvoz ni uspel: {error}",
+  "catalogImportFileNoData": "Datoteka nima podatkov.",
+  "catalogImportFileOpenError": "Datoteke ni bilo mogoče odpreti: {error}",
+  "catalogImportFileTooLarge": "Datoteka je večja od dovoljenih 20 MB.",
+  "catalogImportFileTooltip": "Uvozi CSV ali XLSX",
+  "catalogImportItems": "Uvozi {count, plural, one{{count} predmet} two{{count} predmeta} few{{count} predmete} other{{count} predmetov}}",
+  "catalogImportMissingName": "Manjka ime.",
+  "catalogImportMissingNameColumn": "Manjka obvezni stolpec »name« oziroma »ime«.",
+  "catalogImportMissingNumber": "Manjka številka.",
+  "catalogImportMissingNumberColumn": "Manjka obvezni stolpec »number« oziroma »številka«.",
+  "catalogImportNoItemsBelowHeader": "Pod naslovno vrstico ni nobenega predmeta.",
+  "catalogImportPermissionDenied": "Firestore je uvoz zavrnil. Za uvoz v centralni katalog mora biti prijavljeni uporabnik administrator.",
+  "catalogImportSkipHelp": "Predmeti z že obstoječo številko se ne spremenijo.",
+  "catalogImportSkipped": "Preskočeno: {count}",
+  "catalogImportSupportedFilesOnly": "Podprti sta samo datoteki CSV in XLSX.",
+  "catalogImportTitle": "Uvoz kataloga",
+  "catalogImportUpdateHelp": "Predmeti z že obstoječo številko se posodobijo.",
+  "catalogImportUpdated": "Posodobljeno: {count}",
+  "catalogImportXlsxReadError": "Datoteke XLSX ni bilo mogoče prebrati: {error}",
+  "catalogImporting": "Uvažam ...",
+  "catalogIncreaseQuantity": "Povečaj količino",
+  "catalogInvalidNumber": "Neveljavno število.",
+  "catalogInvalidRows": "{count, plural, one{{count} neveljavna} two{{count} neveljavni} few{{count} neveljavne} other{{count} neveljavnih}}",
+  "catalogInvalidYear": "Neveljavno leto.",
+  "catalogInventoryLoadErrorDetails": "Inventarja ni bilo mogoče naložiti:\n{error}",
+  "catalogItemCount": "Število predmetov",
+  "catalogItemDefaultName": "Predmet {number}",
+  "catalogItemMarkedMissing": "Predmet je označen kot manjkajoč.",
+  "catalogItemMissing": "Predmet manjka",
+  "catalogItemOwned": "Predmet imaš",
+  "catalogItemStatusLoadErrorDetails": "Statusa predmeta ni bilo mogoče naložiti:\n{error}",
+  "catalogItemsCount": "{count, plural, one{{count} predmet} two{{count} predmeta} few{{count} predmeti} other{{count} predmetov}}",
+  "catalogItemsLoadErrorDetails": "Predmetov ni bilo mogoče naložiti:\n{error}",
+  "catalogLoadErrorDetails": "Kataloga ni bilo mogoče naložiti:\n{error}",
+  "catalogMissing": "Manjka",
+  "catalogMissingPlural": "Manjkajo",
+  "catalogNewCollection": "Nova zbirka",
+  "catalogNoCollectionsFound": "Ni najdenih zbirk.",
+  "catalogNoDuplicates": "Nimaš še nobenih viškov.",
+  "catalogNoFilterResults": "Za izbrane filtre ni ustreznih predmetov.",
+  "catalogNoItems": "V tej zbirki še ni predmetov.",
+  "catalogNoOwnedItems": "Nimaš še nobenega predmeta.",
+  "catalogNoSearchResults": "Za iskani izraz in izbrane filtre ni rezultatov.",
+  "catalogNotOwned": "Nimam",
+  "catalogOk": "V redu",
+  "catalogOpeningFile": "Odpiram datoteko ...",
+  "catalogOther": "Drugo",
+  "catalogOwned": "Imam",
+  "catalogOwnedSurplusCount": "{count, plural, =0{Nimaš viškov.} one{Imaš {count} višek.} two{Imaš {count} viška.} few{Imaš {count} viške.} other{Imaš {count} viškov.}}",
+  "catalogPiecesCount": "{count, plural, one{{count} kos} two{{count} kosa} few{{count} kosi} other{{count} kosov}}",
+  "catalogPreview": "Predogled",
+  "catalogPublisher": "Založnik",
+  "catalogQuantity": "Količina",
+  "catalogQuantitySaveError": "Količine ni bilo mogoče shraniti: {error}",
+  "catalogQuantityUpdated": "Količina je posodobljena na {quantity}.",
+  "catalogRarity": "Redkost",
+  "catalogRarityAll": "Redkost: vse",
+  "catalogRarityCommon": "Pogosta",
+  "catalogRarityLimitedEdition": "Omejena izdaja",
+  "catalogRarityRare": "Redka",
+  "catalogRaritySelected": "Redkost: {value}",
+  "catalogRarityUltraRare": "Zelo redka",
+  "catalogRarityValue": "Redkost: {value}",
+  "catalogRemoveFromFavorites": "Odstrani iz priljubljenih",
+  "catalogRemovedFromFavorites": "Predmet je odstranjen iz priljubljenih.",
+  "catalogResultsCount": "{count, plural, one{{count} zadetek} two{{count} zadetka} few{{count} zadetki} other{{count} zadetkov}}",
+  "catalogSearchHint": "Išči številko ali ime ...",
+  "catalogSelectTargetCollectionFirst": "Najprej izberi ciljno zbirko.",
+  "catalogSelectValidFileFirst": "Najprej izberi veljavno datoteko.",
+  "catalogSelectedCollectionMissing": "Izbrana zbirka ne obstaja več.",
+  "catalogSheetName": "List: {name}",
+  "catalogSkip": "Preskoči",
+  "catalogSortItems": "Razvrsti predmete",
+  "catalogSortNameAscending": "Ime: A–Ž",
+  "catalogSortNameDescending": "Ime: Ž–A",
+  "catalogSortNumberAscending": "Številka: naraščajoče",
+  "catalogSortNumberDescending": "Številka: padajoče",
+  "catalogSortRarityAscending": "Redkost: A–Ž",
+  "catalogSortRarityDescending": "Redkost: Ž–A",
+  "catalogSurplusCount": "{count, plural, one{+{count} višek} two{+{count} viška} few{+{count} viški} other{+{count} viškov}}",
+  "catalogTargetCollection": "Ciljna zbirka",
+  "catalogTotalPieces": "Skupaj kosov",
+  "catalogUnnamedItem": "Brez imena",
+  "catalogUpdate": "Posodobi",
+  "catalogValidRows": "{count, plural, one{{count} veljavna} two{{count} veljavni} few{{count} veljavne} other{{count} veljavnih}}",
+  "catalogYear": "Leto",
+  "@catalogAdditionalFilterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogAdditionalFiltersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogCollectionAddError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionAdded": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionCreateError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionCreatedForImport": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionIdExists": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogCollectionsLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogColumnCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogFavoriteChangeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogFirstRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportConfirmRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "collectionName": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportCreated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportCsvReadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportFileOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogImportItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportUpdated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogImportXlsxReadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogInvalidRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogInventoryLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemDefaultName": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemStatusLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogItemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogItemsLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogOwnedSurplusCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogPiecesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogQuantitySaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogQuantityUpdated": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogRaritySelected": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogRarityValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogSheetName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@catalogSurplusCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@catalogValidRows": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cancel": "Prekliči",
+  "clearSearch": "Počisti iskanje",
+  "noResults": "Ni zadetkov",
+  "now": "Zdaj",
+  "sending": "Pošiljam...",
+  "tryAgain": "Poskusi znova",
+  "yesterday": "Včeraj",
+  "weekdayMondayShort": "Pon",
+  "weekdayTuesdayShort": "Tor",
+  "weekdayWednesdayShort": "Sre",
+  "weekdayThursdayShort": "Čet",
+  "weekdayFridayShort": "Pet",
+  "weekdaySaturdayShort": "Sob",
+  "weekdaySundayShort": "Ned",
+  "messageSendError": "Sporočila ni bilo mogoče poslati:\n{error}",
+  "@messageSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesSearchHint": "Išči po uporabniku, zbirki ali sporočilu",
+  "messagesConversationEmptyPreview": "Pogovor še nima sporočil.",
+  "messagesYouPreview": "Ti: {message}",
+  "@messagesYouPreview": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesEmptyTitle": "Še nimaš pogovorov",
+  "messagesEmptyDescription": "Pogovor lahko začneš pri uporabniku, s katerim želiš opraviti menjavo.",
+  "messagesTryAnotherSearch": "Poskusi z drugim iskalnim izrazom.",
+  "messagesNoConversationsForQuery": "Za »{query}« ni bilo najdenih pogovorov.",
+  "@messagesNoConversationsForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesLoadError": "Pogovorov ni bilo mogoče naložiti",
+  "messagesSignInRequired": "Za ogled sporočil se moraš prijaviti.",
+  "messagesGenericUser": "uporabnikom",
+  "messagesStartConversationWith": "Začni pogovor z {name}",
+  "@messagesStartConversationWith": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesConversationAboutCollection": "Pogovor se nanaša na zbirko {collectionName}.",
+  "@messagesConversationAboutCollection": {
+    "placeholders": {
+      "collectionName": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesWriteFirstMessage": "Napiši prvo sporočilo in se dogovorita za menjavo.",
+  "messagesChatLoadError": "Sporočil ni bilo mogoče naložiti.",
+  "messagesWriteMessageHint": "Napiši sporočilo...",
+  "messagesSendMessage": "Pošlji sporočilo",
+  "tradeAccept": "Sprejmi",
+  "tradeArchiveEmpty": "Arhiv je prazen.",
+  "tradeAutomaticProposalDescription": "SwapStash predlaga uravnoteženo menjavo {offeredCount} za {requestedCount}.",
+  "@tradeAutomaticProposalDescription": {
+    "placeholders": {
+      "offeredCount": {
+        "type": "int"
+      },
+      "requestedCount": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeAutomaticProposalTitle": "Samodejni predlog menjave",
+  "tradeBackToResults": "Nazaj na rezultate",
+  "tradeCanOffer": "Lahko ponudiš",
+  "tradeCanReceive": "Lahko dobiš",
+  "tradeCancelOffer": "Prekliči ponudbo",
+  "tradeCardFromCollection": "Kartica iz zbirke",
+  "tradeCardsCount": "{count, plural, one{{count} kartica} two{{count} kartici} few{{count} kartice} other{{count} kartic}}",
+  "@tradeCardsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeCardsLoadError": "Kartic ni bilo mogoče naložiti:\n{error}",
+  "@tradeCardsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCollectionMissing": "Menjava nima določene zbirke.",
+  "tradeCommentHint": "Npr. hiter dogovor in odlično ohranjene kartice.",
+  "tradeComparisonTitle": "Primerjava menjave",
+  "tradeCompletedSteps": "{completed} od {total} korakov",
+  "@tradeCompletedSteps": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeConfirmHandoverButton": "Da, potrjujem predajo",
+  "tradeConfirmHandoverDescription": "Potrdi šele, ko si kartice dejansko predal drugi strani. Po potrditvi bodo kartice odstranjene iz tvojega inventarja. Tega koraka ni mogoče razveljaviti.",
+  "tradeConfirmHandoverTitle": "Potrdi predajo kartic",
+  "tradeConfirmReceiptButton": "Da, potrjujem prejem",
+  "tradeConfirmReceiptDescription": "Potrdi šele, ko si dogovorjene kartice dejansko prejel. Po potrditvi bodo dodane v tvoj inventar. Tega koraka ni mogoče razveljaviti.",
+  "tradeConfirmReceiptTitle": "Potrdi prejem kartic",
+  "tradeConversationOpenError": "Pogovora ni bilo mogoče odpreti:\n{error}",
+  "@tradeConversationOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCounterOfferDescription": "Spremeni ponudbo. Razmerje ni omejeno, zato lahko na primer predlog 3 za 3 spremeniš v 5 za 3.",
+  "tradeCounterOfferItemsUnavailable": "Izbrane kartice niso več razpoložljive za protiponudbo.",
+  "tradeCounterOfferNeedsBothSides": "Protiponudba mora vsebovati vsaj en predmet na obeh straneh.",
+  "tradeCounterOfferSendError": "Protiponudbe ni bilo mogoče poslati: {error}",
+  "@tradeCounterOfferSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeCounterOfferTitle": "Protiponudba",
+  "tradeDirectionCounterOffer": "PROTIPONUDBA",
+  "tradeDirectionReceivedOffer": "PREJETA PONUDBA",
+  "tradeDirectionSentOffer": "POSLANA PONUDBA",
+  "tradeFilterCancelled": "Preklicane",
+  "tradeFilterCompleted": "Zaključene",
+  "tradeFilterRejected": "Zavrnjene",
+  "tradeFindTrades": "Najdi menjave",
+  "tradeFromTask": "Menjava iz opravila",
+  "tradeHandoverConfirmed": "Predaja potrjena ✓",
+  "tradeHandoverConfirmedSuccess": "Predaja kartic je potrjena in inventar je posodobljen.",
+  "tradeIAmOffering": "Ponujam",
+  "tradeIWant": "Želim",
+  "tradeItemSelectionNextStep": "Izbira predmetov pride v naslednjem koraku.",
+  "tradeItemsNextStep": "Seznam predmetov pride v naslednjem koraku.",
+  "tradeLoadError": "Menjav ni bilo mogoče naložiti.",
+  "tradeLoadErrorDetails": "Menjav ni bilo mogoče naložiti:\n{error}",
+  "@tradeLoadErrorDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeNewTrade": "Nova menjava",
+  "tradeNoAvailableItems": "Ni razpoložljivih predmetov.",
+  "tradeNoCancelledTrades": "Ni preklicanih menjav.",
+  "tradeNoCards": "Ni kartic.",
+  "tradeNoCompletedTrades": "Ni zaključenih menjav.",
+  "tradeNoIncomingTrades": "Ni prejetih menjav.",
+  "tradeNoMatchesFound": "Trenutno ni najdenih možnih menjav.",
+  "tradeNoMatchesHint": "Preveri, ali imaš označene viške in ali drugi uporabniki uporabljajo isto zbirko.",
+  "tradeNoOutgoingTrades": "Ni poslanih menjav.",
+  "tradeNoRejectedTrades": "Ni zavrnjenih menjav.",
+  "tradeNoTradesYet": "Še nimaš nobene menjave.",
+  "tradeNoUsersMatch": "Ni uporabnikov, ki ustrezajo iskanju.",
+  "tradeOfferAcceptedSuccess": "Menjava je bila sprejeta.",
+  "tradeOfferCancelledSuccess": "Ponudba je bila preklicana.",
+  "tradeOfferRejectedSuccess": "Ponudba je bila zavrnjena.",
+  "tradeOpeningConversation": "Odpiram pogovor...",
+  "tradeOptionalComment": "Komentar (neobvezno)",
+  "tradePossibleTradesCount": "{count, plural, one{{count} možna menjava} two{{count} možni menjavi} few{{count} možne menjave} other{{count} možnih menjav}}",
+  "@tradePossibleTradesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeProgressAgreed": "Menjava dogovorjena",
+  "tradeProgressIHandedOver": "Predal sem kartice",
+  "tradeProgressIReceived": "Prejel sem kartice",
+  "tradeProgressOtherHandedOver": "Druga stran je predala kartice",
+  "tradeProgressOtherReceived": "Druga stran je prejela kartice",
+  "tradeProgressTitle": "Potek menjave",
+  "tradeProposalSendError": "Predloga menjave ni bilo mogoče poslati:\n{error}",
+  "@tradeProposalSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeProposalSentSuccessfully": "Predlog menjave je bil uspešno poslan.",
+  "tradeRateUser": "Oceni uporabnika",
+  "tradeRatingQuestion": "Kako si zadovoljen z opravljeno menjavo?",
+  "tradeRatingSubmitError": "Ocene ni bilo mogoče oddati: {error}",
+  "@tradeRatingSubmitError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeRatingSubmitted": "Ocena je oddana.",
+  "tradeRatingSubmittedSuccessfully": "Ocena je bila uspešno oddana.",
+  "tradeRatingUnavailable": "Ocenjevanje trenutno ni na voljo. Preveri, ali so nova Firestore pravila objavljena.",
+  "tradeReceiptConfirmed": "Prejem potrjen ✓",
+  "tradeReceiptConfirmedSuccess": "Prejem kartic je potrjen in inventar je posodobljen.",
+  "tradeRecipient": "Prejemnik",
+  "tradeReject": "Zavrni",
+  "tradeRemoveRecipient": "Odstrani prejemnika",
+  "tradeSearchUserHint": "Išči uporabnika po imenu...",
+  "tradeSendCounterOffer": "Pošlji protiponudbo",
+  "tradeSendMessageToUser": "Pošlji sporočilo uporabniku {name}",
+  "@tradeSendMessageToUser": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeSendProposal": "Pošlji predlog",
+  "tradeSendingProposal": "Pošiljam predlog...",
+  "tradeStarsOutOfFive": "{value} od 5",
+  "@tradeStarsOutOfFive": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeSubmitRating": "Oddaj oceno",
+  "tradeSubmittingRating": "Oddajam oceno...",
+  "tradeSuggestAutomatically": "Samodejno predlagaj menjavo",
+  "tradeSummaryTitle": "Povzetek menjave",
+  "tradeTabAll": "Vse",
+  "tradeTabArchive": "Arhiv",
+  "tradeTabReceived": "Prejete",
+  "tradeTabSent": "Poslane",
+  "tradeTheirDuplicates": "Njegovi viški",
+  "tradeTheirDuplicatesYouNeed": "Njegovi viški, ki jih ti še nimaš.",
+  "tradeUserCanOffer": "{name} lahko ponudi",
+  "@tradeUserCanOffer": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserHasNoDuplicatesYouNeed": "{name} trenutno nima viškov, ki bi jih potreboval.",
+  "@tradeUserHasNoDuplicatesYouNeed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserNeedsNoneOfYourDuplicates": "{name} trenutno ne potrebuje nobenega tvojega viška.",
+  "@tradeUserNeedsNoneOfYourDuplicates": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserOffers": "{name} ponudi:",
+  "@tradeUserOffers": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeUserSearchError": "Uporabnikov ni bilo mogoče poiskati:\n{error}",
+  "@tradeUserSearchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeWantedItemsNextStep": "Seznam želenih predmetov pride v naslednjem koraku.",
+  "tradeWith": "Menjava z",
+  "tradeYouCanOffer": "Ti lahko ponudiš",
+  "tradeYouGive": "Oddaš",
+  "tradeYouOfferColon": "Ti ponudiš:",
+  "tradeYouOfferCount": "{count} ponudiš",
+  "@tradeYouOfferCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeYouReceive": "Prejmeš",
+  "tradeYouReceiveCount": "{count} dobiš",
+  "@tradeYouReceiveCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tradeYourDuplicatesTheyNeed": "Tvoji viški, ki jih ta uporabnik še nima.",
+  "tradeAllowsInternationalTrades": "Dovoljuje mednarodne menjave",
+  "tradeActionExecutionError": "Dejanja ni bilo mogoče izvesti: {error}",
+  "@tradeActionExecutionError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeActionCompletedTitle": "Menjava je zaključena",
+  "tradeActionCompletedDescription": "Obe strani sta potrdili predajo in prejem kartic. Inventarja sta posodobljena.",
+  "tradeActionRejectedTitle": "Ponudba je bila zavrnjena",
+  "tradeActionCancelledTitle": "Ponudba je bila preklicana",
+  "tradeActionNoActionRequired": "Pri tej ponudbi ni več potrebna nobena akcija.",
+  "tradeActionYourTurnTitle": "Na potezi si ti",
+  "tradeActionReviewOfferDescription": "Preglej kartice in ponudbo sprejmi, zavrni ali pošlji protiponudbo.",
+  "tradeActionOtherTurnTitle": "Na potezi je druga stran",
+  "tradeActionWaitingResponseDescription": "Trenutno ni potrebna nobena akcija. Čaka se odgovor drugega uporabnika.",
+  "tradeActionNoActionTitle": "Trenutno ni potrebna nobena akcija",
+  "tradeActionStatusNoResponseDescription": "Stanje menjave ne zahteva tvojega odziva.",
+  "tradeActionNextStepTitle": "Naslednji korak",
+  "tradeActionConfirmHandoverDescription": "Ko svoje kartice dejansko predaš drugi strani, potrdi predajo. Nato bodo odštete iz tvojega inventarja.",
+  "tradeActionConfirmReceiptDescription": "Ko dogovorjene kartice dejansko prejmeš, potrdi prejem. Nato bodo dodane v tvoj inventar.",
+  "tradeActionWaitingOtherHandoverDescription": "Ti si predajo že potrdil. Čaka se, da druga stran preda svoje kartice.",
+  "tradeActionWaitingOtherConfirmationTitle": "Čaka se potrditev druge strani",
+  "tradeActionWaitingOtherReceiptDescription": "Ti si prejem že potrdil. Menjava se zaključi, ko tudi druga stran potrdi prejem.",
+  "tradeActionWaitingNextConfirmationDescription": "Čaka se naslednja potrditev druge strani.",
+  "tradeStatusCompletedTitle": "Menjava zaključena",
+  "tradeStatusCompletedSubtitle": "Oba uporabnika sta potrdila pošiljanje in prejem.",
+  "tradeStatusCompletedBadge": "Zaključena",
+  "tradeStatusRejectedTitle": "Ponudba zavrnjena",
+  "tradeStatusRejectedSubtitle": "Ta predlog menjave ni bil sprejet.",
+  "tradeStatusRejectedBadge": "Zavrnjena",
+  "tradeStatusCancelledTitle": "Ponudba preklicana",
+  "tradeStatusCancelledSubtitle": "Pošiljatelj je predlog menjave preklical.",
+  "tradeStatusCancelledBadge": "Preklicana",
+  "tradeStatusCounterOfferReceivedTitle": "Prejel si protiponudbo",
+  "tradeStatusAwaitingYourResponseTitle": "Ponudba čaka na tvoj odgovor",
+  "tradeStatusReviewOfferSubtitle": "Preglej kartice in izberi Sprejmi, Zavrni ali Protiponudba.",
+  "tradeStatusWaitingForYouBadge": "Čaka nate",
+  "tradeStatusCounterOfferSentTitle": "Protiponudba poslana",
+  "tradeStatusOfferSentTitle": "Ponudba poslana",
+  "tradeStatusWaitingOtherUserSubtitle": "Čaka se odgovor drugega uporabnika.",
+  "tradeStatusWaitingResponseBadge": "Čaka odgovor",
+  "tradeStatusReceivedTitle": "Paket si prejel",
+  "tradeStatusReceivedSubtitle": "Prejete kartice so dodane v inventar. Čaka se še potrditev druge strani.",
+  "tradeStatusReceivedBadge": "Prejel",
+  "tradeStatusBothOnWayTitle": "Pošiljki sta na poti",
+  "tradeStatusPackageOnWayTitle": "Paket je na poti k tebi",
+  "tradeStatusBothOnWaySubtitle": "Obe pošiljki sta oddani. Ko paket prejmeš, potrdi prejem.",
+  "tradeStatusOtherSentSubtitle": "Druga stran je paket oddala. Tvoje kartice so še rezervirane.",
+  "tradeStatusOnWayBadge": "Na poti",
+  "tradeStatusSentTitle": "Paket si poslal",
+  "tradeStatusSentSubtitle": "Oddane kartice so odstranjene iz inventarja. Čaka se druga stran.",
+  "tradeStatusSentBadge": "Poslal",
+  "tradeStatusOtherReceivedTitle": "Druga stran je paket prejela",
+  "tradeStatusConfirmWhenReceivedSubtitle": "Ko prejmeš svojo pošiljko, potrdi prejem.",
+  "tradeStatusWaitingReceiptBadge": "Čaka prejem",
+  "tradeStatusAgreedTitle": "Menjava dogovorjena",
+  "tradeStatusAgreedSubtitle": "Kartice na obeh straneh so rezervirane. Inventar se spremeni šele ob potrditvi pošiljanja ali prejema.",
+  "tradeStatusAgreedBadge": "Dogovorjena",
+  "authLoginSubtitle": "Prijavi se v svoj račun",
+  "authRegisterSubtitle": "Ustvari nov zbirateljski račun",
+  "authDisplayNameLabel": "Prikazno ime",
+  "authDisplayNameHint": "Na primer Uroš",
+  "authDisplayNameRequired": "Vpiši prikazno ime.",
+  "authDisplayNameMinLength": "Ime mora imeti najmanj 2 znaka.",
+  "authDisplayNameMaxLength": "Ime ima lahko največ 40 znakov.",
+  "authEmailLabel": "E-poštni naslov",
+  "authEmailRequired": "Vpiši e-poštni naslov.",
+  "authEmailInvalid": "Vpiši veljaven e-poštni naslov.",
+  "authPasswordLabel": "Geslo",
+  "authShowPassword": "Prikaži geslo",
+  "authHidePassword": "Skrij geslo",
+  "authPasswordRequired": "Vpiši geslo.",
+  "authPasswordMinLength": "Geslo mora imeti najmanj 6 znakov.",
+  "authConfirmPasswordLabel": "Ponovi geslo",
+  "authConfirmPasswordRequired": "Ponovno vpiši geslo.",
+  "authPasswordsDoNotMatch": "Gesli se ne ujemata.",
+  "authLoginButton": "Prijava",
+  "authCreateAccountButton": "Ustvari račun",
+  "authNoAccountRegister": "Še nimaš računa? Registriraj se",
+  "authHaveAccountLogin": "Že imaš račun? Prijavi se",
+  "authInvalidData": "Podatki niso veljavni.",
+  "authUnexpectedError": "Prišlo je do nepričakovane napake: {error}",
+  "authFirebaseInvalidEmail": "E-poštni naslov ni veljaven.",
+  "authFirebaseEmailAlreadyInUse": "Račun s tem e-poštnim naslovom že obstaja.",
+  "authFirebaseWeakPassword": "Geslo je prešibko.",
+  "authFirebaseInvalidCredentials": "E-poštni naslov ali geslo ni pravilno.",
+  "authFirebaseTooManyRequests": "Preveč poskusov. Poskusi ponovno pozneje.",
+  "authFirebaseNetworkError": "Preveri internetno povezavo.",
+  "authFirebaseGenericError": "Prijava ali registracija ni uspela.",
+  "favoritesTitle": "Moji favoriti",
+  "favoritesSearchHint": "Išči med favoriti",
+  "favoritesClearSearch": "Počisti",
+  "favoritesRemoved": "Odstranjeno iz favoritov.",
+  "favoritesNamedItemRemoved": "Predmet »{name}« je odstranjen iz favoritov.",
+  "favoritesRemoveError": "Napaka pri odstranjevanju: {error}",
+  "favoritesUnnamedItem": "Brez imena",
+  "favoritesRemoveTooltip": "Odstrani iz favoritov",
+  "favoritesEmptyTitle": "Še nimaš favoritov",
+  "favoritesEmptyDescription": "Na podrobnostih kartice pritisni srček in kartica se bo pojavila tukaj.",
+  "favoritesNoResults": "Ni zadetkov.",
+  "favoritesNoResultsForQuery": "Za »{query}« ni bilo najdenih favoritov.",
+  "favoritesLoadError": "Favoritov ni bilo mogoče naložiti.",
+  "myCollectionsTitle": "Moje zbirke",
+  "myCollectionsAddFromCatalog": "Dodaj zbirko iz kataloga",
+  "myCollectionsAddButton": "Dodaj zbirko",
+  "myCollectionsRemoveTitle": "Odstrani zbirko",
+  "myCollectionsRemoveQuestion": "Ali želiš zbirko »{name}« odstraniti iz svojih zbirk?",
+  "myCollectionsRemoveButton": "Odstrani",
+  "myCollectionsRemoved": "Zbirka »{name}« je bila odstranjena.",
+  "myCollectionsRemoveError": "Zbirke ni bilo mogoče odstraniti: {error}",
+  "myCollectionsLoadError": "Tvojih zbirk ni bilo mogoče naložiti:\n{error}",
+  "myCollectionsCatalogLoadError": "Zbirke ni bilo mogoče naložiti.",
+  "myCollectionsCatalogMissing": "Kataloška zbirka ne obstaja.",
+  "myCollectionsStatisticsLoadError": "Statistike zbirke ni bilo mogoče naložiti.",
+  "myCollectionsStatisticsUnavailable": "Statistika zbirke ni na voljo.",
+  "myCollectionsEmptyTitle": "Še nimaš dodanih zbirk.",
+  "myCollectionsEmptyDescription": "Izberi zbirko iz centralnega kataloga.",
+  "myCollectionsOpenCatalog": "Odpri katalog",
+  "myCollectionsUnnamedCollection": "Neimenovana zbirka",
+  "myCollectionsMenuTooltip": "Možnosti zbirke",
+  "myCollectionsEditMenu": "Uredi",
+  "myCollectionsRemoveMenu": "Odstrani",
+  "myCollectionsProgressCount": "Zbrano: {owned} / {total}",
+  "myCollectionsDuplicateCount": "Viški: {count}",
+  "myCollectionsMissingCount": "Manjka: {count}",
+  "@authUnexpectedError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesNamedItemRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesRemoveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@favoritesNoResultsForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoveQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsRemoveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@myCollectionsProgressCount": {
+    "placeholders": {
+      "owned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@myCollectionsDuplicateCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@myCollectionsMissingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectors": "Zbiratelji",
+  "editProfileDisplayName": "Prikazno ime",
+  "editProfileCity": "Mesto",
+  "editProfileBio": "Opis",
+  "editProfilePublicTitle": "Javni profil",
+  "editProfilePublicSubtitle": "Drugi uporabniki te lahko najdejo.",
+  "editProfileInternationalTitle": "Dovolim mednarodne menjave",
+  "editProfileInternationalSubtitle": "Ponudbe lahko prejmeš tudi iz drugih držav.",
+  "editProfileSave": "Shrani",
+  "editProfileSaving": "Shranjujem…",
+  "editProfileSaved": "Profil je bil uspešno shranjen.",
+  "editProfileSaveError": "Profila ni bilo mogoče shraniti: {error}",
+  "editProfileLoadError": "Profila ni bilo mogoče naložiti:\n{error}",
+  "editProfileMissing": "Profil ne obstaja.",
+  "editProfileDisplayNameRequired": "Vpiši prikazno ime.",
+  "collectorsSearchLabel": "Išči zbiratelja",
+  "collectorsSearchHint": "Vpiši prikazno ime",
+  "collectorsSearchError": "Uporabnikov ni bilo mogoče poiskati:\n{error}",
+  "collectorsNoResults": "Ni najdenih zbirateljev.",
+  "collectorsSearchDescription": "Poišči druge zbiratelje po prikaznem imenu.",
+  "collectorsInternationalAllowed": "Mednarodne menjave dovoljene",
+  "collectorsLocalOnly": "Samo lokalne menjave",
+  "collectorProfileTitle": "Profil zbiratelja",
+  "collectorProfileMissing": "Profil uporabnika ne obstaja.",
+  "collectorChatOpenError": "Pogovora ni bilo mogoče odpreti:\n{error}",
+  "collectorOpeningChat": "Odpiram pogovor…",
+  "collectorSendMessage": "Pošlji sporočilo",
+  "collectorInternationalTrades": "Mednarodne menjave",
+  "collectorLocalTrades": "Lokalne menjave",
+  "collectorAbout": "O zbiratelju",
+  "collectorPrivateTitle": "Ta profil je zaseben",
+  "collectorPrivateDescription": "Lokacija, opis in komentarji ocen niso javno prikazani.",
+  "collectorProfileLoadError": "Profila ni bilo mogoče naložiti:\n{error}",
+  "ratingUnavailable": "Ocena ni na voljo",
+  "ratingLoading": "Nalagam ocene",
+  "ratingNone": "Brez ocen",
+  "ratingCount": "{count, plural, one{{count} ocena} two{{count} oceni} few{{count} ocene} other{{count} ocen}}",
+  "ratingCommentsLoadError": "Komentarjev ocen ni bilo mogoče naložiti.",
+  "ratingNoPublicComments": "Ta zbiratelj še nima javnih komentarjev.",
+  "ratingRecentComments": "Zadnji komentarji",
+  "@editProfileSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@editProfileLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorsSearchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorChatOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@collectorProfileLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@ratingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogCategorySportsCards": "Športne kartice",
+  "collectorsNavigation": "Zbiratelji",
+  "tradeManualStepRecipient": "Prejemnik",
+  "tradeManualStepItems": "Kartice",
+  "tradeManualStepSummary": "Povzetek",
+  "tradeManualChooseRecipientDescription": "Poišči zbiratelja, ki mu želiš poslati ponudbo za menjavo.",
+  "tradeManualChangeRecipient": "Zamenjaj",
+  "tradeManualLoadingOptions": "Preverjam skupne zbirke in razpoložljive kartice…",
+  "tradeManualOptionsError": "Kartic za menjavo ni bilo mogoče naložiti: {error}",
+  "tradeManualNoCommonCollections": "Nimata skupne zbirke",
+  "tradeManualNoCommonCollectionsDescription": "Za ročno menjavo morata imeti oba dodano vsaj eno isto zbirko.",
+  "tradeManualNoAvailableItems": "Trenutno ni razpoložljivih kartic",
+  "tradeManualNeedsBothDirections": "Za ponudbo mora imeti vsak uporabnik vsaj en razpoložljiv višek.",
+  "tradeManualChooseCollection": "Zbirka",
+  "tradeManualSelectionsRemainAcrossCollections": "V eni ponudbi lahko izbereš kartice samo iz ene zbirke. Ob menjavi zbirke se izbor počisti.",
+  "tradeManualNoOfferedItemsInCollection": "V tej zbirki nimaš razpoložljivih viškov.",
+  "tradeManualNoRequestedItemsInCollection": "Drugi uporabnik v tej zbirki nima razpoložljivih viškov.",
+  "tradeManualSelectedItems": "Izbranih: {count}",
+  "tradeManualAvailableQuantity": "Na voljo za menjavo: {count}",
+  "tradeManualChooseAtLeastOneEach": "Izberi najmanj eno kartico na vsaki strani menjave.",
+  "tradeManualReviewOffer": "Preglej ponudbo",
+  "tradeManualSummaryRecipient": "Prejemnik",
+  "tradeManualSummaryOffering": "Ponujam",
+  "tradeManualSummaryRequesting": "Želim",
+  "tradeManualSendOffer": "Pošlji ponudbo",
+  "tradeManualSendingOffer": "Pošiljam ponudbo…",
+  "tradeManualOfferCreated": "Ponudba za menjavo je bila poslana.",
+  "tradeManualOfferError": "Ponudbe ni bilo mogoče poslati: {error}",
+  "tradeManualYourInventoryUnavailable": "Kartica #{itemNumber} ni več na voljo med tvojimi viški.",
+  "tradeManualTheirInventoryUnavailable": "Kartica #{itemNumber} ni več na voljo pri drugem uporabniku.",
+  "tradeManualCatalogItemUnavailable": "Kartice #{itemNumber} ni mogoče povezati s katalogom.",
+  "tradeManualInvalidOffer": "Ponudba ni veljavna. Preveri izbrane kartice in količine.",
+  "tradeManualBack": "Nazaj",
+  "@tradeManualOptionsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualOfferError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualYourInventoryUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualTheirInventoryUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualCatalogItemUnavailable": {
+    "placeholders": {
+      "itemNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "@tradeManualSelectedItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@tradeManualAvailableQuantity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "forgotPassword": "Pozabljeno geslo?",
+  "forgotPasswordTitle": "Ponastavitev gesla",
+  "forgotPasswordDescription": "Vpiši e-poštni naslov svojega računa. Poslali ti bomo povezavo za nastavitev novega gesla.",
+  "sendPasswordResetEmail": "Pošlji povezavo",
+  "sendingEmail": "Pošiljam…",
+  "passwordResetEmailSentTitle": "Preveri svojo e-pošto",
+  "passwordResetEmailSentDescription": "Če račun s tem e-poštnim naslovom obstaja, boš prejel povezavo za ponastavitev gesla.",
+  "backToSignIn": "Nazaj na prijavo",
+  "passwordResetError": "Povezave za ponastavitev gesla ni bilo mogoče poslati: {error}",
+  "verifyEmailTitle": "Potrdi e-poštni naslov",
+  "verifyEmailDescription": "Na naslov {email} smo poslali potrditveno sporočilo. Odpri povezavo v sporočilu in nato preveri stanje.",
+  "checkVerificationStatus": "Preveri stanje",
+  "checkingVerification": "Preverjam…",
+  "resendVerificationEmail": "Ponovno pošlji sporočilo",
+  "verificationEmailSent": "Potrditveno sporočilo je bilo poslano.",
+  "verificationEmailSendError": "Potrditvenega sporočila ni bilo mogoče poslati: {error}",
+  "emailVerificationConfirmed": "E-poštni naslov je potrjen.",
+  "emailStillNotVerified": "E-poštni naslov še ni potrjen.",
+  "continueWithoutVerification": "Za zdaj nadaljuj brez potrditve",
+  "emailVerified": "E-pošta je potrjena",
+  "emailNotVerified": "E-pošta ni potrjena",
+  "emailVerificationReminder": "E-poštni naslov še ni potrjen",
+  "accountSecurityTitle": "Račun in varnost",
+  "accountSecuritySubtitle": "E-pošta, geslo in izbris računa",
+  "changePasswordTitle": "Spremeni geslo",
+  "changePasswordSubtitle": "Nastavi novo geslo za prijavo",
+  "changePasswordDescription": "Za varnost najprej vpiši trenutno geslo in nato izberi novo.",
+  "currentPassword": "Trenutno geslo",
+  "currentPasswordRequired": "Vpiši trenutno geslo.",
+  "newPassword": "Novo geslo",
+  "newPasswordRequired": "Vpiši novo geslo.",
+  "newPasswordMustDiffer": "Novo geslo mora biti drugačno od trenutnega.",
+  "confirmNewPassword": "Ponovi novo geslo",
+  "confirmNewPasswordRequired": "Ponovno vpiši novo geslo.",
+  "changePasswordButton": "Spremeni geslo",
+  "changingPassword": "Spreminjam…",
+  "passwordChanged": "Geslo je bilo uspešno spremenjeno.",
+  "passwordChangeError": "Gesla ni bilo mogoče spremeniti: {error}",
+  "deleteAccountTitle": "Izbriši račun",
+  "deleteAccountSubtitle": "Trajno odstrani profil, zbirke in favorite",
+  "deleteAccountWarningTitle": "Tega dejanja ni mogoče razveljaviti",
+  "deleteAccountWarning": "Izbrisani bodo tvoj profil, inventar, zbirke, favoriti in prijavni račun.",
+  "deleteAccountHistoryNotice": "Zaradi zgodovine drugih udeležencev ostanejo zaključene menjave, sporočila in oddane ocene shranjeni brez tvojega javnega profila.",
+  "deleteAccountConfirmationWord": "IZBRIŠI",
+  "deleteAccountConfirmationLabel": "Za potrditev vpiši {word}",
+  "deleteAccountConfirmationInvalid": "Vpiši {word}.",
+  "deleteAccountButton": "Trajno izbriši račun",
+  "deletingAccount": "Brišem račun…",
+  "deleteAccountConfirmationTitle": "Res želiš izbrisati račun?",
+  "deleteAccountConfirmationMessage": "Račun in tvoji osebni podatki v profilu bodo trajno odstranjeni.",
+  "accountDeleteError": "Računa ni bilo mogoče izbrisati: {error}",
+  "signOutConfirmationTitle": "Odjava",
+  "signOutConfirmationMessage": "Se želiš odjaviti iz tega računa?",
+  "authFirebaseRequiresRecentLogin": "Zaradi varnosti se moraš ponovno prijaviti.",
+  "authFirebaseUserDisabled": "Ta uporabniški račun je onemogočen.",
+  "authFirebaseOperationNotAllowed": "Ta način prijave trenutno ni omogočen.",
+  "@passwordResetError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@verifyEmailDescription": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "@verificationEmailSendError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@passwordChangeError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleteAccountConfirmationLabel": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "@deleteAccountConfirmationInvalid": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "@accountDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "accountDeleteActiveTrades": "Računa ni mogoče izbrisati, dokler imaš aktivne ali nedokončane menjave.",
+  "tradeManualShowAllSurpluses": "Prikaži vse viške",
+  "tradeManualSuggestedSurplusesDescription": "Najprej so prikazani samo viški, ki drugemu uporabniku dopolnijo zbirko.",
+  "tradeManualAllSurplusesDescription": "Prikazani so vsi razpoložljivi viški obeh uporabnikov.",
+  "tradeManualNoSuggestedOfferedItemsInCollection": "Nimaš viškov, ki bi temu uporabniku dopolnili zbirko.",
+  "tradeManualNoSuggestedRequestedItemsInCollection": "Ta uporabnik nima viškov, ki bi dopolnili tvojo zbirko.",
+  "tradeRatingTitle": "Ocena menjave",
+  "tradeRatingYourRating": "Tvoja ocena",
+  "tradeRatingEdit": "Uredi oceno",
+  "tradeRatingCommentHint": "Kratek komentar (neobvezno)",
+  "tradeRatingSaveChanges": "Shrani spremembe",
+  "tradeRatingUpdating": "Shranjujem spremembe...",
+  "tradeRatingUpdatedSuccessfully": "Ocena je bila uspešno posodobljena.",
+  "tradeRatingSelectStars": "Izberi od 1 do 5 zvezdic.",
+  "ratingReviewsTitle": "Prejete ocene",
+  "ratingNoReviews": "Ta zbiratelj še nima ocen.",
+  "safetySettingsTitle": "Varnost in zasebnost",
+  "safetyMenu": "Varnostne možnosti",
+  "safetyBlockUser": "Blokiraj uporabnika",
+  "safetyBlockUserTitle": "Blokiranje uporabnika",
+  "safetyBlockUserConfirmation": "Uporabnik ti ne bo mogel pošiljati sporočil ali novih ponudb za menjavo. Tudi ti mu ne boš mogel pisati ali poslati nove ponudbe.",
+  "safetyUserBlocked": "Uporabnik je blokiran.",
+  "safetyUnblockUser": "Odblokiraj",
+  "safetyUnblockUserTitle": "Odblokiranje uporabnika",
+  "safetyUnblockUserConfirmation": "Ali želiš temu uporabniku znova dovoliti sporočila in nove ponudbe?",
+  "safetyUserUnblocked": "Uporabnik je odblokiran.",
+  "safetyReportUser": "Prijavi uporabnika",
+  "safetyReportTrade": "Prijavi menjavo",
+  "safetyReportMessage": "Prijavi sporočilo",
+  "safetyReportTitle": "Pošlji prijavo",
+  "safetyReportDescription": "Izberi razlog in po želji dodaj podrobnosti. Prijavo bo lahko pregledal samo skrbnik.",
+  "safetyReportReason": "Razlog",
+  "safetyReportReasonSpam": "Neželena vsebina ali spam",
+  "safetyReportReasonHarassment": "Nadlegovanje ali žaljenje",
+  "safetyReportReasonFraud": "Sum prevare",
+  "safetyReportReasonInappropriate": "Neprimerna vsebina",
+  "safetyReportReasonOther": "Drugo",
+  "safetyReportDetails": "Podrobnosti (neobvezno)",
+  "safetyReportDetailsHint": "Na kratko opiši, kaj se je zgodilo.",
+  "safetyReportSubmit": "Pošlji prijavo",
+  "safetyReportSubmitting": "Pošiljam...",
+  "safetyReportSubmitted": "Prijava je bila poslana.",
+  "safetyReportError": "Prijave ni bilo mogoče poslati",
+  "safetyActionError": "Dejanja ni bilo mogoče izvesti",
+  "safetyBlockedUsers": "Blokirani uporabniki",
+  "safetyBlockedUsersDescription": "Preglej in odblokiraj uporabnike.",
+  "safetyBlockedUsersLoadError": "Blokiranih uporabnikov ni bilo mogoče naložiti.",
+  "safetyNoBlockedUsers": "Nimaš blokiranih uporabnikov.",
+  "safetyConversationBlockedByYou": "Tega uporabnika si blokiral. Pogovor ostane viden, novih sporočil pa ni mogoče poslati.",
+  "safetyConversationBlockedByOther": "Pošiljanje novih sporočil v tem pogovoru ni na voljo.",
+  "safetyProfileBlockedByYou": "Tega uporabnika si blokiral.",
+  "safetyProfileBlockedByOther": "Komunikacija s tem uporabnikom ni na voljo.",
+  "safetyAdminReports": "Pregled prijav",
+  "safetyAdminReportsDescription": "Administrativni pregled prijavljenih uporabnikov in vsebine.",
+  "safetyReportsLoadError": "Prijav ni bilo mogoče naložiti.",
+  "safetyNoReports": "Ni prijav za izbrani filter.",
+  "safetyReportTypeUser": "Uporabnik",
+  "safetyReportTypeMessage": "Sporočilo",
+  "safetyReportTypeTrade": "Menjava",
+  "safetyReportStatusOpen": "Odprto",
+  "safetyReportStatusReviewing": "V pregledu",
+  "safetyReportStatusResolved": "Rešeno",
+  "safetyReportStatusDismissed": "Zavrnjeno",
+  "safetyReportStatusUpdated": "Stanje prijave je posodobljeno.",
+  "safetyReporterId": "Prijavitelj",
+  "safetyReportedUserId": "Prijavljeni uporabnik",
+  "safetyTargetId": "Prijavljena vsebina",
+  "safetyConversationId": "Pogovor",
+  "tradeDeliverySectionTitle": "Predaja in pošiljanje",
+  "tradeDeliverySectionDescription": "Izberi način predaje ter partnerju posreduj potrebne zasebne podatke.",
+  "tradeDeliveryYourDetails": "Tvoji podatki",
+  "tradeDeliveryPartnerDetails": "Partnerjevi podatki",
+  "tradeDeliveryYourDetailsMissing": "Še nisi dodal podatkov za predajo ali pošiljanje.",
+  "tradeDeliveryPartnerDetailsMissing": "Partner še ni dodal podatkov za predajo ali pošiljanje.",
+  "tradeDeliveryAdd": "Dodaj",
+  "tradeDeliveryEdit": "Uredi",
+  "tradeDeliveryFormTitle": "Podatki za predajo",
+  "tradeDeliveryChooseMethod": "Način predaje",
+  "tradeDeliveryByMail": "Po pošti",
+  "tradeDeliveryInPerson": "Osebna predaja",
+  "tradeDeliveryFullName": "Ime in priimek",
+  "tradeDeliveryAddressLine1": "Naslov",
+  "tradeDeliveryAddressLine2": "Dodatna vrstica naslova (neobvezno)",
+  "tradeDeliveryPostalCode": "Poštna številka",
+  "tradeDeliveryCity": "Kraj",
+  "tradeDeliveryCountry": "Država",
+  "tradeDeliveryPhone": "Telefonska številka (neobvezno)",
+  "tradeDeliveryMeetingDetails": "Podrobnosti osebne predaje",
+  "tradeDeliveryMeetingDetailsHint": "Predlagaj kraj, čas ali način dogovora.",
+  "tradeDeliveryCarrier": "Dostavna služba (neobvezno)",
+  "tradeDeliveryCarrierHint": "Na primer Pošta Slovenije, GLS ali DPD",
+  "tradeDeliveryTrackingNumber": "Sledilna številka (neobvezno)",
+  "tradeDeliveryNotes": "Opomba (neobvezno)",
+  "tradeDeliveryNotesHint": "Dodaj pomembna navodila za partnerja.",
+  "tradeDeliveryPrivateTitle": "Zasebni podatki",
+  "tradeDeliveryPrivateDescription": "Ti podatki niso javni. Vidi jih samo drugi udeleženec sprejete menjave.",
+  "tradeDeliveryPrivateShortDescription": "Podatki so vidni samo udeležencema te sprejete ali zaključene menjave.",
+  "tradeDeliveryRequiredField": "To polje je obvezno.",
+  "tradeDeliverySave": "Shrani podatke",
+  "tradeDeliverySaving": "Shranjujem...",
+  "tradeDeliverySaved": "Podatki za predajo so shranjeni.",
+  "tradeDeliverySaveError": "Podatkov ni bilo mogoče shraniti: {error}",
+  "@tradeDeliverySaveError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "tradeDeliveryLoadError": "Podatkov za predajo ni bilo mogoče naložiti.",
+  "tradeDeliveryAddress": "Naslov za pošiljanje",
+  "tradeDeliveryTrackingMissing": "Sledilna številka še ni dodana.",
+  "tradeDeliveryCopyAddress": "Kopiraj naslov",
+  "tradeDeliveryCopyPhone": "Kopiraj telefonsko številko",
+  "tradeDeliveryCopyTracking": "Kopiraj sledilno številko",
+  "tradeDeliveryCopied": "Podatek je kopiran.",
+  "continueLabel": "Nadaljuj",
+  "done": "Končano",
+  "betaOnboardingTitle": "Predstavitev aplikacije",
+  "betaOnboardingSkip": "Preskoči",
+  "betaOnboardingStart": "Začni uporabljati",
+  "betaOnboardingCollectionsTitle": "Zbirke na enem mestu",
+  "betaOnboardingCollectionsDescription": "Označi, katere kartice imaš, katere ti manjkajo in koliko viškov imaš. Pregled zbirke se sproti posodablja.",
+  "betaOnboardingTradesTitle": "Poišči smiselne menjave",
+  "betaOnboardingTradesDescription": "SwapStash primerja viške in manjkajoče kartice ter predlaga uporabnike, s katerimi je možna obojestransko koristna menjava.",
+  "betaOnboardingCompleteTradeTitle": "Dogovor, predaja in ocena",
+  "betaOnboardingCompleteTradeDescription": "Pošlji ponudbo, se pogovori, varno deli podatke za predajo ali pošiljanje in po zaključku oceni partnerja.",
+  "betaOnboardingSafetyTitle": "Varnost in nadzor",
+  "betaOnboardingSafetyDescription": "Blokiraj uporabnika, prijavi neprimerno vsebino in sam odločaš, kateri podatki so javni ter kateri so vidni samo partnerju v menjavi.",
+  "betaOnboardingShowAgain": "Ponovno pokaži predstavitev",
+  "betaOnboardingShowAgainDescription": "Še enkrat preglej glavne funkcije aplikacije.",
+  "legalAcceptanceTitle": "Pogoji in zasebnost",
+  "legalAcceptanceHeading": "Pred nadaljevanjem",
+  "legalAcceptanceDescription": "Preberi osnovna pravila uporabe in informacije o obdelavi osebnih podatkov.",
+  "legalAgeConfirmation": "Potrjujem, da sem star najmanj 13 let. Če sem v Sloveniji mlajši od 15 let, imam dovoljenje starša ali skrbnika.",
+  "legalDocumentsConfirmation": "Prebral sem in sprejemam Pogoje uporabe ter Politiko zasebnosti.",
+  "legalAcceptAndContinue": "Sprejmi in nadaljuj",
+  "legalAcceptanceSaving": "Shranjujem sprejem...",
+  "legalBetaNoticeTitle": "Zaprta beta različica",
+  "legalBetaNoticeDescription": "Aplikacija je še v preizkušanju. Funkcije se lahko spremenijo, občasno pa so možne napake ali prekinitve.",
+  "legalTermsTitle": "Pogoji uporabe",
+  "legalPrivacyTitle": "Politika zasebnosti",
+  "legalEffectiveDate": "Velja od: 24. julija 2026",
+  "legalContactFooter": "Upravljavec: SwapStash · Kontakt: uros2004@gmail.com",
+  "legalTermsIntro": "Ti pogoji urejajo uporabo aplikacije SwapStash. Z uporabo aplikacije potrjuješ, da se z njimi strinjaš.",
+  "legalTermsEligibilityTitle": "1. Starost in uporabniški račun",
+  "legalTermsEligibilityBody": "Aplikacijo lahko uporablja oseba, stara najmanj 13 let. Kadar veljavna zakonodaja za samostojno privolitev zahteva višjo starost, mora mladoletni uporabnik pridobiti dovoljenje starša ali skrbnika. V Sloveniji uporabnik, mlajši od 15 let, potrebuje takšno dovoljenje. Uporabnik mora navesti resnične podatke, varovati prijavne podatke in je odgovoren za dejavnost svojega računa.",
+  "legalTermsServiceTitle": "2. Namen storitve in beta različica",
+  "legalTermsServiceBody": "SwapStash omogoča vodenje zbirk, iskanje možnih menjav, pošiljanje ponudb, sporočanje, dogovor o predaji in ocenjevanje zaključenih menjav. SwapStash ni prodajalec, kupec, posrednik, dostavna služba ali stranka dogovora med uporabniki. V beta obdobju se lahko funkcije spremenijo ali začasno niso dosegljive.",
+  "legalTermsConductTitle": "3. Dovoljena uporaba",
+  "legalTermsConductBody": "Prepovedani so nadlegovanje, grožnje, sovražni govor, spam, zavajanje, prevare, lažno predstavljanje, objava nezakonite vsebine, posegi v delovanje aplikacije in uporaba avtomatiziranih sredstev brez dovoljenja. Uporabnik ne sme objaviti podatkov druge osebe brez ustrezne pravne podlage.",
+  "legalTermsTradesTitle": "4. Menjave in dostava",
+  "legalTermsTradesBody": "Uporabniki sami preverijo stanje, pristnost in vrednost predmetov ter se dogovorijo o načinu predaje, stroških in sledenju pošiljke. SwapStash ne jamči, da bo druga stranka izpolnila dogovor, in ne zagotavlja povračila izgubljenih, poškodovanih ali drugače spornih pošiljk. Pred osebno predajo izberi varen javni kraj; mladoletni uporabniki naj vključijo starša ali skrbnika.",
+  "legalTermsContentTitle": "5. Sporočila in uporabniška vsebina",
+  "legalTermsContentBody": "Uporabnik ostane odgovoren za vsebino, ki jo vnese ali pošlje. SwapStash lahko zaradi varnosti, prijave, preprečevanja zlorab ali izpolnjevanja zakonskih obveznosti dostop omeji, vsebino odstrani oziroma jo posreduje pristojnim organom, kadar je to potrebno in zakonito.",
+  "legalTermsSuspensionTitle": "6. Blokiranje in ukrepi",
+  "legalTermsSuspensionBody": "Uporabniki lahko druge uporabnike blokirajo ali prijavijo. SwapStash lahko omeji ali ukine račun, kadar obstaja utemeljen sum kršitve teh pogojev, zlorabe, varnostnega tveganja ali nezakonitega ravnanja. Kadar je mogoče, bo uporabnik o razlogu obveščen.",
+  "legalTermsLiabilityTitle": "7. Razpoložljivost in odgovornost",
+  "legalTermsLiabilityBody": "Storitev je zagotovljena po načelu »takšna, kot je«. SwapStash si prizadeva za varno in zanesljivo delovanje, vendar ne zagotavlja neprekinjene razpoložljivosti, popolne točnosti podatkov ali uspeha posamezne menjave. Omejitve odgovornosti veljajo samo v obsegu, ki ga dovoljuje veljavna zakonodaja, in ne izključujejo pravic, ki jih ni mogoče pogodbeno omejiti.",
+  "legalTermsChangesTitle": "8. Spremembe, pravo in kontakt",
+  "legalTermsChangesBody": "Pogoji se lahko posodobijo zaradi novih funkcij, varnostnih zahtev ali zakonodaje. Ob pomembni spremembi bo aplikacija zahtevala ponoven sprejem. Za pogoje velja pravo Republike Slovenije, ob upoštevanju obveznih pravic uporabnika po pravu njegove države. Vprašanja pošlji na uros2004@gmail.com.",
+  "legalPrivacyIntro": "Ta politika pojasnjuje, katere osebne podatke SwapStash obdeluje, zakaj jih uporablja in katere pravice ima uporabnik.",
+  "legalPrivacyControllerTitle": "1. Upravljavec in kontakt",
+  "legalPrivacyControllerBody": "Upravljavec osebnih podatkov je SwapStash. Za vprašanja, zahteve ali ugovor glede zasebnosti piši na uros2004@gmail.com.",
+  "legalPrivacyDataTitle": "2. Podatki, ki jih obdelujemo",
+  "legalPrivacyDataBody": "Obdelujemo podatke računa in prijave, e-poštni naslov, prikazno ime, državo, mesto, jezik, fotografijo profila in opis; podatke o zbirkah, karticah in viških; ponudbe, statuse menjav, ocene, sporočila in prijave; podatke za predajo ali pošiljanje, ki jih uporabnik prostovoljno vnese; žetone za potisna obvestila ter osnovne tehnične in varnostne podatke, potrebne za delovanje storitve.",
+  "legalPrivacyPurposeTitle": "3. Nameni in pravne podlage",
+  "legalPrivacyPurposeBody": "Podatke uporabljamo za ustvarjanje in upravljanje računa, izvajanje funkcij zbirke in menjav, komunikacijo, dostavo obvestil, preprečevanje zlorab, reševanje prijav, varnost, podporo in izpolnjevanje pravnih obveznosti. Pravne podlage so izvajanje dogovora z uporabnikom, privolitev, zakoniti interes za varnost in izboljšanje storitve ter zakonske obveznosti.",
+  "legalPrivacyVisibilityTitle": "4. Vidnost in posredovanje drugim uporabnikom",
+  "legalPrivacyVisibilityBody": "Javni profil lahko prikazuje izbrano ime, fotografijo, lokacijo, opis, ocene in statistiko menjav. Sporočila so vidna udeležencema pogovora. Naslov, telefonska številka, podatki osebne predaje in sledenja so vidni samo udeležencema sprejete ali zaključene menjave. Prijave so vidne prijavitelju v dovoljenem obsegu in skrbniku.",
+  "legalPrivacyRetentionTitle": "5. Hramba in izbris",
+  "legalPrivacyRetentionBody": "Podatke hranimo toliko časa, kolikor je potrebno za uporabo računa, varnost, reševanje sporov in zakonske obveznosti. Uporabnik lahko zahteva izbris računa. Nekatere zapise lahko omejeno obdobje ohranimo, kadar je to nujno zaradi preprečevanja zlorab, uveljavljanja pravnih zahtev ali zakonske obveznosti. Lokalni sprejem pogojev je shranjen v napravi.",
+  "legalPrivacyProcessorsTitle": "6. Ponudniki storitev in prenosi",
+  "legalPrivacyProcessorsBody": "Za gostovanje, prijavo, podatkovno zbirko, shranjevanje fotografij in potisna obvestila uporabljamo Firebase oziroma Google Cloud ter druge tehnične ponudnike. Ti podatke obdelujejo po naših navodilih in svojih pogodbenih obveznostih. Kadar se podatki obdelujejo zunaj Evropskega gospodarskega prostora, se uporabljajo ustrezni zaščitni mehanizmi, kot so sklepi o ustreznosti ali standardne pogodbene klavzule.",
+  "legalPrivacyRightsTitle": "7. Pravice uporabnika",
+  "legalPrivacyRightsBody": "Glede na okoliščine lahko zahtevaš dostop, popravek, izbris, omejitev obdelave, prenosljivost podatkov ali ugovarjaš obdelavi. Privolitev lahko prekličeš za naprej. Zahtevo pošlji na uros2004@gmail.com. Prav tako lahko vložiš pritožbo pri Informacijskem pooblaščencu Republike Slovenije oziroma pristojnem nadzornem organu.",
+  "legalPrivacyChildrenTitle": "8. Otroci in mladostniki",
+  "legalPrivacyChildrenBody": "SwapStash ni namenjen otrokom, mlajšim od 13 let. Uporabnik, star 13 ali 14 let v Sloveniji, mora imeti dovoljenje starša ali skrbnika. Starši oziroma skrbniki lahko zahtevajo pregled ali izbris podatkov mladoletnega uporabnika. Zaradi varnosti naj mladoletni uporabniki ne objavljajo domačega naslova javno in naj osebne predaje opravijo v spremstvu odrasle osebe.",
+  "legalPrivacySecurityTitle": "9. Varnost in spremembe politike",
+  "legalPrivacySecurityBody": "Uporabljamo tehnične in organizacijske ukrepe, kot so preverjanje dostopa, zasebne podzbirke, omejitve pravil podatkovne zbirke, blokiranje, prijave in varna prijava. Noben sistem ni popolnoma varen. Ob pomembni spremembi te politike bo aplikacija prikazala obvestilo in po potrebi zahtevala ponoven sprejem.",
+  "aboutAppTitle": "O aplikaciji",
+  "aboutAppDescription": "SwapStash pomaga zbirateljem voditi zbirke, poiskati primerne partnerje in varneje zaključiti menjave.",
+  "aboutVersion": "Različica aplikacije",
+  "aboutVersionLoading": "Nalagam različico...",
+  "aboutOperator": "Upravljavec",
+  "aboutContact": "Kontakt in podpora",
+  "aboutLegalSection": "Pravne informacije",
+  "aboutSendFeedback": "Pošlji povratne informacije",
+  "aboutFeedbackEmailSubject": "SwapStash beta – povratne informacije",
+  "aboutFeedbackOpenError": "E-poštne aplikacije ni bilo mogoče odpreti.",
+  "aboutBetaFooter": "Zaprta beta različica · podatki in funkcije se lahko pred javno izdajo spremenijo.",
+  "settingsAboutAndLegalTitle": "O aplikaciji in pravne informacije",
+  "settingsAboutAppSubtitle": "Različica, kontakt, povratne informacije in dokumenti"
 }

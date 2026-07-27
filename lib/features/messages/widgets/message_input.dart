@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class MessageInput extends StatefulWidget {
   final Future<void> Function(String text) onSend;
@@ -48,7 +49,11 @@ class _MessageInputState extends State<MessageInput> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sporočila ni bilo mogoče poslati:\n$error')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.messageSendError(error.toString()),
+          ),
+        ),
       );
     } finally {
       if (mounted) {
@@ -61,6 +66,8 @@ class _MessageInputState extends State<MessageInput> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Material(
       color: Theme.of(context).colorScheme.surface,
       child: SafeArea(
@@ -84,7 +91,7 @@ class _MessageInputState extends State<MessageInput> {
                     _send();
                   },
                   decoration: InputDecoration(
-                    hintText: 'Napiši sporočilo...',
+                    hintText: localizations.messagesWriteMessageHint,
                     filled: true,
                     fillColor: Theme.of(
                       context,
@@ -115,7 +122,7 @@ class _MessageInputState extends State<MessageInput> {
                 width: 48,
                 height: 48,
                 child: IconButton.filled(
-                  tooltip: 'Pošlji sporočilo',
+                  tooltip: localizations.messagesSendMessage,
                   onPressed: _sending ? null : _send,
                   icon: _sending
                       ? const SizedBox(

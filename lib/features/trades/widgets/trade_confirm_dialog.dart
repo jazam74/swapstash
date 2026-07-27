@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 abstract final class TradeConfirmDialog {
   static Future<bool> confirmHandover(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
+
     return await showDialog<bool>(
           context: context,
           builder: (dialogContext) {
             return AlertDialog(
               icon: const Icon(Icons.how_to_reg_outlined),
-              title: const Text('Potrdi predajo kartic'),
-              content: const Text(
-                'Potrdi šele, ko si kartice dejansko predal drugi strani. '
-                'Po potrditvi bodo kartice odstranjene iz tvojega inventarja. '
-                'Tega koraka ni mogoče razveljaviti.',
-              ),
+              title: Text(localizations.tradeConfirmHandoverTitle),
+              content: Text(localizations.tradeConfirmHandoverDescription),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text('Prekliči'),
+                  child: Text(localizations.cancel),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text('Da, potrjujem predajo'),
+                  child: Text(localizations.tradeConfirmHandoverButton),
                 ),
               ],
             );
@@ -30,25 +29,23 @@ abstract final class TradeConfirmDialog {
   }
 
   static Future<bool> confirmReceipt(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
+
     return await showDialog<bool>(
           context: context,
           builder: (dialogContext) {
             return AlertDialog(
               icon: const Icon(Icons.inventory_2_outlined),
-              title: const Text('Potrdi prejem kartic'),
-              content: const Text(
-                'Potrdi šele, ko si dogovorjene kartice dejansko prejel. '
-                'Po potrditvi bodo dodane v tvoj inventar. '
-                'Tega koraka ni mogoče razveljaviti.',
-              ),
+              title: Text(localizations.tradeConfirmReceiptTitle),
+              content: Text(localizations.tradeConfirmReceiptDescription),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
-                  child: const Text('Prekliči'),
+                  child: Text(localizations.cancel),
                 ),
                 FilledButton(
                   onPressed: () => Navigator.of(dialogContext).pop(true),
-                  child: const Text('Da, potrjujem prejem'),
+                  child: Text(localizations.tradeConfirmReceiptButton),
                 ),
               ],
             );

@@ -1,6 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:swapstash/core/localization/firebase_auth_error.dart';
 import 'package:swapstash/core/services/auth_service.dart';
+import 'package:swapstash/core/utils/email_utils.dart';
+import 'package:swapstash/features/auth/forgot_password_page.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -33,6 +38,8 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _submit() async {
+    final localizations = AppLocalizations.of(context)!;
+
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -45,37 +52,53 @@ class _AuthScreenState extends State<AuthScreen> {
 
     try {
       final displayName = _displayNameController.text.trim();
-      final email = _emailController.text.trim();
+      final email = normalizeEmailAddress(_emailController.text);
       final password = _passwordController.text;
+
+      if (_emailController.text != email) {
+        _emailController.value = TextEditingValue(
+          text: email,
+          selection: TextSelection.collapsed(offset: email.length),
+        );
+      }
 
       if (_isLogin) {
         await _authService.login(email: email, password: password);
+        TextInput.finishAutofillContext(shouldSave: true);
       } else {
         await _authService.register(
           email: email,
           password: password,
           displayName: displayName,
+          languageCode: Localizations.localeOf(context).languageCode,
         );
+        TextInput.finishAutofillContext(shouldSave: true);
       }
     } on FirebaseAuthException catch (error) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_firebaseErrorMessage(error.code))),
+        SnackBar(
+          content: Text(localizedFirebaseAuthError(error, localizations)),
+        ),
       );
     } on ArgumentError catch (error) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error.message?.toString() ?? 'Podatki niso veljavni.'),
+          content: Text(
+            error.message?.toString() ?? localizations.authInvalidData,
+          ),
         ),
       );
     } catch (error) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Prišlo je do nepričakovane napake: $error')),
+        SnackBar(
+          content: Text(localizations.authUnexpectedError(error.toString())),
+        ),
       );
     } finally {
       if (mounted) {
@@ -83,27 +106,6 @@ class _AuthScreenState extends State<AuthScreen> {
           _isLoading = false;
         });
       }
-    }
-  }
-
-  String _firebaseErrorMessage(String code) {
-    switch (code) {
-      case 'invalid-email':
-        return 'E-poštni naslov ni veljaven.';
-      case 'email-already-in-use':
-        return 'Račun s tem e-poštnim naslovom že obstaja.';
-      case 'weak-password':
-        return 'Geslo je prešibko.';
-      case 'user-not-found':
-      case 'wrong-password':
-      case 'invalid-credential':
-        return 'E-poštni naslov ali geslo ni pravilno.';
-      case 'too-many-requests':
-        return 'Preveč poskusov. Poskusi ponovno pozneje.';
-      case 'network-request-failed':
-        return 'Preveri internetno povezavo.';
-      default:
-        return 'Prijava ali registracija ni uspela.';
     }
   }
 
@@ -120,6 +122,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -136,9 +140,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Icon(Icons.swap_horiz, size: 46),
                     ),
                     const SizedBox(height: 20),
-                    const Text(
-                      'SwapStash',
-                      style: TextStyle(
+                    Text(
+                      localizations.appName,
+                      style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                       ),
@@ -146,8 +150,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     const SizedBox(height: 8),
                     Text(
                       _isLogin
-                          ? 'Prijavi se v svoj račun'
-                          : 'Ustvari nov zbirateljski račun',
+                          ? localizations.authLoginSubtitle
+                          : localizations.authRegisterSubtitle,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey.shade700,
@@ -155,18 +159,17 @@ class _AuthScreenState extends State<AuthScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
-
                     if (!_isLogin) ...[
                       TextFormField(
                         controller: _displayNameController,
                         textInputAction: TextInputAction.next,
                         textCapitalization: TextCapitalization.words,
                         autocorrect: false,
-                        decoration: const InputDecoration(
-                          labelText: 'Prikazno ime',
-                          hintText: 'Na primer Uroš',
-                          prefixIcon: Icon(Icons.person_outline),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: localizations.authDisplayNameLabel,
+                          hintText: localizations.authDisplayNameHint,
+                          prefixIcon: const Icon(Icons.person_outline),
+                          border: const OutlineInputBorder(),
                         ),
                         validator: (value) {
                           if (_isLogin) {
@@ -176,15 +179,15 @@ class _AuthScreenState extends State<AuthScreen> {
                           final displayName = value?.trim() ?? '';
 
                           if (displayName.isEmpty) {
-                            return 'Vpiši prikazno ime.';
+                            return localizations.authDisplayNameRequired;
                           }
 
                           if (displayName.length < 2) {
-                            return 'Ime mora imeti najmanj 2 znaka.';
+                            return localizations.authDisplayNameMinLength;
                           }
 
                           if (displayName.length > 40) {
-                            return 'Ime ima lahko največ 40 znakov.';
+                            return localizations.authDisplayNameMaxLength;
                           }
 
                           return null;
@@ -192,50 +195,55 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       const SizedBox(height: 16),
                     ],
-
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
+                      textCapitalization: TextCapitalization.none,
                       autocorrect: false,
                       enableSuggestions: false,
-                      autofillHints: const [AutofillHints.email],
-                      decoration: const InputDecoration(
-                        labelText: 'E-poštni naslov',
-                        prefixIcon: Icon(Icons.email_outlined),
-                        border: OutlineInputBorder(),
+                      autofillHints: const [
+                        AutofillHints.username,
+                        AutofillHints.email,
+                      ],
+                      inputFormatters: [emailInputFormatter],
+                      decoration: InputDecoration(
+                        labelText: localizations.authEmailLabel,
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        border: const OutlineInputBorder(),
                       ),
                       validator: (value) {
-                        final email = value?.trim() ?? '';
+                        final email = normalizeEmailAddress(value ?? '');
 
                         if (email.isEmpty) {
-                          return 'Vpiši e-poštni naslov.';
+                          return localizations.authEmailRequired;
                         }
 
-                        if (!email.contains('@') || !email.contains('.')) {
-                          return 'Vpiši veljaven e-poštni naslov.';
+                        if (!isValidEmailAddress(email)) {
+                          return localizations.authEmailInvalid;
                         }
 
                         return null;
                       },
                     ),
                     const SizedBox(height: 16),
-
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _hidePassword,
                       textInputAction: _isLogin
                           ? TextInputAction.done
                           : TextInputAction.next,
-                      autofillHints: const [AutofillHints.password],
+                      autofillHints: _isLogin
+                          ? const [AutofillHints.password]
+                          : const [AutofillHints.newPassword],
                       decoration: InputDecoration(
-                        labelText: 'Geslo',
+                        labelText: localizations.authPasswordLabel,
                         prefixIcon: const Icon(Icons.lock_outline),
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           tooltip: _hidePassword
-                              ? 'Prikaži geslo'
-                              : 'Skrij geslo',
+                              ? localizations.authShowPassword
+                              : localizations.authHidePassword,
                           onPressed: () {
                             setState(() {
                               _hidePassword = !_hidePassword;
@@ -250,11 +258,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Vpiši geslo.';
+                          return localizations.authPasswordRequired;
                         }
 
                         if (value.length < 6) {
-                          return 'Geslo mora imeti najmanj 6 znakov.';
+                          return localizations.authPasswordMinLength;
                         }
 
                         return null;
@@ -265,17 +273,35 @@ class _AuthScreenState extends State<AuthScreen> {
                         }
                       },
                     ),
-
+                    if (_isLogin)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: _isLoading
+                              ? null
+                              : () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => ForgotPasswordPage(
+                                        initialEmail: _emailController.text
+                                            .trim(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                          child: Text(localizations.forgotPassword),
+                        ),
+                      ),
                     if (!_isLogin) ...[
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _confirmPasswordController,
                         obscureText: _hidePassword,
                         textInputAction: TextInputAction.done,
-                        decoration: const InputDecoration(
-                          labelText: 'Ponovi geslo',
-                          prefixIcon: Icon(Icons.lock_reset),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: localizations.authConfirmPasswordLabel,
+                          prefixIcon: const Icon(Icons.lock_reset),
+                          border: const OutlineInputBorder(),
                         ),
                         validator: (value) {
                           if (_isLogin) {
@@ -283,11 +309,11 @@ class _AuthScreenState extends State<AuthScreen> {
                           }
 
                           if (value == null || value.isEmpty) {
-                            return 'Ponovno vpiši geslo.';
+                            return localizations.authConfirmPasswordRequired;
                           }
 
                           if (value != _passwordController.text) {
-                            return 'Gesli se ne ujemata.';
+                            return localizations.authPasswordsDoNotMatch;
                           }
 
                           return null;
@@ -299,9 +325,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         },
                       ),
                     ],
-
                     const SizedBox(height: 24),
-
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
@@ -316,18 +340,21 @@ class _AuthScreenState extends State<AuthScreen> {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : Text(_isLogin ? 'Prijava' : 'Ustvari račun'),
+                              : Text(
+                                  _isLogin
+                                      ? localizations.authLoginButton
+                                      : localizations.authCreateAccountButton,
+                                ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 12),
-
                     TextButton(
                       onPressed: _isLoading ? null : _switchMode,
                       child: Text(
                         _isLogin
-                            ? 'Še nimaš računa? Registriraj se'
-                            : 'Že imaš račun? Prijavi se',
+                            ? localizations.authNoAccountRegister
+                            : localizations.authHaveAccountLogin,
                       ),
                     ),
                   ],

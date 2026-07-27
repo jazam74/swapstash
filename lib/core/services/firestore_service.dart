@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swapstash/core/models/user_collection.dart';
 import 'package:swapstash/core/models/user_profile.dart';
+import 'package:swapstash/core/services/block_service.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final BlockService _blockService = BlockService();
 
   CollectionReference<Map<String, dynamic>> get _users =>
       _db.collection('users');
@@ -70,25 +72,56 @@ class FirestoreService {
   }
 
   Future<List<UserProfile>> searchUsers(String query) async {
-    final value = query.trim();
+    final normalizedQuery = query.trim().toLowerCase();
 
-    if (value.isEmpty) {
+    if (normalizedQuery.isEmpty) {
       return [];
     }
 
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-    final snapshot = await _users
-        .orderBy('displayName')
-        .startAt([value])
-        .endAt(['$value\uf8ff'])
-        .limit(20)
-        .get();
+    // Za MVP preberemo omejeno število profilov in filtriramo lokalno.
+    // Tako iskanje ni občutljivo na velike/male črke in ne zahteva
+    // migracije obstoječih profilov ali dodatnega Firestore indeksa.
+    final snapshot = await _users.limit(200).get();
 
-    return snapshot.docs
-        .where((doc) => doc.id != currentUserId)
-        .map((doc) => UserProfile.fromMap({...doc.data(), 'uid': doc.id}))
+    final results = snapshot.docs
+        .where((document) => document.id != currentUserId)
+        .map(
+          (document) =>
+              UserProfile.fromMap({...document.data(), 'uid': document.id}),
+        )
+        .where((profile) => profile.isPublic)
+        .where(
+          (profile) => profile.displayName.trim().toLowerCase().contains(
+            normalizedQuery,
+          ),
+        )
         .toList();
+
+    results.sort((first, second) {
+      final firstName = first.displayName.trim().toLowerCase();
+      final secondName = second.displayName.trim().toLowerCase();
+
+      final firstStarts = firstName.startsWith(normalizedQuery);
+      final secondStarts = secondName.startsWith(normalizedQuery);
+
+      if (firstStarts != secondStarts) {
+        return firstStarts ? -1 : 1;
+      }
+
+      return firstName.compareTo(secondName);
+    });
+
+    final preliminaryResults = results.take(40).toList(growable: false);
+    final allowedUserIds = await _blockService.filterAllowedUserIds(
+      preliminaryResults.map((profile) => profile.uid),
+    );
+
+    return preliminaryResults
+        .where((profile) => allowedUserIds.contains(profile.uid))
+        .take(20)
+        .toList(growable: false);
   }
 
   Future<void> addCollectionToUser(UserCollection collection) async {

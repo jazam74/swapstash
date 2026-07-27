@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/user_profile.dart';
 import 'package:swapstash/core/services/firestore_service.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -50,12 +51,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
       return;
     }
 
+    final localizations = AppLocalizations.of(context)!;
     final displayName = _displayNameController.text.trim();
 
     if (displayName.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Vpiši prikazno ime.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizations.editProfileDisplayNameRequired)),
+      );
       return;
     }
 
@@ -74,18 +76,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       await _firestoreService.updateCurrentUserProfile(updatedProfile);
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profil je bil uspešno shranjen.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(localizations.editProfileSaved)));
 
       Navigator.of(context).pop();
     } catch (error) {
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profila ni bilo mogoče shraniti: $error')),
+        SnackBar(
+          content: Text(localizations.editProfileSaveError(error.toString())),
+        ),
       );
     } finally {
       if (mounted) {
@@ -98,8 +106,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Uredi profil')),
+      appBar: AppBar(title: Text(localizations.editProfile)),
       body: StreamBuilder<UserProfile?>(
         stream: _firestoreService.watchCurrentUserProfile(),
         builder: (context, snapshot) {
@@ -113,8 +123,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Profila ni bilo mogoče naložiti:\n'
-                  '${snapshot.error}',
+                  localizations.editProfileLoadError(snapshot.error.toString()),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -124,86 +133,136 @@ class _EditProfilePageState extends State<EditProfilePage> {
           final profile = snapshot.data;
 
           if (profile == null) {
-            return const Center(child: Text('Profil ne obstaja.'));
+            return Center(child: Text(localizations.editProfileMissing));
           }
 
           _initializeForm(profile);
 
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              TextField(
-                controller: _displayNameController,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Prikazno ime',
-                  prefixIcon: Icon(Icons.person_outline),
-                  border: OutlineInputBorder(),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              const maxContentWidth = 900.0;
+
+              final horizontalPadding = constraints.maxWidth >= 900
+                  ? 24.0
+                  : 16.0;
+              final availableWidth =
+                  constraints.maxWidth - (horizontalPadding * 2);
+              final contentWidth = availableWidth > maxContentWidth
+                  ? maxContentWidth
+                  : availableWidth;
+
+              return ListView(
+                padding: EdgeInsets.fromLTRB(
+                  horizontalPadding,
+                  20,
+                  horizontalPadding,
+                  32,
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _cityController,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Mesto',
-                  prefixIcon: Icon(Icons.location_city),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _bioController,
-                maxLines: 3,
-                maxLength: 300,
-                decoration: const InputDecoration(
-                  labelText: 'Opis',
-                  prefixIcon: Icon(Icons.notes_outlined),
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 8),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                value: _isPublic,
-                onChanged: _isSaving
-                    ? null
-                    : (value) {
-                        setState(() {
-                          _isPublic = value;
-                        });
-                      },
-                title: const Text('Javni profil'),
-                subtitle: const Text('Drugi uporabniki te lahko najdejo.'),
-              ),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                value: _allowInternationalTrades,
-                onChanged: _isSaving
-                    ? null
-                    : (value) {
-                        setState(() {
-                          _allowInternationalTrades = value;
-                        });
-                      },
-                title: const Text('Dovolim mednarodne menjave'),
-                subtitle: const Text(
-                  'Ponudbe lahko prejmeš tudi iz drugih držav.',
-                ),
-              ),
-              const SizedBox(height: 24),
-              FilledButton.icon(
-                onPressed: _isSaving ? null : () => _saveProfile(profile),
-                icon: _isSaving
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.save_outlined),
-                label: Text(_isSaving ? 'Shranjujem ...' : 'Shrani'),
-              ),
-            ],
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: SizedBox(
+                      width: contentWidth,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextField(
+                            controller: _displayNameController,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              labelText:
+                                  localizations.editProfileDisplayName,
+                              prefixIcon:
+                                  const Icon(Icons.person_outline),
+                              border: const OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: _cityController,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              labelText: localizations.editProfileCity,
+                              prefixIcon:
+                                  const Icon(Icons.location_city),
+                              border: const OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: _bioController,
+                            maxLines: 3,
+                            maxLength: 300,
+                            decoration: InputDecoration(
+                              labelText: localizations.editProfileBio,
+                              prefixIcon:
+                                  const Icon(Icons.notes_outlined),
+                              border: const OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            value: _isPublic,
+                            onChanged: _isSaving
+                                ? null
+                                : (value) {
+                                    setState(() {
+                                      _isPublic = value;
+                                    });
+                                  },
+                            title: Text(
+                              localizations.editProfilePublicTitle,
+                            ),
+                            subtitle: Text(
+                              localizations.editProfilePublicSubtitle,
+                            ),
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            value: _allowInternationalTrades,
+                            onChanged: _isSaving
+                                ? null
+                                : (value) {
+                                    setState(() {
+                                      _allowInternationalTrades = value;
+                                    });
+                                  },
+                            title: Text(
+                              localizations.editProfileInternationalTitle,
+                            ),
+                            subtitle: Text(
+                              localizations
+                                  .editProfileInternationalSubtitle,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          FilledButton.icon(
+                            onPressed: _isSaving
+                                ? null
+                                : () => _saveProfile(profile),
+                            icon: _isSaving
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.save_outlined),
+                            label: Text(
+                              _isSaving
+                                  ? localizations.editProfileSaving
+                                  : localizations.editProfileSave,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

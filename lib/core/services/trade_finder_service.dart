@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:swapstash/core/models/trade_candidate.dart';
 import 'package:swapstash/core/models/user_profile.dart';
 import 'package:swapstash/core/services/collection_members_service.dart';
 import 'package:swapstash/core/services/firestore_service.dart';
 import 'package:swapstash/core/services/inventory_compare_service.dart';
+import 'package:swapstash/core/services/block_service.dart';
 
 class TradeFinderService {
   final FirestoreService _firestoreService = FirestoreService();
@@ -11,6 +13,7 @@ class TradeFinderService {
       CollectionMembersService();
   final InventoryCompareService _inventoryCompareService =
       InventoryCompareService();
+  final BlockService _blockService = BlockService();
 
   Future<List<TradeCandidate>> findTrades({
     required String collectionId,
@@ -28,16 +31,36 @@ class TradeFinderService {
       currentProfile: profile,
     );
 
+    final allowedUserIds = await _blockService.filterAllowedUserIds(
+      members.map((member) => member.uid),
+    );
+    final allowedMembers = members
+        .where((member) => allowedUserIds.contains(member.uid))
+        .toList(growable: false);
+
+    debugPrint(
+      'Samodejno iskanje menjav: zbirka=$collectionId, '
+      'ustrezni uporabniki=${allowedMembers.length}',
+    );
+
     final List<TradeCandidate> candidates = [];
 
-    for (final member in members) {
+    for (final member in allowedMembers) {
       final comparison = await _inventoryCompareService.compare(
         collectionId: collectionId,
         currentUserId: profile.uid,
         otherUserId: member.uid,
       );
 
-      if (!comparison.hasPossibleTrade) continue;
+      debugPrint(
+        'Primerjava z ${member.displayName} (${member.uid}): '
+        'ponudim=${comparison.canOffer.map((item) => item.number).join(',')}; '
+        'potrebujem=${comparison.needs.map((item) => item.number).join(',')}',
+      );
+
+      if (!comparison.hasPossibleTrade) {
+        continue;
+      }
 
       candidates.add(TradeCandidate(member: member, comparison: comparison));
     }

@@ -7,6 +7,7 @@ import 'package:swapstash/core/services/chat_service.dart';
 import 'package:swapstash/core/services/trade_service.dart';
 import 'package:swapstash/features/messages/chat_page.dart';
 import 'package:swapstash/features/users/public_user_profile_page.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class TradeDetailPage extends StatefulWidget {
   final CatalogCollection collection;
@@ -62,7 +63,13 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Pogovora ni bilo mogoče odpreti:\n$error')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(
+              context,
+            )!.tradeConversationOpenError(error.toString()),
+          ),
+        ),
       );
     } finally {
       if (mounted) {
@@ -83,6 +90,8 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
   }
 
   Future<void> _createAutomaticTradeProposal() async {
+    final localizations = AppLocalizations.of(context)!;
+
     if (_creatingTrade) {
       return;
     }
@@ -103,7 +112,7 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Samodejni predlog menjave'),
+          title: Text(localizations.tradeAutomaticProposalTitle),
           content: SizedBox(
             width: double.maxFinite,
             child: SingleChildScrollView(
@@ -112,13 +121,15 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'SwapStash predlaga uravnoteženo menjavo '
-                    '$tradeCount za $tradeCount.',
+                    localizations.tradeAutomaticProposalDescription(
+                      tradeCount,
+                      tradeCount,
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Ti ponudiš:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                    localizations.tradeYouOfferColon,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 6),
                   ...offeredCatalogItems.map(
@@ -129,7 +140,9 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    '${widget.candidate.member.displayName} ponudi:',
+                    localizations.tradeUserOffers(
+                      widget.candidate.member.displayName,
+                    ),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 6),
@@ -146,12 +159,12 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text('Prekliči'),
+              child: Text(localizations.cancel),
             ),
             FilledButton.icon(
               onPressed: () => Navigator.of(dialogContext).pop(true),
               icon: const Icon(Icons.send),
-              label: const Text('Pošlji predlog'),
+              label: Text(localizations.tradeSendProposal),
             ),
           ],
         );
@@ -200,18 +213,28 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Predlog menjave je bil uspešno poslan.')),
+        SnackBar(content: Text(localizations.tradeProposalSentSuccessfully)),
       );
     } catch (error) {
       if (!mounted) {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Predloga menjave ni bilo mogoče poslati:\n$error'),
-        ),
-      );
+      final message = error is TradeInventoryUnavailableException
+          ? (error.side == TradeInventorySide.sender
+                ? localizations.tradeManualYourInventoryUnavailable(
+                    error.itemNumber,
+                  )
+                : localizations.tradeManualTheirInventoryUnavailable(
+                    error.itemNumber,
+                  ))
+          : error is TradeCatalogItemUnavailableException
+          ? localizations.tradeManualCatalogItemUnavailable(error.itemNumber)
+          : localizations.tradeProposalSendError(error.toString());
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     } finally {
       if (mounted) {
         setState(() {
@@ -223,12 +246,13 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final candidate = widget.candidate;
     final member = candidate.member;
     final comparison = candidate.comparison;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Primerjava menjave')),
+      appBar: AppBar(title: Text(localizations.tradeComparisonTitle)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -237,21 +261,23 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
           _SummaryCard(candidate: candidate),
           const SizedBox(height: 20),
           _ItemsSection(
-            title: 'Ti lahko ponudiš',
-            description: 'Tvoji viški, ki jih ta uporabnik še nima.',
+            title: localizations.tradeYouCanOffer,
+            description: localizations.tradeYourDuplicatesTheyNeed,
             icon: Icons.upload_rounded,
             items: comparison.canOffer,
-            emptyMessage:
-                '${member.displayName} trenutno ne potrebuje nobenega tvojega viška.',
+            emptyMessage: localizations.tradeUserNeedsNoneOfYourDuplicates(
+              member.displayName,
+            ),
           ),
           const SizedBox(height: 20),
           _ItemsSection(
-            title: '${member.displayName} lahko ponudi',
-            description: 'Njegovi viški, ki jih ti še nimaš.',
+            title: localizations.tradeUserCanOffer(member.displayName),
+            description: localizations.tradeTheirDuplicatesYouNeed,
             icon: Icons.download_rounded,
             items: comparison.needs,
-            emptyMessage:
-                '${member.displayName} trenutno nima viškov, ki bi jih potreboval.',
+            emptyMessage: localizations.tradeUserHasNoDuplicatesYouNeed(
+              member.displayName,
+            ),
           ),
           const SizedBox(height: 24),
           FilledButton.icon(
@@ -268,8 +294,8 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
                 : const Icon(Icons.auto_awesome),
             label: Text(
               _creatingTrade
-                  ? 'Pošiljam predlog...'
-                  : 'Samodejno predlagaj menjavo',
+                  ? localizations.tradeSendingProposal
+                  : localizations.tradeSuggestAutomatically,
             ),
           ),
           const SizedBox(height: 12),
@@ -287,8 +313,8 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
                 : const Icon(Icons.chat_bubble_outline),
             label: Text(
               _openingChat
-                  ? 'Odpiram pogovor...'
-                  : 'Pošlji sporočilo uporabniku ${member.displayName}',
+                  ? localizations.tradeOpeningConversation
+                  : localizations.tradeSendMessageToUser(member.displayName),
             ),
           ),
           const SizedBox(height: 12),
@@ -299,7 +325,7 @@ class _TradeDetailPageState extends State<TradeDetailPage> {
                     Navigator.of(context).pop();
                   },
             icon: const Icon(Icons.arrow_back),
-            label: const Text('Nazaj na rezultate'),
+            label: Text(localizations.tradeBackToResults),
           ),
         ],
       ),
@@ -315,6 +341,7 @@ class _MemberHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final member = candidate.member;
     final displayName = member.displayName.trim();
 
@@ -357,7 +384,7 @@ class _MemberHeader extends StatelessWidget {
                   children: [
                     Text(
                       displayName.isEmpty
-                          ? 'Neimenovan uporabnik'
+                          ? localizations.unnamedUser
                           : displayName,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
@@ -373,11 +400,15 @@ class _MemberHeader extends StatelessWidget {
                     ],
                     if (member.allowInternationalTrades) ...[
                       const SizedBox(height: 4),
-                      const Row(
+                      Row(
                         children: [
-                          Icon(Icons.public, size: 18),
-                          SizedBox(width: 4),
-                          Expanded(child: Text('Dovoljuje mednarodne menjave')),
+                          const Icon(Icons.public, size: 18),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              localizations.tradeAllowsInternationalTrades,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -401,6 +432,7 @@ class _SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final comparison = candidate.comparison;
 
     return Card(
@@ -409,7 +441,7 @@ class _SummaryCard extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              '${candidate.possibleTrades} možnih menjav',
+              localizations.tradePossibleTradesCount(candidate.possibleTrades),
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
@@ -419,21 +451,21 @@ class _SummaryCard extends StatelessWidget {
                   child: _SummaryValue(
                     icon: Icons.upload_rounded,
                     value: comparison.canOffer.length,
-                    label: 'Lahko ponudiš',
+                    label: localizations.tradeCanOffer,
                   ),
                 ),
                 Expanded(
                   child: _SummaryValue(
                     icon: Icons.download_rounded,
                     value: comparison.needs.length,
-                    label: 'Lahko dobiš',
+                    label: localizations.tradeCanReceive,
                   ),
                 ),
                 Expanded(
                   child: _SummaryValue(
                     icon: Icons.inventory_2_outlined,
                     value: candidate.duplicateCount,
-                    label: 'Njegovi viški',
+                    label: localizations.tradeTheirDuplicates,
                   ),
                 ),
               ],

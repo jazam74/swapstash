@@ -1,127 +1,188 @@
 import 'package:flutter/material.dart';
 import 'package:swapstash/core/models/trade_rating.dart';
+import 'package:swapstash/core/models/user_profile.dart';
+import 'package:swapstash/core/services/firestore_service.dart';
 import 'package:swapstash/core/services/trade_rating_service.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class UserRatingList extends StatelessWidget {
   final String userId;
+  final int limit;
+  final bool showTitle;
 
-  const UserRatingList({super.key, required this.userId});
+  const UserRatingList({
+    super.key,
+    required this.userId,
+    this.limit = 10,
+    this.showTitle = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final ratingService = TradeRatingService();
+    final localizations = AppLocalizations.of(context)!;
 
-    return StreamBuilder<List<TradeRating>>(
-      stream: ratingService.watchRatingsForUser(userId: userId, limit: 20),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const _RatingStateCard(
-            icon: Icons.error_outline_rounded,
-            text: 'Komentarjev ocen ni bilo mogoče naložiti.',
-          );
-        }
+    return Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: StreamBuilder<List<TradeRating>>(
+          stream: TradeRatingService().watchRatings(
+            userId: userId,
+            limit: limit,
+          ),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return _MessageRow(
+                icon: Icons.error_outline,
+                message: localizations.ratingCommentsLoadError,
+              );
+            }
 
-        if (snapshot.connectionState == ConnectionState.waiting &&
-            !snapshot.hasData) {
-          return const Card(
-            child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-          );
-        }
+            if (snapshot.connectionState == ConnectionState.waiting &&
+                !snapshot.hasData) {
+              return _MessageRow(
+                icon: Icons.hourglass_top,
+                message: localizations.ratingLoading,
+                loading: true,
+              );
+            }
 
-        final ratings = (snapshot.data ?? const <TradeRating>[])
-            .where((rating) => rating.comment.trim().isNotEmpty)
-            .toList(growable: false);
+            final ratings = snapshot.data ?? const <TradeRating>[];
 
-        if (ratings.isEmpty) {
-          return const _RatingStateCard(
-            icon: Icons.rate_review_outlined,
-            text: 'Ta zbiratelj še nima javnih komentarjev.',
-          );
-        }
+            if (ratings.isEmpty) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (showTitle) ...[
+                    Text(
+                      localizations.ratingReviewsTitle,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  _MessageRow(
+                    icon: Icons.star_outline,
+                    message: localizations.ratingNoReviews,
+                  ),
+                ],
+              );
+            }
 
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Zadnji komentarji',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                if (showTitle) ...[
+                  Text(
+                    localizations.ratingReviewsTitle,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 12),
+                  const SizedBox(height: 8),
+                ],
                 for (var index = 0; index < ratings.length; index++) ...[
-                  _RatingComment(rating: ratings[index]),
+                  _RatingEntry(rating: ratings[index]),
                   if (index < ratings.length - 1) const Divider(height: 24),
                 ],
               ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _RatingEntry extends StatelessWidget {
+  final TradeRating rating;
+
+  const _RatingEntry({required this.rating});
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final date = MaterialLocalizations.of(
+      context,
+    ).formatShortDate(rating.createdAt.toDate());
+
+    return FutureBuilder<UserProfile?>(
+      future: FirestoreService().getUserProfile(rating.reviewerId),
+      builder: (context, snapshot) {
+        final displayName = snapshot.data?.displayName.trim();
+        final reviewer = displayName == null || displayName.isEmpty
+            ? localizations.unknownUser
+            : displayName;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const CircleAvatar(
+                  radius: 16,
+                  child: Icon(Icons.person_outline, size: 18),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    reviewer,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Text(date, style: Theme.of(context).textTheme.bodySmall),
+              ],
             ),
-          ),
+            const SizedBox(height: 8),
+            Row(
+              children: List.generate(
+                5,
+                (index) => Icon(
+                  index < rating.stars
+                      ? Icons.star_rounded
+                      : Icons.star_border_rounded,
+                  size: 20,
+                ),
+              ),
+            ),
+            if (rating.comment.trim().isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(rating.comment.trim()),
+            ],
+          ],
         );
       },
     );
   }
 }
 
-class _RatingComment extends StatelessWidget {
-  final TradeRating rating;
-
-  const _RatingComment({required this.rating});
-
-  @override
-  Widget build(BuildContext context) {
-    final date = rating.createdAt.toDate().toLocal();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            for (var value = 1; value <= 5; value++)
-              Icon(
-                value <= rating.stars
-                    ? Icons.star_rounded
-                    : Icons.star_border_rounded,
-                size: 18,
-              ),
-            const Spacer(),
-            Text(
-              '${date.day}. ${date.month}. ${date.year}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(rating.comment.trim()),
-      ],
-    );
-  }
-}
-
-class _RatingStateCard extends StatelessWidget {
+class _MessageRow extends StatelessWidget {
   final IconData icon;
-  final String text;
+  final String message;
+  final bool loading;
 
-  const _RatingStateCard({required this.icon, required this.text});
+  const _MessageRow({
+    required this.icon,
+    required this.message,
+    this.loading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Icon(icon),
-            const SizedBox(width: 12),
-            Expanded(child: Text(text)),
-          ],
-        ),
-      ),
+    return Row(
+      children: [
+        if (loading)
+          const SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          )
+        else
+          Icon(icon),
+        const SizedBox(width: 10),
+        Expanded(child: Text(message)),
+      ],
     );
   }
 }

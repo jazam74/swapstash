@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:swapstash/core/theme/app_radius.dart';
 import 'package:swapstash/core/theme/app_spacing.dart';
 import 'package:swapstash/core/theme/app_text_styles.dart';
+import 'package:swapstash/l10n/generated/app_localizations.dart';
 
 class CollectionProgress extends StatelessWidget {
   final double progress;
@@ -21,6 +22,7 @@ class CollectionProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final double safeProgress = progress < 0.0
         ? 0.0
         : (progress > 1.0 ? 1.0 : progress);
@@ -54,7 +56,7 @@ class CollectionProgress extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          '$ownedCount od $totalCount kartic',
+          localizations.myCollectionsProgressCount(ownedCount, totalCount),
           style: compact ? AppTextStyles.caption : AppTextStyles.bodySecondary,
         ),
       ],
