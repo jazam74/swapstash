@@ -68,6 +68,7 @@ service cloud.firestore {
 
       // Profil lahko ustvari in spreminja samo njegov lastnik.
       // Sistemske statistike niso uporabniško nastavljive.
+      // completedTrades vzdržuje samo Admin SDK (P22A2B reconcile).
       allow create: if isOwner(userId)
           && request.resource.data.get('rating', 0) == 0
           && request.resource.data.get('ratingCount', 0) == 0
@@ -106,6 +107,45 @@ service cloud.firestore {
 
           // Količine lahko spreminja samo lastnik inventarja.
           allow create, update, delete: if isOwner(userId);
+        }
+      }
+
+      // ===========================
+      // REZERVACIJE PO ZBIRKAH (P22A2B)
+      //
+      // Pot: users/{uid}/reservationCollections/{collectionId}/items/{itemKey}
+      // Parent dokumenta reservationCollections/{collectionId} NE ustvarjamo
+      // samo zaradi subcollection — Admin SDK piše direktno v items/.
+      // ===========================
+
+      match /reservationCollections/{collectionId} {
+
+        // Parent doc je opcijski; klient ga ne sme pisati.
+        allow read: if isOwner(userId)
+            || (
+              isSignedIn()
+              && exists(
+                /databases/$(database)/documents/users/$(request.auth.uid)/collections/$(collectionId)
+              )
+            );
+
+        allow create, update, delete: if false;
+
+        match /items/{itemKey} {
+
+          // Lastnik bere vedno. Drug prijavljen uporabnik sme brati samo
+          // rezervacije za collectionId, ki ga ima tudi sam v
+          // users/{auth.uid}/collections/{collectionId}.
+          allow get, list: if isOwner(userId)
+              || (
+                isSignedIn()
+                && exists(
+                  /databases/$(database)/documents/users/$(request.auth.uid)/collections/$(collectionId)
+                )
+              );
+
+          // Samo Admin SDK (reconcileTradeAggregates).
+          allow create, update, delete: if false;
         }
       }
 
@@ -307,6 +347,21 @@ service cloud.firestore {
         return request.resource.data.diff(resource.data).affectedKeys();
       }
 
+      // P22A2B V1 item bounds — mirrors TradeItemLimits / tradeAggregates.js.
+      // Malicious clients can bypass Dart TradeService; Rules are the gate.
+      // Per-element field validation cannot be looped in Rules; the Function
+      // rejects garbage structures as ANOMALY without partial aggregate writes.
+      function tradeItemListsWithinV1Limits() {
+        return request.resource.data.offeredItems is list
+            && request.resource.data.requestedItems is list
+            && request.resource.data.offeredItems.size() > 0
+            && request.resource.data.requestedItems.size() > 0
+            && request.resource.data.offeredItems.size() <= 50
+            && request.resource.data.requestedItems.size() <= 50
+            && request.resource.data.offeredItems.size()
+                + request.resource.data.requestedItems.size() <= 100;
+      }
+
       // senderId in receiverId se ne smeta nikoli spremeniti. createdAt je
       // zasciten posredno: nobena od spodnjih dovoljenih oblik zapisa ga
       // nima na seznamu changedKeys().hasOnly(...).
@@ -349,6 +404,7 @@ service cloud.firestore {
               resource.data.senderId,
               resource.data.receiverId
             )
+            && tradeItemListsWithinV1Limits()
             && changedKeys().hasOnly([
               'offeredItems', 'requestedItems', 'status',
               'lastProposedBy', 'awaitingUserId', 'updatedAt',
@@ -465,6 +521,7 @@ service cloud.firestore {
           && request.resource.data.senderReceived == false
           && request.resource.data.receiverShipped == false
           && request.resource.data.receiverReceived == false
+          && tradeItemListsWithinV1Limits()
           && !interactionBlocked(
             request.resource.data.senderId,
             request.resource.data.receiverId
@@ -474,27 +531,32 @@ service cloud.firestore {
       // od obeh udeležencev.
       allow get: if isTradeParticipant();
 
-      // Poizvedbe, ki jih aplikacija dejansko uporablja:
+      // =====================================================================
+      // P22A2B FINAL STATE — PARTICIPANT-ONLY /trades LIST
       //
-      // 1. lastne menjave (TradesPage, dashboard, znacke, rezervacije):
-      //      where senderId == uid       ali  where receiverId == uid
+      // *** DO NOT DEPLOY UNTIL CLIENT CUTOVER IS COMPLETE. ***
       //
-      // 2. tuje menjave, potrebne za javni profil in rezervacijski
-      //    izracun (TradeService.watchCompletedTradeCount in
-      //    TradeService.getActiveReservations):
-      //      where senderId == X   + where status == 'accepted'
-      //      where receiverId == X + where status == 'completed'
+      // Cutover gate (SwapStash not yet public production):
+      //   1. Deploy Function + aggregates backend
+      //   2. Run pre-flight + backfill
+      //   3. Ship new app to Internal/Closed testing
+      //   4. Confirm all active beta testers are on the new build
+      //   5. Verify the new build performs ZERO foreign /trades queries
+      //   6. THEN deploy these participant-only rules
+      //   7. THEN public production release
       //
-      // Firestore preveri poizvedbo proti temu pravilu, zato je
-      // nefiltriran collection('trades').get() zavrnjen. Aktivna
-      // pogajanja ('pending' in 'countered') niso vidna nikomur
-      // razen obema udelezencema.
+      // Old clients that still call watchCompletedTradeCount / getActiveReservations
+      // via foreign accepted/completed trade queries will break once these rules
+      // are live. Do not deploy lockdown merely because a new AAB was uploaded.
+      //
+      // Allowed list queries must constrain to the caller as participant:
+      //   where senderId == auth.uid   OR   where receiverId == auth.uid
+      // Foreign status == accepted|completed and unfiltered dumps are DENIED.
+      // =====================================================================
       allow list: if isSignedIn()
           && (
             resource.data.senderId == request.auth.uid ||
-            resource.data.receiverId == request.auth.uid ||
-            resource.data.status == 'accepted' ||
-            resource.data.status == 'completed'
+            resource.data.receiverId == request.auth.uid
           );
 
       // Menjavo lahko spreminja samo udelezenec in samo tako, da
@@ -647,6 +709,14 @@ service cloud.firestore {
       }
 
       allow delete: if false;
+    }
+
+    // ===========================
+    // P22A2B — PER-TRADE AGGREGATE STATE (Admin SDK only)
+    // ===========================
+
+    match /_tradeAggregateState/{tradeId} {
+      allow read, create, update, delete: if false;
     }
 
     // ===========================

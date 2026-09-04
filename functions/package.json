@@ -7,7 +7,11 @@
     "node": "22"
   },
   "scripts": {
-    "check": "node --check index.js",
+    "check": "node --check index.js && node --check lib/tradeAggregates.js && node --check tools/preflight-aggregates.js && node --check tools/backfill-aggregates.js",
+    "test": "node --test --test-concurrency=1 test/*.test.js",
+    "preflight": "node tools/preflight-aggregates.js",
+    "backfill:dry-run": "node tools/backfill-aggregates.js --mode dry-run",
+    "backfill:write": "node tools/backfill-aggregates.js --mode write",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },

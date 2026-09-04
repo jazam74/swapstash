@@ -7,6 +7,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   setDoc,
   where,
@@ -145,10 +146,40 @@ describe("/trades read access", () => {
       );
     });
 
-    it("keeps the public-profile counter working (watchCompletedTradeCount for another user)", async () => {
+    it("Alice can list own sent trades ordered by createdAt (TradesPage)", async () => {
       const firestore = db(testEnv, ALICE);
 
-      const snapshot = await assertSucceeds(
+      await assertSucceeds(
+        getDocs(
+          query(
+            collection(firestore, "trades"),
+            where("senderId", "==", ALICE),
+            orderBy("createdAt", "desc"),
+          ),
+        ),
+      );
+    });
+
+    it("Alice can list own received trades ordered by createdAt", async () => {
+      const firestore = db(testEnv, ALICE);
+
+      await assertSucceeds(
+        getDocs(
+          query(
+            collection(firestore, "trades"),
+            where("receiverId", "==", ALICE),
+            orderBy("createdAt", "desc"),
+          ),
+        ),
+      );
+    });
+  });
+
+  describe("denied", () => {
+    it("P22A2B: Alice cannot query Bob's completed trades (foreign completed DENIED)", async () => {
+      const firestore = db(testEnv, ALICE);
+
+      await assertFails(
         getDocs(
           query(
             collection(firestore, "trades"),
@@ -157,17 +188,12 @@ describe("/trades read access", () => {
           ),
         ),
       );
-
-      const ids = snapshot.docs.map((document) => document.id);
-      if (ids.length !== 1 || ids[0] !== "t_bob_to_carol_completed") {
-        throw new Error(`Unexpected completed trades: ${JSON.stringify(ids)}`);
-      }
     });
 
-    it("keeps the reservation engine working (getActiveReservations for another user)", async () => {
+    it("P22A2B: Alice cannot query Bob's accepted trades (foreign accepted DENIED)", async () => {
       const firestore = db(testEnv, ALICE);
 
-      await assertSucceeds(
+      await assertFails(
         getDocs(
           query(
             collection(firestore, "trades"),
@@ -176,7 +202,7 @@ describe("/trades read access", () => {
           ),
         ),
       );
-      await assertSucceeds(
+      await assertFails(
         getDocs(
           query(
             collection(firestore, "trades"),
@@ -186,9 +212,49 @@ describe("/trades read access", () => {
         ),
       );
     });
-  });
 
-  describe("denied", () => {
+    it("P22A2B: unfiltered status==accepted|completed dumps are DENIED", async () => {
+      const firestore = db(testEnv, ALICE);
+
+      await assertFails(
+        getDocs(
+          query(
+            collection(firestore, "trades"),
+            where("status", "==", "accepted"),
+          ),
+        ),
+      );
+      await assertFails(
+        getDocs(
+          query(
+            collection(firestore, "trades"),
+            where("status", "==", "completed"),
+          ),
+        ),
+      );
+    });
+
+    it("P22A2B: Alice cannot query another user's trades by senderId/receiverId", async () => {
+      const firestore = db(testEnv, ALICE);
+
+      await assertFails(
+        getDocs(
+          query(
+            collection(firestore, "trades"),
+            where("senderId", "==", BOB),
+          ),
+        ),
+      );
+      await assertFails(
+        getDocs(
+          query(
+            collection(firestore, "trades"),
+            where("receiverId", "==", CAROL),
+          ),
+        ),
+      );
+    });
+
     it("5. Alice cannot dump the whole trades collection", async () => {
       const firestore = db(testEnv, ALICE);
 

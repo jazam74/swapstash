@@ -53,8 +53,14 @@ class InventoryCompareService {
         userId: candidateUserId,
         collectionId: catalogCollectionId,
       ),
-      _tradeService.getActiveReservations(userId: myUserId),
-      _tradeService.getActiveReservations(userId: candidateUserId),
+      _tradeService.getActiveReservations(
+        userId: myUserId,
+        collectionIds: [catalogCollectionId],
+      ),
+      _tradeService.getActiveReservations(
+        userId: candidateUserId,
+        collectionIds: [catalogCollectionId],
+      ),
     ]);
 
     final catalogItems = results[0] as List<CatalogItem>;

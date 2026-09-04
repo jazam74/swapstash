@@ -6,6 +6,7 @@ const {setGlobalOptions, logger} = require("firebase-functions");
 const {
   onDocumentCreated,
   onDocumentUpdated,
+  onDocumentWritten,
 } = require("firebase-functions/v2/firestore");
 
 const {initializeApp} = require("firebase-admin/app");
@@ -15,6 +16,10 @@ const {
   getFirestore,
 } = require("firebase-admin/firestore");
 const {getMessaging} = require("firebase-admin/messaging");
+const {
+  reconcileTradeAggregates,
+  logReservationOvercommit,
+} = require("./lib/tradeAggregates");
 
 initializeApp();
 
@@ -982,4 +987,86 @@ exports.notifyTradeDeliveryUpdated = onDocumentUpdated(
       });
     }),
 );
+
+/**
+ * P22A2B — trade aggregate reconciliation.
+ *
+ * The write event is only a signal. reconcileTradeAggregates always reads the
+ * current canonical /trades/{tradeId} document and applies desired − previous
+ * against _tradeAggregateState/{tradeId}.
+ *
+ * DO NOT DEPLOY until client cutover + backfill plan are reviewed.
+ */
+exports.reconcileTradeAggregatesOnWrite = onDocumentWritten(
+    "trades/{tradeId}",
+    async (event) => {
+      const tradeId = String(event.params.tradeId || "").trim();
+
+      if (!tradeId) {
+        return {status: "skipped_missing_trade_id"};
+      }
+
+      try {
+        const result = await reconcileTradeAggregates(db, tradeId, {logger});
+        return {
+          status: result.noop ? "noop" : "reconciled",
+          tradeId,
+          appliedCompletedDelta: result.appliedCompletedDelta || 0,
+          effectiveTradeStatus: result.effectiveTradeStatus || null,
+        };
+      } catch (error) {
+        if (error && error.code === "trade_item_limit_exceeded") {
+          logger.error({
+            event: "trade_item_limit_exceeded",
+            tradeId,
+            message: error.message,
+            anomaly: "ANOMALY / MANUAL REVIEW",
+          });
+          return {status: "failed_item_limit", tradeId, anomaly: "ANOMALY / MANUAL REVIEW"};
+        }
+
+        if (error && error.code === "trade_invalid_for_reconcile") {
+          logger.error({
+            event: "trade_invalid_for_reconcile",
+            tradeId,
+            message: error.message,
+            anomaly: "ANOMALY / MANUAL REVIEW",
+          });
+          return {
+            status: "failed_invalid_trade",
+            tradeId,
+            anomaly: "ANOMALY / MANUAL REVIEW",
+          };
+        }
+
+        if (error && error.code === "reservation_aggregate_underflow") {
+          logger.error({
+            event: "reservation_aggregate_underflow",
+            tradeId,
+            message: error.message,
+            details: error.details || null,
+            anomaly: "ANOMALY / MANUAL REVIEW",
+          });
+          return {
+            status: "failed_reservation_underflow",
+            tradeId,
+            anomaly: "ANOMALY / MANUAL REVIEW",
+          };
+        }
+
+        logger.error({
+          event: "reconcile_trade_aggregates_failed",
+          tradeId,
+          message: error instanceof Error ? error.message : String(error),
+        });
+        throw error;
+      }
+    },
+);
+
+// Exported for unit tests / backfill scripts that import via index.
+exports._tradeAggregates = {
+  reconcileTradeAggregates,
+  logReservationOvercommit,
+};
 

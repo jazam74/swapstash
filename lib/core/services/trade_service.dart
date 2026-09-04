@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/core/models/trade_item.dart';
 import 'package:swapstash/core/services/user_item_service.dart';
@@ -64,9 +63,19 @@ class TradeReservations {
     return incomingByItem[_key(collectionId, itemNumber)] ?? 0;
   }
 
+  /// Client-facing reservation map key. Matches historical
+  /// `collectionId::itemNumber` (trim + lower-case item number).
   static String _key(String collectionId, String itemNumber) {
     return '${collectionId.trim()}::${itemNumber.trim().toLowerCase()}';
   }
+}
+
+/// V1 trade size bound — mirrors functions/lib/tradeAggregates.js.
+/// Without a bound, reconcile could exceed Firestore's 500-doc transaction
+/// limit (1 state + 2 users + reservation docs).
+abstract final class TradeItemLimits {
+  static const int maxItemsPerSide = 50;
+  static const int maxItemsTotal = 100;
 }
 
 class TradeService {
@@ -113,6 +122,10 @@ class TradeService {
 
     _validateItems(offeredItems);
     _validateItems(requestedItems);
+    _validateItemCountBounds(
+      offeredItems: offeredItems,
+      requestedItems: requestedItems,
+    );
 
     final canonicalItemIds = await _resolveCanonicalItemIds([
       ...offeredItems,
@@ -249,63 +262,32 @@ class TradeService {
       return Stream<int>.value(0);
     }
 
-    late final StreamController<int> controller;
-    StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? senderSubscription;
-    StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?
-    receiverSubscription;
-
-    var senderCompletedIds = <String>{};
-    var receiverCompletedIds = <String>{};
-
-    void emitCount() {
-      if (controller.isClosed) {
-        return;
+    // P22A2B: users/{uid}.completedTrades is the UI source of truth.
+    // Do not query foreign /trades documents for this counter.
+    return _db.collection('users').doc(uid).snapshots().map((snapshot) {
+      final data = snapshot.data();
+      if (data == null) {
+        return 0;
       }
 
-      controller.add({...senderCompletedIds, ...receiverCompletedIds}.length);
-    }
-
-    Set<String> completedIds(QuerySnapshot<Map<String, dynamic>> snapshot) {
-      return snapshot.docs.map((document) => document.id).toSet();
-    }
-
-    // Ta števec se prikaže tudi na tujem javnem profilu, zato mora
-    // poizvedba ostati znotraj tistega dela pravil, ki dovoljuje branje
-    // tujih menjav. Filter po statusu je zato del poizvedbe in ne
-    // naknadnega filtriranja v klientu.
-    controller = StreamController<int>(
-      onListen: () {
-        controller.add(0);
-
-        senderSubscription = _tradesReference
-            .where('senderId', isEqualTo: uid)
-            .where('status', isEqualTo: TradeStatus.completed.name)
-            .snapshots()
-            .listen((snapshot) {
-              senderCompletedIds = completedIds(snapshot);
-              emitCount();
-            }, onError: controller.addError);
-
-        receiverSubscription = _tradesReference
-            .where('receiverId', isEqualTo: uid)
-            .where('status', isEqualTo: TradeStatus.completed.name)
-            .snapshots()
-            .listen((snapshot) {
-              receiverCompletedIds = completedIds(snapshot);
-              emitCount();
-            }, onError: controller.addError);
-      },
-      onCancel: () async {
-        await senderSubscription?.cancel();
-        await receiverSubscription?.cancel();
-      },
-    );
-
-    return controller.stream;
+      return (data['completedTrades'] as num?)?.toInt() ?? 0;
+    });
   }
 
+  /// Active reservation aggregates for [userId].
+  ///
+  /// Reads `users/{uid}/reservationCollections/{collectionId}/items/*`
+  /// maintained by Cloud Function reconcile — never foreign accepted trades.
+  /// Docs with outgoing==0 && incoming==0 are deleted by reconcile; any
+  /// leftover zero docs are ignored here and do not count as reservations.
+  ///
+  /// When [collectionIds] is omitted:
+  /// - for the signed-in user, all of their collections are scanned;
+  /// - for another user, only collections shared with the caller (required
+  ///   by reservation security rules).
   Future<TradeReservations> getActiveReservations({
     required String userId,
+    Iterable<String>? collectionIds,
   }) async {
     final uid = userId.trim();
 
@@ -313,93 +295,54 @@ class TradeService {
       throw ArgumentError('ID uporabnika ne sme biti prazen.');
     }
 
-    // Rezervacije se izračunajo tudi za sogovornika, zato mora poizvedba
-    // ostati znotraj dela pravil, ki dovoljuje branje tujih menjav.
-    // Spodnja zanka je tako ali tako upoštevala samo sprejete menjave,
-    // zato je filter po statusu vsebinsko enakovreden prejšnjemu.
-    final results = await Future.wait([
-      _tradesReference
-          .where('senderId', isEqualTo: uid)
-          .where('status', isEqualTo: TradeStatus.accepted.name)
-          .get(),
-      _tradesReference
-          .where('receiverId', isEqualTo: uid)
-          .where('status', isEqualTo: TradeStatus.accepted.name)
-          .get(),
-    ]);
-
-    final senderTrades = results[0].docs
-        .map((document) => Trade.fromMap(document.id, document.data()))
-        .toList(growable: false);
-
-    final receiverTrades = results[1].docs
-        .map((document) => Trade.fromMap(document.id, document.data()))
-        .toList(growable: false);
-
-    final acceptedTrades = <Trade>[
-      ...senderTrades.where((trade) => trade.status == TradeStatus.accepted),
-      ...receiverTrades.where((trade) => trade.status == TradeStatus.accepted),
-    ];
-
-    // Po izbrisu starega uporabniškega računa lahko zgodovinski dokument
-    // sprejete menjave ostane v Firestore. Takšna menjava se ne more več
-    // zaključiti in zato ne sme za vedno rezervirati kartic.
-    final counterpartIds = acceptedTrades
-        .map((trade) => _counterpartIdFor(trade: trade, userId: uid))
-        .where((id) => id.isNotEmpty)
-        .toSet();
-
-    final counterpartSnapshots = await Future.wait(
-      counterpartIds.map((id) => _db.collection('users').doc(id).get()),
+    final ids = await _resolveReservationCollectionIds(
+      targetUserId: uid,
+      collectionIds: collectionIds,
     );
 
-    final existingCounterpartIds = counterpartSnapshots
-        .where((snapshot) => snapshot.exists)
-        .map((snapshot) => snapshot.id)
-        .toSet();
-
-    bool canReserve(Trade trade) {
-      final counterpartId = _counterpartIdFor(trade: trade, userId: uid);
-      final counterpartExists = existingCounterpartIds.contains(counterpartId);
-
-      if (!counterpartExists) {
-        debugPrint(
-          'Prezrta osirotela sprejeta menjava ${trade.id}: '
-          'uporabnik $counterpartId ne obstaja več.',
-        );
-      }
-
-      return counterpartExists;
+    if (ids.isEmpty) {
+      return const TradeReservations(
+        outgoingByItem: {},
+        incomingByItem: {},
+      );
     }
+
+    final snapshots = await Future.wait(
+      ids.map(
+        (collectionId) => _db
+            .collection('users')
+            .doc(uid)
+            .collection('reservationCollections')
+            .doc(collectionId)
+            .collection('items')
+            .get(),
+      ),
+    );
 
     final outgoing = <String, int>{};
     final incoming = <String, int>{};
 
-    for (final trade in senderTrades) {
-      if (trade.status != TradeStatus.accepted || !canReserve(trade)) {
-        continue;
-      }
+    for (final snapshot in snapshots) {
+      for (final document in snapshot.docs) {
+        final data = document.data();
+        final collectionId = (data['collectionId'] as String?)?.trim() ?? '';
+        final itemNumber = (data['itemNumber'] as String?) ?? '';
 
-      if (!trade.senderShipped) {
-        _addItems(outgoing, trade.offeredItems);
-      }
+        if (collectionId.isEmpty || itemNumber.trim().isEmpty) {
+          continue;
+        }
 
-      if (!trade.senderReceived) {
-        _addItems(incoming, trade.requestedItems);
-      }
-    }
+        final key = TradeReservations._key(collectionId, itemNumber);
+        final outgoingQuantity = (data['outgoing'] as num?)?.toInt() ?? 0;
+        final incomingQuantity = (data['incoming'] as num?)?.toInt() ?? 0;
 
-    for (final trade in receiverTrades) {
-      if (trade.status != TradeStatus.accepted || !canReserve(trade)) {
-        continue;
-      }
+        if (outgoingQuantity > 0) {
+          outgoing[key] = (outgoing[key] ?? 0) + outgoingQuantity;
+        }
 
-      if (!trade.receiverShipped) {
-        _addItems(outgoing, trade.requestedItems);
-      }
-
-      if (!trade.receiverReceived) {
-        _addItems(incoming, trade.offeredItems);
+        if (incomingQuantity > 0) {
+          incoming[key] = (incoming[key] ?? 0) + incomingQuantity;
+        }
       }
     }
 
@@ -409,7 +352,47 @@ class TradeService {
     );
   }
 
+  Future<List<String>> _resolveReservationCollectionIds({
+    required String targetUserId,
+    Iterable<String>? collectionIds,
+  }) async {
+    if (collectionIds != null) {
+      return collectionIds
+          .map((id) => id.trim())
+          .where((id) => id.isNotEmpty)
+          .toSet()
+          .toList(growable: false);
+    }
+
+    final currentUid = currentUserId;
+
+    if (targetUserId == currentUid) {
+      return _listUserCollectionIds(currentUid);
+    }
+
+    final mine = await _listUserCollectionIds(currentUid);
+    final theirs = await _listUserCollectionIds(targetUserId);
+    final theirSet = theirs.toSet();
+
+    return mine.where(theirSet.contains).toList(growable: false);
+  }
+
+  Future<List<String>> _listUserCollectionIds(String userId) async {
+    final snapshot = await _db
+        .collection('users')
+        .doc(userId)
+        .collection('collections')
+        .get();
+
+    return snapshot.docs
+        .map((document) => document.id.trim())
+        .where((id) => id.isNotEmpty)
+        .toList(growable: false);
+  }
+
   Future<void> acceptTrade({required String tradeId}) async {
+    // Known V1 limitation (TOCTOU): accept is still a client write.
+    // Strong consistency / reservation_overcommit detection → P22A2C.
     await _respondToActiveOffer(
       tradeId: tradeId,
       newStatus: TradeStatus.accepted,
@@ -436,6 +419,10 @@ class TradeService {
 
     _validateItems(offeredItems);
     _validateItems(requestedItems);
+    _validateItemCountBounds(
+      offeredItems: offeredItems,
+      requestedItems: requestedItems,
+    );
 
     final document = _tradesReference.doc(tradeId);
 
@@ -817,7 +804,15 @@ class TradeService {
     required List<TradeItem> items,
     required TradeInventorySide side,
   }) async {
-    final reservations = await getActiveReservations(userId: userId);
+    final collectionIds = items
+        .map((item) => item.collectionId.trim())
+        .where((id) => id.isNotEmpty)
+        .toSet();
+
+    final reservations = await getActiveReservations(
+      userId: userId,
+      collectionIds: collectionIds,
+    );
     final itemsByCollection = <String, List<TradeItem>>{};
 
     for (final item in items) {
@@ -983,39 +978,27 @@ class TradeService {
     }
   }
 
-  String _counterpartIdFor({required Trade trade, required String userId}) {
-    if (trade.senderId == userId) {
-      return trade.receiverId.trim();
-    }
-
-    if (trade.receiverId == userId) {
-      return trade.senderId.trim();
-    }
-
-    return '';
-  }
-
-  void _addItems(Map<String, int> target, List<TradeItem> items) {
-    for (final item in items) {
-      // Stare testne menjave so nastale še pred uvedbo itemId.
-      // Takih zapisov ne uporabljamo kot aktivne rezervacije,
-      // ker jih ni mogoče zanesljivo povezati z inventarjem.
-      if (!item.hasItemId) {
-        continue;
-      }
-
-      final key = TradeReservations._key(item.collectionId, item.itemNumber);
-
-      target[key] = (target[key] ?? 0) + item.quantity;
-    }
-  }
-
   List<Trade> _tradesFromSnapshot(
     QuerySnapshot<Map<String, dynamic>> snapshot,
   ) {
     return snapshot.docs
         .map((document) => Trade.fromMap(document.id, document.data()))
         .toList();
+  }
+
+  void _validateItemCountBounds({
+    required List<TradeItem> offeredItems,
+    required List<TradeItem> requestedItems,
+  }) {
+    if (offeredItems.length > TradeItemLimits.maxItemsPerSide ||
+        requestedItems.length > TradeItemLimits.maxItemsPerSide ||
+        offeredItems.length + requestedItems.length >
+            TradeItemLimits.maxItemsTotal) {
+      throw ArgumentError(
+        'Menjava sme imeti največ ${TradeItemLimits.maxItemsPerSide} '
+        'predmetov na stran in ${TradeItemLimits.maxItemsTotal} skupaj.',
+      );
+    }
   }
 
   void _validateItems(List<TradeItem> items) {

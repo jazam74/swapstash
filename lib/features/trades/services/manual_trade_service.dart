@@ -92,8 +92,14 @@ class ManualTradeService {
     }
 
     final reservationResults = await Future.wait([
-      _tradeService.getActiveReservations(userId: currentUserId),
-      _tradeService.getActiveReservations(userId: receiverId),
+      _tradeService.getActiveReservations(
+        userId: currentUserId,
+        collectionIds: commonCollectionIds,
+      ),
+      _tradeService.getActiveReservations(
+        userId: receiverId,
+        collectionIds: commonCollectionIds,
+      ),
     ]);
 
     final currentReservations = reservationResults[0];
