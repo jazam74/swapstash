@@ -120,57 +120,53 @@ class ChatService {
 
     final reference = _conversationsReference.doc(conversationId);
 
-    final existingDocument = await reference.get();
-    final existingData = existingDocument.data();
+    // Vrstni red mora biti determiniran, sicer bi vsak udeleženec zapisal
+    // svojo različico polja participantIds in bi pravilo o nespremenljivih
+    // udeležencih zavrnilo zapis drugega uporabnika.
+    final participantIds = [currentUserId, candidateUserId]..sort();
 
-    if (existingDocument.exists && existingData != null) {
-      await reference.set({
-        'participantNames': {
-          currentUserId: currentUserName,
-          candidateUserId: normalizedOtherUserName,
-        },
-        'participantPhotoUrls': {
-          currentUserId: currentUserPhotoUrl,
-          candidateUserId: normalizedOtherUserPhotoUrl,
-        },
-        'collectionName': collectionName.trim(),
-      }, SetOptions(merge: true));
-
-      final refreshedDocument = await reference.get();
-      final refreshedData = refreshedDocument.data();
-
-      if (refreshedData == null) {
-        throw StateError('Podatkov pogovora ni bilo mogoče prebrati.');
-      }
-
-      return Conversation.fromMap(refreshedDocument.id, refreshedData);
-    }
-
-    final now = Timestamp.now();
-
-    final conversation = Conversation(
-      id: conversationId,
-      participantIds: [currentUserId, candidateUserId],
-      participantNames: {
+    // Zapis je namenoma idempotenten in vsebuje samo polja, ki so ob vsakem
+    // klicu enaka ali se smejo osvežiti. Stanje pogovora (lastMessage,
+    // lastMessageAt, lastSenderId, unreadCounts) je izpuščeno, zato ga
+    // merge ne more prepisati. Tako predhodno branje ni več potrebno in
+    // pravilo za branje lahko zahteva udeleženca.
+    await reference.set({
+      'participantIds': participantIds,
+      'participantNames': {
         currentUserId: currentUserName,
         candidateUserId: normalizedOtherUserName,
       },
-      participantPhotoUrls: {
+      'participantPhotoUrls': {
         currentUserId: currentUserPhotoUrl,
         candidateUserId: normalizedOtherUserPhotoUrl,
       },
-      collectionId: collectionId.trim(),
-      collectionName: collectionName.trim(),
-      lastMessage: '',
-      lastMessageAt: null,
-      lastSenderId: '',
-      unreadCounts: {currentUserId: 0, candidateUserId: 0},
-      createdAt: now,
-    );
+      'collectionId': collectionId.trim(),
+      'collectionName': collectionName.trim(),
+    }, SetOptions(merge: true));
 
-    await reference.set(conversation.toMap());
+    var document = await reference.get();
+    var data = document.data();
 
-    return conversation;
+    if (data == null) {
+      throw StateError('Podatkov pogovora ni bilo mogoče prebrati.');
+    }
+
+    // Nov pogovor še nima časovne oznake. Zapišemo jo enkrat samkrat, da
+    // se pogovori brez sporočil še vedno pravilno razvrstijo.
+    if (data['createdAt'] == null) {
+      await reference.set({
+        'createdAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      document = await reference.get();
+      data = document.data();
+
+      if (data == null) {
+        throw StateError('Podatkov pogovora ni bilo mogoče prebrati.');
+      }
+    }
+
+    return Conversation.fromMap(document.id, data);
   }
 
   Stream<List<Conversation>> watchConversations() {
@@ -178,16 +174,26 @@ class ChatService {
 
     return _conversationsReference
         .where('participantIds', arrayContains: currentUserId)
-        .orderBy('lastMessageAt', descending: true)
         .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
+        .map((snapshot) {
+          final conversations = snapshot.docs
               .map(
                 (document) =>
                     Conversation.fromMap(document.id, document.data()),
               )
-              .toList(),
-        );
+              .toList();
+
+          // Razvrstimo v klientu. Firestore orderBy('lastMessageAt') bi
+          // izpustil pogovore, ki še nimajo nobenega sporočila.
+          conversations.sort((first, second) {
+            final firstAt = first.lastMessageAt ?? first.createdAt;
+            final secondAt = second.lastMessageAt ?? second.createdAt;
+
+            return secondAt.compareTo(firstAt);
+          });
+
+          return conversations;
+        });
   }
 
   Stream<int> watchTotalUnreadCount() {

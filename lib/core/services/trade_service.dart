@@ -266,21 +266,20 @@ class TradeService {
     }
 
     Set<String> completedIds(QuerySnapshot<Map<String, dynamic>> snapshot) {
-      return snapshot.docs
-          .where(
-            (document) =>
-                document.data()['status'] == TradeStatus.completed.name,
-          )
-          .map((document) => document.id)
-          .toSet();
+      return snapshot.docs.map((document) => document.id).toSet();
     }
 
+    // Ta števec se prikaže tudi na tujem javnem profilu, zato mora
+    // poizvedba ostati znotraj tistega dela pravil, ki dovoljuje branje
+    // tujih menjav. Filter po statusu je zato del poizvedbe in ne
+    // naknadnega filtriranja v klientu.
     controller = StreamController<int>(
       onListen: () {
         controller.add(0);
 
         senderSubscription = _tradesReference
             .where('senderId', isEqualTo: uid)
+            .where('status', isEqualTo: TradeStatus.completed.name)
             .snapshots()
             .listen((snapshot) {
               senderCompletedIds = completedIds(snapshot);
@@ -289,6 +288,7 @@ class TradeService {
 
         receiverSubscription = _tradesReference
             .where('receiverId', isEqualTo: uid)
+            .where('status', isEqualTo: TradeStatus.completed.name)
             .snapshots()
             .listen((snapshot) {
               receiverCompletedIds = completedIds(snapshot);
@@ -313,9 +313,19 @@ class TradeService {
       throw ArgumentError('ID uporabnika ne sme biti prazen.');
     }
 
+    // Rezervacije se izračunajo tudi za sogovornika, zato mora poizvedba
+    // ostati znotraj dela pravil, ki dovoljuje branje tujih menjav.
+    // Spodnja zanka je tako ali tako upoštevala samo sprejete menjave,
+    // zato je filter po statusu vsebinsko enakovreden prejšnjemu.
     final results = await Future.wait([
-      _tradesReference.where('senderId', isEqualTo: uid).get(),
-      _tradesReference.where('receiverId', isEqualTo: uid).get(),
+      _tradesReference
+          .where('senderId', isEqualTo: uid)
+          .where('status', isEqualTo: TradeStatus.accepted.name)
+          .get(),
+      _tradesReference
+          .where('receiverId', isEqualTo: uid)
+          .where('status', isEqualTo: TradeStatus.accepted.name)
+          .get(),
     ]);
 
     final senderTrades = results[0].docs

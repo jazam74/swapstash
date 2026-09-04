@@ -269,11 +269,202 @@ service cloud.firestore {
 
     match /trades/{tradeId} {
 
+      // ===========================
+      // POMOŽNE FUNKCIJE ZA MENJAVE
+      // ===========================
+
+      function isTradeParticipant() {
+        return isSignedIn()
+            && (
+              resource.data.senderId == request.auth.uid ||
+              resource.data.receiverId == request.auth.uid
+            );
+      }
+
+      // Nasprotna stran menjave za podanega uporabnika.
+      function tradeCounterpart(userId) {
+        return userId == resource.data.senderId
+            ? resource.data.receiverId
+            : resource.data.senderId;
+      }
+
+      // Aktivna ponudba, na katero se še pričakuje odgovor.
+      function isActiveOffer() {
+        return resource.data.status == 'pending'
+            || resource.data.status == 'countered';
+      }
+
+      // Kdo je trenutno na potezi. Zgodovinski dokumenti brez polja
+      // awaitingUserId padejo nazaj na receiverId - enako kot
+      // TradeService._validateActiveResponder v trade_service.dart.
+      function expectedResponder() {
+        return resource.data.get('awaitingUserId', '') != ''
+            ? resource.data.awaitingUserId
+            : resource.data.receiverId;
+      }
+
+      function changedKeys() {
+        return request.resource.data.diff(resource.data).affectedKeys();
+      }
+
+      // senderId in receiverId se ne smeta nikoli spremeniti. createdAt je
+      // zasciten posredno: nobena od spodnjih dovoljenih oblik zapisa ga
+      // nima na seznamu changedKeys().hasOnly(...).
+      function tradeIdentityUnchanged() {
+        return request.resource.data.senderId == resource.data.senderId
+            && request.resource.data.receiverId == resource.data.receiverId;
+      }
+
+      // ===========================
+      // DOVOLJENI PREHODI STANJ
+      //
+      // Vsak dovoljen zapis ustreza natanko enemu toku iz
+      // lib/core/services/trade_service.dart. Karkoli drugega
+      // je zavrnjeno, tudi ce zapis pride iz spremenjenega klienta.
+      // ===========================
+
+      // TradeService._respondToActiveOffer: sprejem ali zavrnitev.
+      function isOfferResponse() {
+        return isActiveOffer()
+            && request.auth.uid == expectedResponder()
+            && (
+              request.resource.data.status == 'accepted' ||
+              request.resource.data.status == 'rejected'
+            )
+            && request.resource.data.awaitingUserId == ''
+            && changedKeys().hasOnly([
+              'status', 'awaitingUserId', 'updatedAt',
+            ]);
+      }
+
+      // TradeService.counterTrade: protiponudba obrne potezo.
+      function isCounterOffer() {
+        return isActiveOffer()
+            && request.auth.uid == expectedResponder()
+            && request.resource.data.status == 'countered'
+            && request.resource.data.lastProposedBy == request.auth.uid
+            && request.resource.data.awaitingUserId
+                == tradeCounterpart(request.auth.uid)
+            && !interactionBlocked(
+              resource.data.senderId,
+              resource.data.receiverId
+            )
+            && changedKeys().hasOnly([
+              'offeredItems', 'requestedItems', 'status',
+              'lastProposedBy', 'awaitingUserId', 'updatedAt',
+            ]);
+      }
+
+      // TradeService.cancelTrade: preklice lahko samo zadnji predlagatelj.
+      function isCancellation() {
+        return isActiveOffer()
+            && resource.data.get('lastProposedBy', '') == request.auth.uid
+            && request.resource.data.status == 'cancelled'
+            && request.resource.data.awaitingUserId == ''
+            && changedKeys().hasOnly([
+              'status', 'awaitingUserId', 'updatedAt',
+            ]);
+      }
+
+      // TradeService.markShipped: vsak udelezenec potrdi svojo posiljko.
+      // Zastavico je mogoce obrniti samo iz false v true.
+      function isShippingConfirmation() {
+        return resource.data.status == 'accepted'
+            && request.resource.data.status == 'accepted'
+            && (
+              (
+                request.auth.uid == resource.data.senderId
+                && resource.data.get('senderShipped', false) == false
+                && request.resource.data.senderShipped == true
+                && changedKeys().hasOnly([
+                  'senderShipped', 'senderShippedAt', 'updatedAt',
+                ])
+              ) || (
+                request.auth.uid == resource.data.receiverId
+                && resource.data.get('receiverShipped', false) == false
+                && request.resource.data.receiverShipped == true
+                && changedKeys().hasOnly([
+                  'receiverShipped', 'receiverShippedAt', 'updatedAt',
+                ])
+              )
+            );
+      }
+
+      // TradeService.markReceived brez zakljucka menjave.
+      function isReceiptConfirmation() {
+        return resource.data.status == 'accepted'
+            && request.resource.data.status == 'accepted'
+            && (
+              (
+                request.auth.uid == resource.data.senderId
+                && resource.data.get('senderReceived', false) == false
+                && request.resource.data.senderReceived == true
+                && changedKeys().hasOnly([
+                  'senderReceived', 'senderReceivedAt', 'updatedAt',
+                ])
+              ) || (
+                request.auth.uid == resource.data.receiverId
+                && resource.data.get('receiverReceived', false) == false
+                && request.resource.data.receiverReceived == true
+                && changedKeys().hasOnly([
+                  'receiverReceived', 'receiverReceivedAt', 'updatedAt',
+                ])
+              )
+            );
+      }
+
+      // Vse stiri potrditve morajo biti izpolnjene v koncnem dokumentu.
+      // Ker isti zapis obrne samo zadnjo manjkajoco zastavico prejema,
+      // so ostale tri lahko postavljene le s predhodnimi, prav tako
+      // preverjenimi zapisi. Status 'completed' zato ni dosegljiv
+      // brez celotnega poteka posiljanja in prejemanja.
+      function allConfirmationsPresent() {
+        return request.resource.data.senderShipped == true
+            && request.resource.data.receiverShipped == true
+            && request.resource.data.senderReceived == true
+            && request.resource.data.receiverReceived == true;
+      }
+
+      // TradeService.markReceived, ki hkrati zakljuci menjavo.
+      function isCompletingReceipt() {
+        return resource.data.status == 'accepted'
+            && request.resource.data.status == 'completed'
+            && allConfirmationsPresent()
+            && (
+              (
+                request.auth.uid == resource.data.senderId
+                && resource.data.get('senderReceived', false) == false
+                && changedKeys().hasOnly([
+                  'senderReceived', 'senderReceivedAt', 'status', 'updatedAt',
+                ])
+              ) || (
+                request.auth.uid == resource.data.receiverId
+                && resource.data.get('receiverReceived', false) == false
+                && changedKeys().hasOnly([
+                  'receiverReceived', 'receiverReceivedAt',
+                  'status', 'updatedAt',
+                ])
+              )
+            );
+      }
+
+      // ===========================
+      // PRAVILA
+      // ===========================
+
       // Novo menjavo lahko ustvari samo prijavljeni pošiljatelj.
       // Menjave samemu sebi ne dovolimo.
       allow create: if isSignedIn()
           && request.resource.data.senderId == request.auth.uid
           && request.resource.data.receiverId != request.auth.uid
+          && request.resource.data.status == 'pending'
+          && request.resource.data.lastProposedBy == request.auth.uid
+          && request.resource.data.awaitingUserId
+              == request.resource.data.receiverId
+          && request.resource.data.senderShipped == false
+          && request.resource.data.senderReceived == false
+          && request.resource.data.receiverShipped == false
+          && request.resource.data.receiverReceived == false
           && !interactionBlocked(
             request.resource.data.senderId,
             request.resource.data.receiverId
@@ -281,37 +472,42 @@ service cloud.firestore {
 
       // Posamezno menjavo lahko neposredno prebere samo eden
       // od obeh udeležencev.
-      allow get: if isSignedIn()
+      allow get: if isTradeParticipant();
+
+      // Poizvedbe, ki jih aplikacija dejansko uporablja:
+      //
+      // 1. lastne menjave (TradesPage, dashboard, znacke, rezervacije):
+      //      where senderId == uid       ali  where receiverId == uid
+      //
+      // 2. tuje menjave, potrebne za javni profil in rezervacijski
+      //    izracun (TradeService.watchCompletedTradeCount in
+      //    TradeService.getActiveReservations):
+      //      where senderId == X   + where status == 'accepted'
+      //      where receiverId == X + where status == 'completed'
+      //
+      // Firestore preveri poizvedbo proti temu pravilu, zato je
+      // nefiltriran collection('trades').get() zavrnjen. Aktivna
+      // pogajanja ('pending' in 'countered') niso vidna nikomur
+      // razen obema udelezencema.
+      allow list: if isSignedIn()
           && (
             resource.data.senderId == request.auth.uid ||
-            resource.data.receiverId == request.auth.uid
+            resource.data.receiverId == request.auth.uid ||
+            resource.data.status == 'accepted' ||
+            resource.data.status == 'completed'
           );
 
-      // Potrebno za poizvedbe:
-      // - senderId == currentUser
-      // - receiverId == currentUser
-      // - senderId/receiverId + status == accepted
-      //
-      // Te poizvedbe uporablja seznam menjav in sistem rezervacij.
-      allow list: if isSignedIn();
-
-      // Menjavo lahko spreminja samo eden od udeležencev.
-      // senderId in receiverId se ne smeta spreminjati.
-      allow update: if isSignedIn()
+      // Menjavo lahko spreminja samo udelezenec in samo tako, da
+      // zapis ustreza enemu od dovoljenih prehodov stanja.
+      allow update: if isTradeParticipant()
+          && tradeIdentityUnchanged()
           && (
-            resource.data.senderId == request.auth.uid ||
-            resource.data.receiverId == request.auth.uid
-          )
-          && request.resource.data.senderId
-              == resource.data.senderId
-          && request.resource.data.receiverId
-              == resource.data.receiverId
-          && (
-            request.resource.data.status != 'countered'
-            || !interactionBlocked(
-              resource.data.senderId,
-              resource.data.receiverId
-            )
+            isOfferResponse()
+            || isCounterOffer()
+            || isCancellation()
+            || isShippingConfirmation()
+            || isReceiptConfirmation()
+            || isCompletingReceipt()
           );
 
       // ===========================
@@ -544,8 +740,11 @@ service cloud.firestore {
                 in request.resource.data.participantIds;
       }
 
-      // ChatService preveri, ali deterministični pogovor že obstaja.
-      allow get: if isSignedIn();
+      // ID pogovora je determiniran ({collectionId}_{uidA}_{uidB}), zato
+      // ga je mogoce uganiti. Dokument sme brati samo udelezenec.
+      // ChatService.getOrCreateConversation zato ne dela vec predhodnega
+      // branja, ampak idempotenten zapis in sele nato branje.
+      allow get: if isConversationParticipant();
 
       // Za watchConversations mora poizvedba uporabljati:
       // where('participantIds', arrayContains: currentUserId)
@@ -561,9 +760,17 @@ service cloud.firestore {
             request.resource.data.participantIds[1]
           );
 
+      // Udelezenca se ne smeta spremeniti. Primerjamo kot mnozico, ker
+      // je vrstni red v starejsih dokumentih odvisen od tega, kdo je
+      // pogovor ustvaril.
       allow update: if isConversationParticipant()
+          && request.resource.data.participantIds.size() == 2
           && request.resource.data.participantIds
-              == resource.data.participantIds;
+              .hasOnly(resource.data.participantIds)
+          && resource.data.participantIds
+              .hasOnly(request.resource.data.participantIds)
+          && request.resource.data.get('collectionId', '')
+              == resource.data.get('collectionId', '');
 
       allow delete: if false;
 
