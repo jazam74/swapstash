@@ -22,17 +22,30 @@ export function conversationId(collectionId, firstUserId, secondUserId) {
   return `${collectionId}_${userIds[0]}_${userIds[1]}`;
 }
 
+function hostAndPort(value, fallback) {
+  const [host, port] = (value ?? fallback).split(":");
+  return { host, port: Number(port) };
+}
+
 export async function createTestEnvironment() {
-  const [host, port] = (
-    process.env.FIRESTORE_EMULATOR_HOST ?? "127.0.0.1:8080"
-  ).split(":");
+  const firestoreEmulator = hostAndPort(
+    process.env.FIRESTORE_EMULATOR_HOST,
+    "127.0.0.1:8080",
+  );
+  const storageEmulator = hostAndPort(
+    process.env.FIREBASE_STORAGE_EMULATOR_HOST,
+    "127.0.0.1:9199",
+  );
 
   return initializeTestEnvironment({
     projectId: "swapstash-rules-test",
     firestore: {
       rules: readFileSync(resolve(here, "..", "firestore.rules"), "utf8"),
-      host,
-      port: Number(port),
+      ...firestoreEmulator,
+    },
+    storage: {
+      rules: readFileSync(resolve(here, "..", "storage.rules"), "utf8"),
+      ...storageEmulator,
     },
   });
 }
@@ -41,6 +54,25 @@ export function db(testEnv, uid) {
   return uid === null
     ? testEnv.unauthenticatedContext().firestore()
     : testEnv.authenticatedContext(uid).firestore();
+}
+
+export function storage(testEnv, uid) {
+  return uid === null
+    ? testEnv.unauthenticatedContext().storage()
+    : testEnv.authenticatedContext(uid).storage();
+}
+
+/**
+ * Mirrors the object path built by ItemImageService.itemImageReference:
+ * `users/{uid}/collections/{collectionId}/items/{itemNumber}.jpg`.
+ */
+export function itemImagePath(userId, collectionId, itemNumber) {
+  return `users/${userId}/collections/${collectionId}/items/${itemNumber}.jpg`;
+}
+
+/** A small byte payload standing in for a picked JPEG. */
+export function imageBytes(sizeInBytes = 1024) {
+  return new Uint8Array(sizeInBytes).fill(0xff);
 }
 
 /** Mirrors the document TradeService.createTrade writes. */

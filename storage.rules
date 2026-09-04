@@ -1,0 +1,68 @@
+rules_version = '2';
+
+// SwapStash Firebase Storage rules.
+//
+// FIREBASE STORAGE STATUS: NOT INITIALIZED — MANUALLY CONFIRMED
+// V projektu swapstash-49199 Cloud Storage for Firebase še ni aktiviran
+// (Firebase Console prikazuje začetni zaslon "Get started", bucket in
+// zavihki Files/Rules ne obstajajo). Ta datoteka zato NI trenutno
+// deployana in NI odprava aktivne produkcijske Storage ranljivosti.
+// Gre za pripravo za trenutek, ko se Storage aktivira.
+//
+// Pred prvo verzijo Storage namenoma ne aktiviramo: edina pot
+// (ItemImageService) je dosegljiva samo iz nedosegljivega legacy
+// ItemsPage, produkcijski UI uporablja CatalogItemsPage. Ko se Storage
+// nekoč aktivira, morajo biti ta pravila deployana skupaj z aktivacijo.
+//
+// Aplikacija uporablja eno samo pot. Zapisuje jo ItemImageService
+// (lib/core/services/item_image_service.dart:45-49):
+//
+//   users/{userId}/collections/{collectionId}/items/{itemNumber}.jpg
+//
+// Datoteko naloži, prebere, zamenja in izbriše izključno njen lastnik.
+// Nobena druga koda v aplikaciji teh slik ne bere, prenosni URL pa se
+// nikoli ne shrani v Firestore, zato je tudi branje omejeno na lastnika.
+// Ko bo produkt slike prikazoval tudi drugim zbirateljem, bo treba
+// pravilo za branje namenoma razširiti in to pokriti s testom.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // ItemImageService.pickAndUploadItemImage naloži sliko, ki jo
+    // image_picker omeji na 1600 px širine in 85 % kakovosti
+    // (item_image_service.dart:90-94). Tak zapis je v praksi krepko pod
+    // 2 MB. Meja 5 MB pusti rezervo za platforme, kjer se stiskanje ne
+    // izvede, hkrati pa prepreči uporabo Storage kot splošnega prostora
+    // za datoteke.
+    function isValidItemImage() {
+      return request.resource != null
+          && request.resource.size <= 5 * 1024 * 1024
+          && request.resource.contentType.matches('image/.*');
+    }
+
+    match /users/{userId}/collections/{collectionId}/items/{fileName} {
+
+      allow read: if isOwner(userId);
+
+      // Ime datoteke je vedno '{itemNumber}.jpg', kjer je itemNumber
+      // celo število, večje od 0 (item_image_service.dart:26-49).
+      // Ob spremembi poimenovanja je treba popraviti tudi to pravilo.
+      allow create, update: if isOwner(userId)
+          && isValidItemImage()
+          && fileName.matches('[0-9]+[.]jpg');
+
+      allow delete: if isOwner(userId);
+    }
+
+    // Druge poti niso predvidene. Storage pravila so unija ujemajočih
+    // se pravil, zato spodnji zapis ničesar ne odvzame - privzeto je
+    // dostop tako ali tako zavrnjen. Zapisan je kot izjava namere.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
