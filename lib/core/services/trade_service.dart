@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:swapstash/core/models/trade.dart';
 import 'package:swapstash/core/models/trade_item.dart';
+import 'package:swapstash/core/observability/crash_reporter.dart';
 import 'package:swapstash/core/services/user_item_service.dart';
 import 'package:swapstash/core/services/block_service.dart';
 
@@ -99,6 +100,21 @@ class TradeService {
   }
 
   Future<String> createTrade({
+    required String receiverId,
+    required List<TradeItem> offeredItems,
+    required List<TradeItem> requestedItems,
+  }) {
+    return _withTradeObservability(
+      'create_trade',
+      () => _createTrade(
+        receiverId: receiverId,
+        offeredItems: offeredItems,
+        requestedItems: requestedItems,
+      ),
+    );
+  }
+
+  Future<String> _createTrade({
     required String receiverId,
     required List<TradeItem> offeredItems,
     required List<TradeItem> requestedItems,
@@ -390,23 +406,46 @@ class TradeService {
         .toList(growable: false);
   }
 
-  Future<void> acceptTrade({required String tradeId}) async {
+  Future<void> acceptTrade({required String tradeId}) {
     // Known V1 limitation (TOCTOU): accept is still a client write.
     // Strong consistency / reservation_overcommit detection → P22A2C.
-    await _respondToActiveOffer(
-      tradeId: tradeId,
-      newStatus: TradeStatus.accepted,
+    // When P22A2C detects overcommit, call:
+    // CrashReporter.instance.logReservationOvercommit(operation: 'accept_trade', ...)
+    return _withTradeObservability(
+      'accept_trade',
+      () => _respondToActiveOffer(
+        tradeId: tradeId,
+        newStatus: TradeStatus.accepted,
+      ),
     );
   }
 
-  Future<void> rejectTrade({required String tradeId}) async {
-    await _respondToActiveOffer(
-      tradeId: tradeId,
-      newStatus: TradeStatus.rejected,
+  Future<void> rejectTrade({required String tradeId}) {
+    return _withTradeObservability(
+      'reject_trade',
+      () => _respondToActiveOffer(
+        tradeId: tradeId,
+        newStatus: TradeStatus.rejected,
+      ),
     );
   }
 
   Future<void> counterTrade({
+    required String tradeId,
+    required List<TradeItem> offeredItems,
+    required List<TradeItem> requestedItems,
+  }) {
+    return _withTradeObservability(
+      'counter_trade',
+      () => _counterTrade(
+        tradeId: tradeId,
+        offeredItems: offeredItems,
+        requestedItems: requestedItems,
+      ),
+    );
+  }
+
+  Future<void> _counterTrade({
     required String tradeId,
     required List<TradeItem> offeredItems,
     required List<TradeItem> requestedItems,
@@ -470,7 +509,14 @@ class TradeService {
     });
   }
 
-  Future<void> cancelTrade({required String tradeId}) async {
+  Future<void> cancelTrade({required String tradeId}) {
+    return _withTradeObservability(
+      'cancel_trade',
+      () => _cancelTrade(tradeId: tradeId),
+    );
+  }
+
+  Future<void> _cancelTrade({required String tradeId}) async {
     final document = _tradesReference.doc(tradeId);
 
     await _db.runTransaction((transaction) async {
@@ -500,7 +546,14 @@ class TradeService {
     });
   }
 
-  Future<void> markShipped({required String tradeId}) async {
+  Future<void> markShipped({required String tradeId}) {
+    return _withTradeObservability(
+      'mark_shipped',
+      () => _markShipped(tradeId: tradeId),
+    );
+  }
+
+  Future<void> _markShipped({required String tradeId}) async {
     final uid = currentUserId;
     final tradeRef = _tradesReference.doc(tradeId);
     final touchedCollections = <String>{};
@@ -626,7 +679,14 @@ class TradeService {
     await _syncCollections(touchedCollections);
   }
 
-  Future<void> markReceived({required String tradeId}) async {
+  Future<void> markReceived({required String tradeId}) {
+    return _withTradeObservability(
+      'mark_received',
+      () => _markReceived(tradeId: tradeId),
+    );
+  }
+
+  Future<void> _markReceived({required String tradeId}) async {
     final uid = currentUserId;
     final tradeRef = _tradesReference.doc(tradeId);
     final touchedCollections = <String>{};
@@ -1014,6 +1074,22 @@ class TradeService {
       if (item.quantity <= 0) {
         throw ArgumentError('Količina predmeta mora biti večja od 0.');
       }
+    }
+  }
+
+  Future<T> _withTradeObservability<T>(
+    String operation,
+    Future<T> Function() action,
+  ) async {
+    try {
+      return await action();
+    } catch (error, stack) {
+      await CrashReporter.instance.observeTradeFailure(
+        operation: operation,
+        error: error,
+        stack: stack,
+      );
+      rethrow;
     }
   }
 }

@@ -6,6 +6,7 @@ plugins {
 
     // START: FlutterFire Configuration
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     // END: FlutterFire Configuration
 
     // Flutter Gradle Plugin mora biti uporabljen po Android pluginu.
