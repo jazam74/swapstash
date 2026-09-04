@@ -43,6 +43,7 @@ function parseArgs(argv) {
     allowProduction: false,
     confirmProject: "",
     confirmAuthoritative: false,
+    includeOrphanDetails: false,
     limit: 0,
   };
 
@@ -58,6 +59,8 @@ function parseArgs(argv) {
       args.confirmProject = argv[++i];
     } else if (arg === "--confirm-authoritative-rebuild") {
       args.confirmAuthoritative = true;
+    } else if (arg === "--include-orphan-details") {
+      args.includeOrphanDetails = true;
     } else if (arg === "--limit" && argv[i + 1]) {
       args.limit = Number(argv[++i]) || 0;
     } else if (arg === "--help" || arg === "-h") {
@@ -144,14 +147,24 @@ async function listTrades(db, limit) {
 /**
  * @param {FirebaseFirestore.Firestore} db
  * @param {FirebaseFirestore.QueryDocumentSnapshot[]} tradeDocs
+ * @param {{includeOrphanDetails?: boolean}} [options]
  * @return {Promise<object>}
  */
-async function dryRunSummary(db, tradeDocs) {
+async function dryRunSummary(db, tradeDocs, options = {}) {
+  const includeOrphanDetails = options.includeOrphanDetails === true;
   const expectedCompletedByUser = {};
   const expectedReservationDocs = new Map();
   const orphans = [];
   const anomalies = [];
   const perTrade = [];
+  let orphanTradeCount = 0;
+  let orphanMissingSenderCount = 0;
+  let orphanMissingReceiverCount = 0;
+  let orphanMissingBothCount = 0;
+  let completedIncrementsForExistingUsers = 0;
+  let completedIncrementsSkippedMissingUsers = 0;
+  let reservationWritesExpected = 0;
+  let reservationWritesSkippedMissingUsers = 0;
 
   for (const doc of tradeDocs) {
     const trade = doc.data() || {};
@@ -163,18 +176,29 @@ async function dryRunSummary(db, tradeDocs) {
       receiverId ? db.collection("users").doc(receiverId).get() : null,
     ]);
 
-    const senderExists = senderSnap ? senderSnap.exists : false;
-    const receiverExists = receiverSnap ? receiverSnap.exists : false;
+    const senderExists = senderSnap ? senderSnap.exists === true : false;
+    const receiverExists = receiverSnap ? receiverSnap.exists === true : false;
 
     if (!senderExists || !receiverExists) {
-      orphans.push({
-        tradeId: doc.id,
-        senderId,
-        receiverId,
-        senderExists,
-        receiverExists,
-        status: trade.status,
-      });
+      orphanTradeCount += 1;
+      const senderMissing = Boolean(senderId) && !senderExists;
+      const receiverMissing = Boolean(receiverId) && !receiverExists;
+      if (senderMissing && receiverMissing) {
+        orphanMissingBothCount += 1;
+      } else if (senderMissing) {
+        orphanMissingSenderCount += 1;
+      } else if (receiverMissing) {
+        orphanMissingReceiverCount += 1;
+      }
+
+      if (includeOrphanDetails) {
+        orphans.push({
+          tradeId: doc.id,
+          status: trade.status,
+          senderExists,
+          receiverExists,
+        });
+      }
     }
 
     const preview = await previewReconcile(db, doc.id);
@@ -200,22 +224,38 @@ async function dryRunSummary(db, tradeDocs) {
       receiverExists,
     });
 
+    // Same write policy as reconcileTradeAggregates: only existing users.
     if (desired.completedContribution === 1) {
-      if (senderId) {
+      if (senderId && senderExists) {
         expectedCompletedByUser[senderId] =
           (expectedCompletedByUser[senderId] || 0) + 1;
+        completedIncrementsForExistingUsers += 1;
+      } else if (senderId) {
+        completedIncrementsSkippedMissingUsers += 1;
       }
-      if (receiverId) {
+      if (receiverId && receiverExists) {
         expectedCompletedByUser[receiverId] =
           (expectedCompletedByUser[receiverId] || 0) + 1;
+        completedIncrementsForExistingUsers += 1;
+      } else if (receiverId) {
+        completedIncrementsSkippedMissingUsers += 1;
       }
     }
 
-    const addExpected = (uid, map) => {
+    const addExpected = (uid, map, userPresent) => {
       if (!uid) {
         return;
       }
-      for (const entry of Object.values(map || {})) {
+      const entries = Object.values(map || {});
+      if (entries.length === 0) {
+        return;
+      }
+      if (!userPresent) {
+        reservationWritesSkippedMissingUsers += entries.length;
+        return;
+      }
+      for (const entry of entries) {
+        reservationWritesExpected += 1;
         const path =
           `users/${uid}/reservationCollections/${entry.collectionId}` +
           `/items/${entry.itemKey}`;
@@ -233,8 +273,8 @@ async function dryRunSummary(db, tradeDocs) {
       }
     };
 
-    addExpected(desired.senderId, desired.senderReservations);
-    addExpected(desired.receiverId, desired.receiverReservations);
+    addExpected(desired.senderId, desired.senderReservations, senderExists);
+    addExpected(desired.receiverId, desired.receiverReservations, receiverExists);
 
     if (String(trade.status) === "accepted" &&
         (!senderExists || !receiverExists)) {
@@ -249,21 +289,37 @@ async function dryRunSummary(db, tradeDocs) {
       status: trade.status,
       noop: preview.noop,
       completedContribution: desired.completedContribution,
+      senderExists,
+      receiverExists,
       senderReservationKeys: Object.keys(desired.senderReservations).length,
       receiverReservationKeys: Object.keys(desired.receiverReservations).length,
     });
   }
 
-  return {
+  const result = {
     tradeCount: tradeDocs.length,
-    orphanTrades: orphans,
+    orphanTradeCount,
+    orphanMissingSenderCount,
+    orphanMissingReceiverCount,
+    orphanMissingBothCount,
     anomalyCount: anomalies.length,
     anomalies,
+    completedIncrementsForExistingUsers,
+    completedIncrementsSkippedMissingUsers,
+    reservationWritesExpected,
+    reservationWritesSkippedMissingUsers,
+    expectedCompletedUserCount: Object.keys(expectedCompletedByUser).length,
     expectedCompletedCounts: expectedCompletedByUser,
     expectedReservationDocumentCount: expectedReservationDocs.size,
-    expectedReservationDocuments: [...expectedReservationDocs.values()],
-    perTrade,
   };
+
+  if (includeOrphanDetails) {
+    result.orphanTrades = orphans;
+    result.expectedReservationDocuments = [...expectedReservationDocs.values()];
+    result.perTrade = perTrade;
+  }
+
+  return result;
 }
 
 /**
@@ -345,6 +401,7 @@ Options:
   --allow-production
   --confirm-project swapstash-49199   (required for production WRITE)
   --confirm-authoritative-rebuild     (required for authoritative rebuild)
+  --include-orphan-details            (opt-in tradeId / path samples)
   --limit <n>
 `);
     process.exit(0);
@@ -362,16 +419,24 @@ Options:
   }
 
   const db = getFirestore();
-  const preflight = await runPreflight(db);
+  const preflight = await runPreflight(db, {
+    includeOrphanDetails: args.includeOrphanDetails,
+  });
   const tradeDocs = await listTrades(db, args.limit);
+  const summaryOpts = {includeOrphanDetails: args.includeOrphanDetails};
 
   if (args.mode === "dry-run") {
-    const summary = await dryRunSummary(db, tradeDocs);
+    const summary = await dryRunSummary(db, tradeDocs, summaryOpts);
+    // Production stdout: drop UID-keyed maps unless detail mode.
+    const publicSummary = args.includeOrphanDetails ? summary : {
+      ...summary,
+      expectedCompletedCounts: undefined,
+    };
     console.log(JSON.stringify({
       mode: "dry-run",
       preflight,
-      summary,
-      note: "No writes performed.",
+      summary: publicSummary,
+      note: "No writes performed. Missing users are never recreated.",
       lifetimeInvariant:
         "completedTrades is lifetime. Physically deleting completed " +
         "/trades docs prevents authoritative rebuild from reconstructing " +
@@ -387,12 +452,20 @@ Options:
       process.exit(1);
     }
 
-    const summary = await dryRunSummary(db, tradeDocs);
+    const summary = await dryRunSummary(db, tradeDocs, summaryOpts);
     console.log(JSON.stringify({
       mode: "write-precheck",
       preflight,
       anomalyCount: summary.anomalyCount,
       anomalies: summary.anomalies,
+      orphanTradeCount: summary.orphanTradeCount,
+      completedIncrementsForExistingUsers:
+        summary.completedIncrementsForExistingUsers,
+      completedIncrementsSkippedMissingUsers:
+        summary.completedIncrementsSkippedMissingUsers,
+      reservationWritesExpected: summary.reservationWritesExpected,
+      reservationWritesSkippedMissingUsers:
+        summary.reservationWritesSkippedMissingUsers,
     }, null, 2));
 
     const writeResult = await writeReconcileAll(db, tradeDocs);
@@ -436,12 +509,13 @@ Options:
       process.exit(1);
     }
 
-    const summary = await dryRunSummary(db, tradeDocs);
+    const summary = await dryRunSummary(db, tradeDocs, summaryOpts);
     console.log(JSON.stringify({
       mode: "authoritative-rebuild-precheck",
       preflight,
       anomalyCount: summary.anomalyCount,
       anomalies: summary.anomalies,
+      orphanTradeCount: summary.orphanTradeCount,
       warning:
         "Rebuild from currently retained /trades only. Physically deleted " +
         "completed trades are permanently missing from lifetime counts.",

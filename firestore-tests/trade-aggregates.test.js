@@ -1,6 +1,8 @@
 import { after, before, beforeEach, describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 
 import { doc, setDoc } from "firebase/firestore";
 
@@ -14,12 +16,13 @@ import {
   tradeFixture,
 } from "./helpers.js";
 
+const functionsDir = resolve(dirname(fileURLToPath(import.meta.url)), "../functions");
 const require = createRequire(import.meta.url);
 const adminAppPath = require.resolve("firebase-admin/app", {
-  paths: [new URL("../functions/", import.meta.url).pathname],
+  paths: [functionsDir],
 });
 const adminFsPath = require.resolve("firebase-admin/firestore", {
-  paths: [new URL("../functions/", import.meta.url).pathname],
+  paths: [functionsDir],
 });
 const {
   initializeApp,
@@ -126,8 +129,8 @@ async function assertAggregateMatchesTrade(tradeId) {
   ]);
 
   const desired = contributionFromTrade(trade, {
-    senderExists: senderSnap ? senderSnap.exists : true,
-    receiverExists: receiverSnap ? receiverSnap.exists : true,
+    senderExists: senderSnap ? senderSnap.exists === true : false,
+    receiverExists: receiverSnap ? receiverSnap.exists === true : false,
   });
   const state = await readState(tradeId);
 
@@ -894,5 +897,223 @@ describe("Admin delete completed trade retains lifetime count", () => {
     assert.equal(await readUserCompleted(BOB), 1);
     const state = await readState("t_admin_delete");
     assert.equal(state.completedContribution, 1);
+  });
+});
+
+describe("P22C1 orphan / missing-user matrix", () => {
+  async function assertUserAbsent(uid) {
+    const snap = await adminDb.collection("users").doc(uid).get();
+    assert.equal(snap.exists, false, `user ${uid} must remain absent`);
+  }
+
+  async function assertNoReservationSubtree(uid) {
+    // Parent listing misses orphan subcollections; probe the fixture path.
+    const items = await adminDb
+        .collection("users")
+        .doc(uid)
+        .collection("reservationCollections")
+        .doc(COLLECTION_ID)
+        .collection("items")
+        .get();
+    assert.equal(
+        items.size,
+        0,
+        `no reservation items under missing user ${uid}`,
+    );
+  }
+
+  it("A: completed trade, both users exist", async () => {
+    await seed(testEnv, async (firestore) => {
+      await seedUsers(firestore, [ALICE, BOB]);
+      await setDoc(
+          doc(firestore, "trades/t_orphan_a"),
+          completedTrade({senderId: ALICE, receiverId: BOB}),
+      );
+    });
+
+    const result = await reconcileTradeAggregates(adminDb, "t_orphan_a");
+    assert.equal(result.noop, false);
+    assert.equal(result.skippedCompletedUserWrites, 0);
+    assert.equal(await readUserCompleted(ALICE), 1);
+    assert.equal(await readUserCompleted(BOB), 1);
+    const state = await readState("t_orphan_a");
+    assert.equal(state.completedContribution, 1);
+  });
+
+  it("B: completed trade, sender missing — no resurrection", async () => {
+    await seed(testEnv, async (firestore) => {
+      await seedUsers(firestore, [BOB]);
+      await setDoc(
+          doc(firestore, "trades/t_orphan_b"),
+          completedTrade({senderId: ALICE, receiverId: BOB}),
+      );
+    });
+
+    const result = await reconcileTradeAggregates(adminDb, "t_orphan_b");
+    assert.equal(result.orphan.senderMissing, true);
+    assert.equal(result.orphan.receiverMissing, false);
+    assert.equal(result.skippedCompletedUserWrites, 1);
+    assert.equal(await readUserCompleted(BOB), 1);
+    await assertUserAbsent(ALICE);
+    await assertNoReservationSubtree(ALICE);
+
+    const state = await readState("t_orphan_b");
+    assert.equal(state.completedContribution, 1);
+    assert.equal(state.senderId, ALICE);
+    assert.equal(state.receiverId, BOB);
+  });
+
+  it("C: completed trade, receiver missing — no resurrection", async () => {
+    await seed(testEnv, async (firestore) => {
+      await seedUsers(firestore, [ALICE]);
+      await setDoc(
+          doc(firestore, "trades/t_orphan_c"),
+          completedTrade({senderId: ALICE, receiverId: BOB}),
+      );
+    });
+
+    const result = await reconcileTradeAggregates(adminDb, "t_orphan_c");
+    assert.equal(result.orphan.receiverMissing, true);
+    assert.equal(result.skippedCompletedUserWrites, 1);
+    assert.equal(await readUserCompleted(ALICE), 1);
+    await assertUserAbsent(BOB);
+    await assertNoReservationSubtree(BOB);
+  });
+
+  it("D: completed trade, both missing — no user docs created", async () => {
+    await seed(testEnv, async (firestore) => {
+      await setDoc(
+          doc(firestore, "trades/t_orphan_d"),
+          completedTrade({senderId: ALICE, receiverId: BOB}),
+      );
+    });
+
+    const result = await reconcileTradeAggregates(adminDb, "t_orphan_d");
+    assert.equal(result.orphan.senderMissing, true);
+    assert.equal(result.orphan.receiverMissing, true);
+    assert.equal(result.skippedCompletedUserWrites, 2);
+    await assertUserAbsent(ALICE);
+    await assertUserAbsent(BOB);
+
+    const state = await readState("t_orphan_d");
+    assert.equal(state.completedContribution, 1);
+    assert.equal(state.senderId, ALICE);
+  });
+
+  it("E: accepted trade, sender missing — no reservations / no resurrection", async () => {
+    await seed(testEnv, async (firestore) => {
+      await seedUsers(firestore, [BOB]);
+      await setDoc(
+          doc(firestore, "trades/t_orphan_e"),
+          acceptedTrade({senderId: ALICE, receiverId: BOB}),
+      );
+    });
+
+    const result = await reconcileTradeAggregates(adminDb, "t_orphan_e");
+    assert.equal(result.orphan.senderMissing, true);
+    assert.equal(await readUserCompleted(BOB), 0);
+    await assertUserAbsent(ALICE);
+    await assertNoReservationSubtree(ALICE);
+    await assertNoReservationSubtree(BOB);
+    assertNoActiveReservation(await readReservation(BOB, COLLECTION_ID, "1"));
+    assertNoActiveReservation(await readReservation(BOB, COLLECTION_ID, "2"));
+
+    const state = await readState("t_orphan_e");
+    assert.equal(state.completedContribution, 0);
+    assert.deepEqual(state.senderReservations, {});
+    assert.deepEqual(state.receiverReservations, {});
+  });
+
+  it("F: accepted trade, receiver missing — no reservations / no resurrection", async () => {
+    await seed(testEnv, async (firestore) => {
+      await seedUsers(firestore, [ALICE]);
+      await setDoc(
+          doc(firestore, "trades/t_orphan_f"),
+          acceptedTrade({senderId: ALICE, receiverId: BOB}),
+      );
+    });
+
+    await reconcileTradeAggregates(adminDb, "t_orphan_f");
+    await assertUserAbsent(BOB);
+    await assertNoReservationSubtree(BOB);
+    await assertNoReservationSubtree(ALICE);
+    assertNoActiveReservation(await readReservation(ALICE, COLLECTION_ID, "1"));
+  });
+
+  it("G: repeated reconciliation of orphan completed trade is idempotent", async () => {
+    await seed(testEnv, async (firestore) => {
+      await seedUsers(firestore, [BOB]);
+      await setDoc(
+          doc(firestore, "trades/t_orphan_g"),
+          completedTrade({senderId: ALICE, receiverId: BOB}),
+      );
+    });
+
+    await reconcileTradeAggregates(adminDb, "t_orphan_g");
+    assert.equal(await readUserCompleted(BOB), 1);
+    await assertUserAbsent(ALICE);
+
+    const second = await reconcileTradeAggregates(adminDb, "t_orphan_g");
+    assert.equal(second.noop, true);
+    assert.equal(await readUserCompleted(BOB), 1);
+    await assertUserAbsent(ALICE);
+
+    const third = await reconcileTradeAggregates(adminDb, "t_orphan_g");
+    assert.equal(third.noop, true);
+    assert.equal(await readUserCompleted(BOB), 1);
+    await assertUserAbsent(ALICE);
+  });
+
+  it("H: completed→cancelled transition clears contribution without resurrecting", async () => {
+    await seed(testEnv, async (firestore) => {
+      await seedUsers(firestore, [BOB]);
+      await setDoc(
+          doc(firestore, "trades/t_orphan_h"),
+          completedTrade({senderId: ALICE, receiverId: BOB}),
+      );
+    });
+
+    await reconcileTradeAggregates(adminDb, "t_orphan_h");
+    assert.equal(await readUserCompleted(BOB), 1);
+    await assertUserAbsent(ALICE);
+
+    await adminDb.collection("trades").doc("t_orphan_h").set({
+      status: "cancelled",
+      awaitingUserId: "",
+    }, {merge: true});
+
+    const result = await reconcileTradeAggregates(adminDb, "t_orphan_h");
+    assert.equal(result.noop, false);
+    // Lifetime retain: completed→non-completed with trade still present
+    // applies delta -1 to surviving user only; missing sender stays absent.
+    assert.equal(await readUserCompleted(BOB), 0);
+    await assertUserAbsent(ALICE);
+
+    const state = await readState("t_orphan_h");
+    assert.equal(state.completedContribution, 0);
+  });
+
+  it("dry-run counts skipped missing-user increments (same policy as write)", async () => {
+    await seed(testEnv, async (firestore) => {
+      await seedUsers(firestore, [BOB]);
+      await setDoc(
+          doc(firestore, "trades/t_orphan_dry"),
+          completedTrade({senderId: ALICE, receiverId: BOB}),
+      );
+    });
+
+    const trades = await adminDb.collection("trades").get();
+    const dry = await dryRunSummary(adminDb, trades.docs);
+    assert.equal(dry.orphanTradeCount, 1);
+    assert.equal(dry.orphanMissingSenderCount, 1);
+    assert.equal(dry.completedIncrementsForExistingUsers, 1);
+    assert.equal(dry.completedIncrementsSkippedMissingUsers, 1);
+    assert.equal(dry.expectedCompletedCounts[BOB], 1);
+    assert.equal(dry.expectedCompletedCounts[ALICE], undefined);
+
+    const report = await runPreflight(adminDb);
+    assert.equal(report.orphanTradeCount, 1);
+    assert.equal(report.orphanMissingSenderCount, 1);
+    assert.equal(report.decision, "SAFE_FAST_PATH");
   });
 });

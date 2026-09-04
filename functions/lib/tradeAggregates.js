@@ -376,9 +376,11 @@ function contributionFromTrade(trade, userPresence = {
 
   // Orphan accepted trades (deleted counterpart) must not reserve forever —
   // mirrors the former client-side counterpart existence check.
+  // V1: if EITHER participant user doc is missing, BOTH sides get zero
+  // reservations (no half-held inventory under the surviving user either).
   const counterpartsPresent =
-    userPresence.senderExists !== false &&
-    userPresence.receiverExists !== false;
+    userPresence.senderExists === true &&
+    userPresence.receiverExists === true;
 
   if (status === "accepted" && counterpartsPresent && senderId && receiverId) {
     if (!trade.senderShipped) {
@@ -686,50 +688,87 @@ async function reconcileTradeAggregates(db, tradeId, options = {}) {
       assertTradeValidForReconcile(trade);
     }
 
-    const senderId = String(trade?.senderId || "").trim();
-    const receiverId = String(trade?.receiverId || "").trim();
-
-    // Read user docs up front when we may touch completedTrades or check
-    // orphan counterparts. Always read when ids are known so presence is
-    // consistent with desired contribution.
-    const userRefs = [];
-    const userIdOrder = [];
-    if (senderId) {
-      userRefs.push(db.collection("users").doc(senderId));
-      userIdOrder.push(senderId);
-    }
-    if (receiverId && receiverId !== senderId) {
-      userRefs.push(db.collection("users").doc(receiverId));
-      userIdOrder.push(receiverId);
-    }
-
-    const userSnaps = userRefs.length ? await tx.getAll(...userRefs) : [];
-    const userExists = {};
-    userIdOrder.forEach((uid, index) => {
-      userExists[uid] = userSnaps[index]?.exists === true;
-    });
-
     const previous = normalizePreviousState(
         stateSnap.exists ? stateSnap.data() : null,
     );
+
+    const tradeSenderId = String(trade?.senderId || "").trim();
+    const tradeReceiverId = String(trade?.receiverId || "").trim();
+
+    // Read EVERY candidate uid that could be written (trade + previous state).
+    // Strict presence checks prevent resurrecting deleted users via
+    // set(..., {merge: true}) on users/{uid} or reservation subpaths.
+    const candidateUids = [];
+    const seenUids = new Set();
+    const pushUid = (uid) => {
+      const idValue = String(uid || "").trim();
+      if (!idValue || seenUids.has(idValue)) {
+        return;
+      }
+      seenUids.add(idValue);
+      candidateUids.push(idValue);
+    };
+    pushUid(tradeSenderId);
+    pushUid(tradeReceiverId);
+    pushUid(previous.senderId);
+    pushUid(previous.receiverId);
+
+    const userRefs = candidateUids.map(
+        (uid) => db.collection("users").doc(uid),
+    );
+    const userSnaps = userRefs.length ? await tx.getAll(...userRefs) : [];
+    const userExists = {};
+    candidateUids.forEach((uid, index) => {
+      userExists[uid] = userSnaps[index]?.exists === true;
+    });
 
     // If trade was deleted, desired is zero contribution. Participant ids
     // for reversing reservations come from previous state.
     const desired = contributionFromTrade(
         trade ? trade : null,
         {
-          senderExists: senderId ? userExists[senderId] !== false : true,
-          receiverExists: receiverId ? userExists[receiverId] !== false : true,
+          senderExists: tradeSenderId ?
+            userExists[tradeSenderId] === true :
+            false,
+          receiverExists: tradeReceiverId ?
+            userExists[tradeReceiverId] === true :
+            false,
         },
     );
 
     // Preserve participant ids on state even when trade is gone so reverse
-    // diffs can still target the right reservation docs.
+    // diffs can still target the right reservation docs. State MAY reference
+    // missing/deleted uids without creating user documents.
     if (!desired.senderId && previous.senderId) {
       desired.senderId = previous.senderId;
     }
     if (!desired.receiverId && previous.receiverId) {
       desired.receiverId = previous.receiverId;
+    }
+
+    const senderUid = desired.senderId || previous.senderId || "";
+    const receiverUid = desired.receiverId || previous.receiverId || "";
+    const senderPresent = senderUid ? userExists[senderUid] === true : false;
+    const receiverPresent = receiverUid ?
+      userExists[receiverUid] === true :
+      false;
+
+    const orphan = {
+      senderMissing: Boolean(senderUid) && !senderPresent,
+      receiverMissing: Boolean(receiverUid) && !receiverPresent,
+    };
+    if (orphan.senderMissing || orphan.receiverMissing) {
+      logger.warn({
+        event: "aggregate_orphan_missing_user",
+        tradeId: id,
+        senderMissing: orphan.senderMissing,
+        receiverMissing: orphan.receiverMissing,
+        effectiveTradeStatus: trade ? String(trade.status || "") : "deleted",
+        note:
+          "Missing users are never recreated. completedTrades / reservation " +
+          "writes are skipped for absent user docs. State may still record " +
+          "their uid for idempotent reconciliation.",
+      });
     }
 
     if (contributionsEqual(desired, previous) && stateSnap.exists) {
@@ -738,14 +777,18 @@ async function reconcileTradeAggregates(db, tradeId, options = {}) {
         noop: true,
         desired,
         previous,
+        orphan,
+        skippedCompletedUserWrites: 0,
+        skippedReservationUserWrites: 0,
       };
     }
 
     // Prefetch reservation docs that will be written/deleted (all reads
     // before writes — required by Firestore transactions).
+    // Never touch reservation paths under a missing user document.
     const reservationRefs = [];
     const collectRefs = (uid, mapA, mapB) => {
-      if (!uid) {
+      if (!uid || userExists[uid] !== true) {
         return;
       }
       const keys = new Set([
@@ -776,12 +819,12 @@ async function reconcileTradeAggregates(db, tradeId, options = {}) {
     };
 
     collectRefs(
-        desired.senderId || previous.senderId,
+        senderUid,
         desired.senderReservations,
         previous.senderReservations,
     );
     collectRefs(
-        desired.receiverId || previous.receiverId,
+        receiverUid,
         desired.receiverReservations,
         previous.receiverReservations,
     );
@@ -796,24 +839,41 @@ async function reconcileTradeAggregates(db, tradeId, options = {}) {
 
     // Plan reservation writes FIRST. Underflow throws before any tx writes
     // so completedTrades / state / reservations stay untouched.
-    const senderReservationOps = planReservationDiffs(
-        desired.senderId || previous.senderId,
-        desired.senderReservations,
-        previous.senderReservations,
-        snapshotCache,
-        db,
-        logger,
-        id,
-    );
-    const receiverReservationOps = planReservationDiffs(
-        desired.receiverId || previous.receiverId,
-        desired.receiverReservations,
-        previous.receiverReservations,
-        snapshotCache,
-        db,
-        logger,
-        id,
-    );
+    // Missing users → empty ops (no phantom reservation hierarchy).
+    const senderReservationOps = senderPresent ?
+      planReservationDiffs(
+          senderUid,
+          desired.senderReservations,
+          previous.senderReservations,
+          snapshotCache,
+          db,
+          logger,
+          id,
+      ) :
+      [];
+    const receiverReservationOps = receiverPresent ?
+      planReservationDiffs(
+          receiverUid,
+          desired.receiverReservations,
+          previous.receiverReservations,
+          snapshotCache,
+          db,
+          logger,
+          id,
+      ) :
+      [];
+
+    let skippedReservationUserWrites = 0;
+    if (!senderPresent && senderUid &&
+        (Object.keys(desired.senderReservations || {}).length > 0 ||
+         Object.keys(previous.senderReservations || {}).length > 0)) {
+      skippedReservationUserWrites += 1;
+    }
+    if (!receiverPresent && receiverUid &&
+        (Object.keys(desired.receiverReservations || {}).length > 0 ||
+         Object.keys(previous.receiverReservations || {}).length > 0)) {
+      skippedReservationUserWrites += 1;
+    }
 
     // completedTrades lifetime contribution (both participants).
     const completedDelta =
@@ -837,9 +897,16 @@ async function reconcileTradeAggregates(db, tradeId, options = {}) {
       });
     }
 
+    let skippedCompletedUserWrites = 0;
     if (appliedCompletedDelta !== 0) {
       const touchUser = (uid) => {
-        if (!uid || userExists[uid] === false) {
+        if (!uid) {
+          return;
+        }
+        // CRITICAL: only write when the canonical user document exists.
+        // set(..., {merge: true}) would otherwise CREATE a deleted user.
+        if (userExists[uid] !== true) {
+          skippedCompletedUserWrites += 1;
           return;
         }
         const ref = db.collection("users").doc(uid);
@@ -847,8 +914,8 @@ async function reconcileTradeAggregates(db, tradeId, options = {}) {
           completedTrades: FieldValue.increment(appliedCompletedDelta),
         }, {merge: true});
       };
-      touchUser(desired.senderId || previous.senderId);
-      touchUser(desired.receiverId || previous.receiverId);
+      touchUser(senderUid);
+      touchUser(receiverUid);
     }
 
     applyReservationOps(tx, senderReservationOps);
@@ -856,8 +923,8 @@ async function reconcileTradeAggregates(db, tradeId, options = {}) {
 
     tx.set(stateRef, {
       completedContribution: desired.completedContribution,
-      senderId: desired.senderId || previous.senderId || "",
-      receiverId: desired.receiverId || previous.receiverId || "",
+      senderId: senderUid,
+      receiverId: receiverUid,
       senderReservations: desired.senderReservations,
       receiverReservations: desired.receiverReservations,
       updatedAt: Timestamp.now(),
@@ -870,6 +937,9 @@ async function reconcileTradeAggregates(db, tradeId, options = {}) {
       desired,
       previous,
       appliedCompletedDelta,
+      orphan,
+      skippedCompletedUserWrites,
+      skippedReservationUserWrites,
       effectiveTradeStatus: trade ? String(trade.status || "") : "deleted",
     };
   });
@@ -920,8 +990,8 @@ async function previewReconcile(db, tradeId) {
       stateSnap.exists ? stateSnap.data() : null,
   );
   const desired = contributionFromTrade(trade, {
-    senderExists: senderSnap ? senderSnap.exists : true,
-    receiverExists: receiverSnap ? receiverSnap.exists : true,
+    senderExists: senderSnap ? senderSnap.exists === true : false,
+    receiverExists: receiverSnap ? receiverSnap.exists === true : false,
   });
 
   return {
@@ -930,6 +1000,11 @@ async function previewReconcile(db, tradeId) {
     noop: contributionsEqual(desired, previous) && stateSnap.exists,
     desired,
     previous,
+    orphan: {
+      senderMissing: Boolean(senderId) && !(senderSnap && senderSnap.exists),
+      receiverMissing:
+        Boolean(receiverId) && !(receiverSnap && receiverSnap.exists),
+    },
   };
 }
 

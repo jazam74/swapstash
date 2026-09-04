@@ -154,6 +154,40 @@ function main() {
     fail("firebase.json must keep functions configuration");
   }
 
+  // P22C1: preflight/backfill collectionGroup("items").where("itemKey","!=",null)
+  // requires a COLLECTION_GROUP single-field override (not a composite index).
+  const indexesPath = path.join(ROOT, "firestore.indexes.json");
+  if (!fs.existsSync(indexesPath)) {
+    fail("firestore.indexes.json is missing");
+  } else {
+    const indexesFile = readJson(indexesPath);
+    if (indexesFile.data) {
+      const overrides = indexesFile.data.fieldOverrides || [];
+      const itemKeyOverride = overrides.find(
+          (entry) => entry &&
+            entry.collectionGroup === "items" &&
+            entry.fieldPath === "itemKey",
+      );
+      if (!itemKeyOverride) {
+        fail(
+            "firestore.indexes.json must declare fieldOverrides for " +
+            "collectionGroup items / fieldPath itemKey " +
+            "(required by aggregate preflight reservation query)",
+        );
+      } else {
+        const scopes = (itemKeyOverride.indexes || [])
+            .filter((idx) => idx && idx.queryScope === "COLLECTION_GROUP")
+            .map((idx) => idx.order);
+        if (!scopes.includes("ASCENDING")) {
+          fail(
+              "items.itemKey fieldOverride must include COLLECTION_GROUP " +
+              "ASCENDING (FAILED_PRECONDITION without it)",
+          );
+        }
+      }
+    }
+  }
+
   const defaultProject = rc.data.projects && rc.data.projects.default;
   if (defaultProject !== EXPECTED_PROJECT) {
     fail(

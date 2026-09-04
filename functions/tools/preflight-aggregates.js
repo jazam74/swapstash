@@ -12,16 +12,24 @@
  *
  * DO NOT run against production from this task without an explicit decision.
  * Pass --allow-production only after reviewing credentials and intent.
+ *
+ * Production output is aggregate-only by default (no UIDs / trade ids).
+ * Pass --include-orphan-details only for manual remediation.
  */
 
 const {initializeApp, getApps} = require("firebase-admin/app");
 const {getFirestore} = require("firebase-admin/firestore");
+
+/** Must stay aligned with firestore.indexes.json fieldOverrides. */
+const RESERVATION_ITEM_KEY_COLLECTION_GROUP = "items";
+const RESERVATION_ITEM_KEY_FIELD = "itemKey";
 
 function parseArgs(argv) {
   const args = {
     project: process.env.GCLOUD_PROJECT || process.env.GCP_PROJECT || "",
     allowProduction: false,
     json: false,
+    includeOrphanDetails: false,
   };
 
   for (let i = 0; i < argv.length; i++) {
@@ -32,6 +40,8 @@ function parseArgs(argv) {
       args.allowProduction = true;
     } else if (arg === "--json") {
       args.json = true;
+    } else if (arg === "--include-orphan-details") {
+      args.includeOrphanDetails = true;
     } else if (arg === "--help" || arg === "-h") {
       args.help = true;
     }
@@ -115,8 +125,10 @@ async function runCompletedTradesPreflight(db) {
 async function runReservationBaselinePreflight(db) {
   // Collection group on leaf `items` under reservationCollections.
   // Inventory items live under collections/*/items and do not carry itemKey.
-  const snap = await db.collectionGroup("items")
-      .where("itemKey", "!=", null)
+  // Requires COLLECTION_GROUP single-field index on items.itemKey
+  // (see firestore.indexes.json fieldOverrides).
+  const snap = await db.collectionGroup(RESERVATION_ITEM_KEY_COLLECTION_GROUP)
+      .where(RESERVATION_ITEM_KEY_FIELD, "!=", null)
       .limit(50)
       .get();
 
@@ -133,16 +145,104 @@ async function runReservationBaselinePreflight(db) {
     existingReservationDocs: reservationDocs.length,
     reservationSamples: reservationDocs.slice(0, 10),
     reservationBaselineClean: reservationDocs.length === 0,
+    reservationItemKeyQuery: {
+      collectionGroup: RESERVATION_ITEM_KEY_COLLECTION_GROUP,
+      field: RESERVATION_ITEM_KEY_FIELD,
+      operator: "!=",
+      requiredIndex: "fieldOverrides COLLECTION_GROUP ASCENDING",
+    },
   };
 }
 
 /**
+ * Aggregate orphan /trades participant presence (no UIDs by default).
  * @param {FirebaseFirestore.Firestore} db
+ * @param {{includeDetails?: boolean}} [options]
  * @return {Promise<object>}
  */
-async function runPreflight(db) {
+async function runOrphanTradesPreflight(db, options = {}) {
+  const includeDetails = options.includeDetails === true;
+  const tradesSnap = await db.collection("trades")
+      .select("senderId", "receiverId", "status")
+      .get();
+
+  let orphanTradeCount = 0;
+  let orphanMissingSenderCount = 0;
+  let orphanMissingReceiverCount = 0;
+  let orphanMissingBothCount = 0;
+  const details = [];
+
+  for (const tradeDoc of tradesSnap.docs) {
+    const trade = tradeDoc.data() || {};
+    const senderId = String(trade.senderId || "").trim();
+    const receiverId = String(trade.receiverId || "").trim();
+
+    const [senderSnap, receiverSnap] = await Promise.all([
+      senderId ? db.collection("users").doc(senderId).get() : null,
+      receiverId ? db.collection("users").doc(receiverId).get() : null,
+    ]);
+
+    const senderExists = senderSnap ? senderSnap.exists === true : false;
+    const receiverExists = receiverSnap ? receiverSnap.exists === true : false;
+
+    if (senderExists && receiverExists) {
+      continue;
+    }
+
+    orphanTradeCount += 1;
+    const senderMissing = Boolean(senderId) && !senderExists;
+    const receiverMissing = Boolean(receiverId) && !receiverExists;
+
+    if (senderMissing && receiverMissing) {
+      orphanMissingBothCount += 1;
+    } else if (senderMissing) {
+      orphanMissingSenderCount += 1;
+    } else if (receiverMissing) {
+      orphanMissingReceiverCount += 1;
+    }
+
+    if (includeDetails && details.length < 50) {
+      details.push({
+        tradeId: tradeDoc.id,
+        status: trade.status || null,
+        senderMissing,
+        receiverMissing,
+      });
+    }
+  }
+
+  const report = {
+    tradeCount: tradesSnap.size,
+    orphanTradeCount,
+    orphanMissingSenderCount,
+    orphanMissingReceiverCount,
+    orphanMissingBothCount,
+    orphanBackfillSafe:
+      "Missing users are skipped for completedTrades and reservation " +
+      "writes; surviving participants still receive increments. " +
+      "Deleted users are never recreated.",
+  };
+
+  if (includeDetails) {
+    report.orphanDetails = details;
+  }
+
+  return report;
+}
+
+/**
+ * @param {FirebaseFirestore.Firestore} db
+ * @param {{includeOrphanDetails?: boolean}} [options]
+ * @return {Promise<object>}
+ */
+async function runPreflight(db, options = {}) {
   const completed = await runCompletedTradesPreflight(db);
   const reservations = await runReservationBaselinePreflight(db);
+  const orphans = await runOrphanTradesPreflight(db, {
+    includeDetails: options.includeOrphanDetails === true,
+  });
+
+  const stateSnap = await db.collection("_tradeAggregateState").select().get();
 
   const safeForIncrementalBackfill =
     completed.safeFastPath && reservations.reservationBaselineClean;
@@ -151,7 +251,8 @@ async function runPreflight(db) {
   let message =
     "All completedTrades are 0 or missing (default 0) and no " +
     "reservationCollections items exist. Incremental reconcile from empty " +
-    "_tradeAggregateState is allowed.";
+    "_tradeAggregateState is allowed. Orphan trades are safe: missing " +
+    "users are never resurrected.";
 
   if (!reservations.reservationBaselineClean) {
     decision = "ABORT_EXISTING_RESERVATIONS";
@@ -170,6 +271,8 @@ async function runPreflight(db) {
   return {
     ...completed,
     ...reservations,
+    ...orphans,
+    tradeAggregateStateDocuments: stateSnap.size,
     safeForIncrementalBackfill,
     decision,
     message,
@@ -183,9 +286,10 @@ async function main() {
     console.log(`Usage: node tools/preflight-aggregates.js [options]
 
 Options:
-  --project <id>         Firebase project id
-  --allow-production     Required if FIRESTORE_EMULATOR_HOST is unset
-  --json                 Print JSON only
+  --project <id>              Firebase project id
+  --allow-production          Required if FIRESTORE_EMULATOR_HOST is unset
+  --json                      Print JSON only
+  --include-orphan-details    Opt-in tradeId samples for remediation (not default)
 `);
     process.exit(0);
   }
@@ -203,9 +307,17 @@ Options:
   }
 
   const db = getFirestore();
-  const report = await runPreflight(db);
+  const report = await runPreflight(db, {
+    includeOrphanDetails: args.includeOrphanDetails,
+  });
   report.emulator = isEmulator();
   report.project = args.project || null;
+
+  // Never dump nonZeroSamples / reservationSamples UIDs paths unless detail mode.
+  if (!args.includeOrphanDetails) {
+    delete report.nonZeroSamples;
+    delete report.reservationSamples;
+  }
 
   if (args.json) {
     console.log(JSON.stringify(report, null, 2));
@@ -227,7 +339,10 @@ if (require.main === module) {
 }
 
 module.exports = {
+  RESERVATION_ITEM_KEY_COLLECTION_GROUP,
+  RESERVATION_ITEM_KEY_FIELD,
   runPreflight,
   runCompletedTradesPreflight,
   runReservationBaselinePreflight,
+  runOrphanTradesPreflight,
 };
